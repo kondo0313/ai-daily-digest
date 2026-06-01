@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-06-02</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-06-02</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #強化学習 #状態空間モデル #新人研究者向け</div>
+    <h1 class="headline">なぜ「線形」の記憶でうまくいくのか？部分観測強化学習の理論的なぞ解き</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-06-02 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Why Linear Recurrent Memory Works in Partially Observable Reinforcement Learning</div>
+      <div class="pc-row">
+        <span>著者情報は原論文を参照（arXiv プレプリント）</span>
+        <span>arXiv cs.LG ・ 投稿年月は原論文を参照</span>
+        <a href="https://arxiv.org/abs/2605.31261">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>はじめに：なぜ「線形の記憶」が気になるのか</h2>
+<p>AIエージェントが世界を観察するとき、いつも全部が見えているとは限りません。霧の中を歩くように、断片的な手がかりから「いま自分はどんな状況にいるのか」を推測する必要があります。これが<span class="term">部分観測強化学習</span>（POMDP、Partially Observable Reinforcement Learning）の難しさです。</p>
+<p>この「過去の手がかりを覚えておく」役割を担うのが<strong>リカレントメモリ</strong>です。近年、<span class="term">状態空間モデル</span>（State Space Model、略してSSM）や<span class="term">線形リカレントニューラルネットワーク</span>と呼ばれる、構造がシンプルな記憶ユニットが、実験で驚くほど良い成績を出してきました。</p>
+<p>ところが不思議なことに、「なぜそれがうまくいくのか」という理論的な説明はあまりありませんでした。今日の論文は、その<strong>なぜ</strong>に正面から答えようとする一本です。</p>
+<div class="pull">実験で強いことは分かっていた。でも『なぜ』が分からなかった。この論文はその橋渡しをする。</div>
+<h2><span class="n">2</span>背景：HMMと『信念』というキーワード</h2>
+<p>部分観測の世界を数学的に表す代表的な道具が<span class="term">HMM</span>（Hidden Markov Model、隠れマルコフモデル）です。たとえ話をしましょう。あなたは部屋の外にいて、中の様子は見えません。でも、ドアの隙間から漏れる「音」だけは聞こえます。中の状態（人がいる／いない、など）は隠れていて、音だけが観測できる。これがHMMのイメージです。</p>
+<p>このとき賢いエージェントは、聞こえた音の履歴から「いま中はこういう状態だろう」という<strong>確率の分布</strong>を持ちます。これを<span class="term">信念ベクトル</span>（belief vector）と呼びます。たとえば「人がいる確率70%、いない確率30%」といった具合です。</p>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>理論的には、この信念ベクトルさえ正しく持てれば、最適な行動を選ぶのに十分（=十分統計量）であることが知られています。つまり『良い記憶』とは『正しい信念を保てる記憶』のこと。</div>
+<p>ここで重要なのが<span class="term">ソフトマックス</span>という変換です。信念ベクトルは確率なので合計が1になりますが、その手前には<strong>pre-softmaxロジット</strong>という、まだ確率に変換される前の生のスコアがあります。ソフトマックスは『スコアを確率に変換する関数』だと思ってください。論文の鍵は、このロジットの方に注目した点にあります。</p>
+<h2><span class="n">3</span>この論文が示したこと（全体像）</h2>
+<p>論文は、2種類の<strong>線形フィルタ</strong>（過去の観測を足し合わせて記憶を更新する、シンプルな線形の仕組み）を構成的に作り、それぞれが何を保証するかを証明しました。</p>
+<div class="step"><span class="si">主張①</span><p>遷移行列が決定論的（次の状態が一意に決まる）なHMMでは、線形フィルタが信念ベクトルのpre-softmaxロジットを『厳密に』再現できる。つまり最適方策を学ぶための十分統計量になる。</p></div><div class="step"><span class="si">主張②</span><p>遷移行列が『ほぼ』決定論的なHMMでは、線形フィルタによる状態の復元誤差が限りなく小さくなる。つまり状態のあいまいさをほぼゼロにできる。</p></div><div class="step"><span class="si">主張③</span><p>これらの結果は、行動によって状態が変わる『行動制御つきHMM』にも拡張できる。このとき線形フィルタは『時間とともに変化し、行動に依存する』形になる。</p></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>『構成的に証明する』とは、抽象的に存在を示すのではなく、実際にそれを作る手順を見せて証明することです。『ほら、こう作ればこう動くでしょう』という、エンジニアにとって直感的なスタイルです。</div>
+<h2><span class="n">4</span>手法を分解して優しく理解する</h2>
+<h3>線形フィルタって、何をしているの？</h3>
+<p>線形リカレントメモリの更新は、ざっくり言うと『前の記憶を少し縮めて、今の観測を足す』という操作の繰り返しです。式の雰囲気だけ示すと、新しい記憶 h は <strong>h ← A・h（前の記憶を変換）＋ B・x（今の観測を取り込む）</strong> という形です。AやBは行列（数の表）で、足し算とかけ算だけ。だから『線形』なのです。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># h: 記憶ベクトル、x: いまの観測</span></div><div class="ln"><span class="no">1</span><span class="ct">h = <span class="fn">zeros</span>()  # 最初は空っぽ</span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="kw">for</span> x <span class="kw">in</span> observations:</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="ind"></span>h = A @ h + B @ x<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># A,B を巧妙に選ぶと…</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>logit = C @ h  # 信念のpre-softmaxロジットに一致！<span class="badge">②</span></span></div></div><div class="code-cap">線形リカレントメモリの心臓部（イメージ）</div>
+<p>①が記憶の更新、②が記憶から信念ロジットを取り出す部分です。論文の貢献は『AとBとCをうまく設計すれば、②の出力がHMMの真の信念ロジットと厳密に一致する』ことを示した点にあります。複雑な非線形ネットワークがなくても、線形のかけ算と足し算だけで十分だ、というわけです。</p>
+<h3>なぜ『ロジット』なら線形で済むのか</h3>
+<p>信念の確率そのものは、ソフトマックスという非線形変換を経て出てきます。そのままでは線形フィルタで再現しにくい。ところが、その<strong>手前のロジット</strong>を見ると、HMMの更新（前の信念に遷移と観測の情報をかけ合わせる）が、対数（log）の世界では『足し算』として整理できる場合があるのです。</p>
+<p>たとえ話をすると、かけ算は扱いにくいけれど、対数を取れば足し算になる、という昔ながらの計算の知恵に似ています。決定論的な遷移という条件が、ちょうどこの『きれいな足し算の構造』を生み、線形フィルタとぴったり噛み合うのです。</p>
+<h3>『ほぼ決定論的』への拡張（主張②）</h3>
+<p>現実の問題では、遷移が完全に決定論的とは限りません。そこで論文は『ほぼ決定論的』な場合に話を広げ、状態を復元する際の誤差が<strong>限りなく小さくなる</strong>ことを示しました。完璧ではなくても『実用上ほぼ問題ない』レベルに収まる、という誠実な拡張です。</p>
+<h3>行動が状態を変えるとき（主張③）</h3>
+<p>強化学習では、エージェントの行動が次の状態を変えます。この場合、先ほどの行列AやBが『行動に応じて切り替わる』時間変化するフィルタになります。直感的には『どのボタンを押したかで記憶の更新ルールが変わる』イメージです。これにより、理論が実際の強化学習に近い設定まで届くようになりました。</p>
+<h2><span class="n">5</span>実験：理論は本当に動くのか</h2>
+<p>論文は数値実験で理論を確かめ、さらに小規模な強化学習ゲームで、構成した線形フィルタが<strong>強い特徴抽出器</strong>として機能することを示しました。つまり『理論上きれいなだけ』ではなく、実際にエージェントの学習を助ける部品として役立つことを確認したのです。</p>
+<div class="stats"><div class="stat"><div class="v">2種類</div><div class="k">構成した線形フィルタ（厳密再現用・ほぼ決定論用）</div></div><div class="stat"><div class="v">≒0</div><div class="k">ほぼ決定論的HMMでの状態復元誤差（限りなく小さい）</div></div></div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>アブストラクトに具体的な精度の数値は明記されていないため、ここでは性質（誤差が消える等）のみを示しています。詳しい数値は本文の実験節を確認してください。</div>
+<h2><span class="n">6</span>新規性：なぜこの論文が重要なのか</h2>
+<div class="pull">『実験で強い』を『なぜ強いのか』に変えた——線形リカレントメモリがHMMの信念の十分統計量になることを、作って見せた。</div>
+<p>これまで状態空間モデルやSSMの成功は、いわば『経験則』でした。この論文は、その背後に『線形フィルタが信念ロジットを厳密に再現できる』という明確な数学的理由があることを示しました。理論が実証を後追いで説明し、設計の指針を与えるという、研究として理想的な貢献です。</p>
+<h2><span class="n">7</span>意義と限界（ここは誠実に）</h2>
+<p>素晴らしい理論ですが、適用範囲には条件があります。新人研究者として、論文の主張がどこまで言えるかを正しく把握しておきましょう。</p>
+<div class="step"><span class="si">限界①</span><p>主張①の厳密な再現は『決定論的な遷移行列』という条件のもとで成立する。完全にランダム性の高い環境にそのまま当てはまるわけではない。</p></div><div class="step"><span class="si">限界②</span><p>主張②も『ほぼ決定論的』が前提。遷移の不確実性が大きい問題では誤差が無視できなくなる可能性がある。</p></div><div class="step"><span class="si">限界③</span><p>検証された強化学習タスクは『小規模なゲーム』。大規模・複雑な実環境でどこまで効くかは今後の課題。</p></div><div class="step"><span class="si">限界④</span><p>HMMという枠組み自体が現実の近似。世界がHMMでうまく表せない場合、理論の保証はそのままは効かない。</p></div>
+<p>とはいえ、これらは『理論が嘘』という話ではなく、『どんな前提で何が保証されるか』が明確になったという前向きな話です。むしろ前提が明示されていることこそ、良い理論の証です。</p>
+<h2><span class="n">8</span>新人へのひとこと</h2>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>『なぜうまくいくのか』を問う姿勢を大切にしてください。性能が出た手法を見たら、まず『どんな条件でその性能が出るのか』『どこで崩れるのか』を考える癖をつけると、実験屋にも理論屋にも強くなれます。</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>この論文の大きな文脈は、『シンプルな構造（線形）が、実は深いタスク（部分観測下の意思決定）に十分なことがある』というメッセージです。複雑さを足す前に、まず単純な仕組みで何が表現できるかを問う——これは研究全般に通じる発想です。</div>
+<p>線形だから弱い、とは限りません。適切に設計された線形の記憶は、隠れた世界の『信念』を驚くほど忠実に映し出す鏡になりうる。今日の論文は、その鏡の作り方を一つ、丁寧に教えてくれました。</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
