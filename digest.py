@@ -52,6 +52,12 @@ MODEL = os.environ.get("MODEL", "claude-opus-4-8")
 # 出力先 (GitHub Pages は docs/ を公開する設定にする)
 DOCS_DIR = os.path.join(os.path.dirname(__file__), "docs")
 
+# 重複防止: 過去 N 日分の記事と被らないように論文を除外する
+HISTORY_DAYS = int(os.environ.get("HISTORY_DAYS", "20"))
+
+# タイムゾーン: 配信日時の判定は JST で行う (GitHub Actions は既定で UTC)
+JST = timezone(timedelta(hours=9))
+
 # 追いたい技術領域。ここを書き換えれば興味の方向が変わる。
 INTERESTS = """
 - 大規模言語モデルの新しいアーキテクチャ・学習手法 (attention 改良, MoE, 状態空間モデルなど)
@@ -122,6 +128,56 @@ def fetch_entries():
 
     print(f"[info] 収集: {len(items)} 件", file=sys.stderr)
     return items
+
+
+# ---------------------------------------------------------------------------
+# 1.5. 重複防止 (docs/ の過去記事から紹介済み論文 URL を抽出)
+# ---------------------------------------------------------------------------
+
+def extract_recent_paper_urls():
+    """docs/ 内の最新 HISTORY_DAYS 日分の記事 HTML から、
+    紹介済み論文の URL を抽出して set で返す。"""
+    if not os.path.isdir(DOCS_DIR):
+        return set()
+
+    # YYYY-MM-DD.html を新しい順に並べて上位 N 件を対象に
+    files = []
+    for fn in os.listdir(DOCS_DIR):
+        m = re.match(r"(\d{4}-\d{2}-\d{2})\.html$", fn)
+        if m:
+            files.append((m.group(1), os.path.join(DOCS_DIR, fn)))
+    files.sort(reverse=True)
+    files = files[:HISTORY_DAYS]
+
+    urls = set()
+    for _, path in files:
+        try:
+            with open(path, encoding="utf-8") as f:
+                txt = f.read()
+            # paper-card 内の <a href="...">原文 →</a> を拾う
+            for m in re.finditer(r'href="(https?://[^"]+)"[^>]*>\s*原文', txt):
+                urls.add(m.group(1))
+        except Exception as e:
+            print(f"[warn] {path} 読み込み失敗: {e}", file=sys.stderr)
+
+    print(f"[info] 過去 {len(files)} 日分から {len(urls)} 件の論文を除外対象に",
+          file=sys.stderr)
+    return urls
+
+
+def _arxiv_id(url):
+    """arXiv URL から論文 ID だけ抽出して正規化。
+    abs / pdf やバージョン違いの URL を同一視するため。"""
+    m = re.search(r"arxiv\.org/(?:abs|pdf)/(\d+\.\d+)", url or "")
+    return f"arxiv:{m.group(1)}" if m else (url or "")
+
+
+def filter_already_seen(items, seen_urls):
+    """既に紹介した論文を除外。"""
+    seen_ids = {_arxiv_id(u) for u in seen_urls}
+    fresh = [it for it in items if _arxiv_id(it["link"]) not in seen_ids]
+    print(f"[info] 重複除外: {len(items)} → {len(fresh)} 件", file=sys.stderr)
+    return fresh
 
 
 # ---------------------------------------------------------------------------
@@ -424,14 +480,23 @@ def main():
         print(f"[error] 環境変数が未設定: {', '.join(missing)}", file=sys.stderr)
         sys.exit(1)
 
-    date_str = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d")
+    # 日付は JST 基準 (GitHub Actions は UTC で動くため明示的に変換)
+    date_str = datetime.now(JST).strftime("%Y-%m-%d")
 
     items = fetch_entries()
     if not items:
         post_discord_empty(date_str)
         return
 
-    paper = select_one(items)
+    # 過去 HISTORY_DAYS 日分の記事と被らないように除外
+    seen_urls = extract_recent_paper_urls()
+    fresh_items = filter_already_seen(items, seen_urls)
+    if not fresh_items:
+        print("[info] 新規論文なし。配信スキップ。", file=sys.stderr)
+        post_discord_empty(date_str)
+        return
+
+    paper = select_one(fresh_items)
 
     print("[info] 記事生成中... (モデル: %s)" % MODEL, file=sys.stderr)
     article = generate_article(paper)
