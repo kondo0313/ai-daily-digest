@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-06-01</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-06-01</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #計算理論 #ChainOfThought #新人研究者向け</div>
+    <h1 class="headline">「考える時間」より「覚える容量」が鍵だった：CoTとループ型Transformerをメモリ予算で分離する</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-06-01 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Chain-of-Thought and Compressed Looped Transformers: A Memory-Budget Separation</div>
+      <div class="pc-row">
+        <span>著者情報は原論文を参照（arXiv プレプリント）</span>
+        <span>arXiv cs.LG ・ 投稿年月不明</span>
+        <a href="https://arxiv.org/abs/2605.30757">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>はじめに：『もっと考えさせれば賢くなる』は本当か？</h2>
+<p>最近のAIでは、モデルそのものを大きくしなくても、<strong>推論のときに計算量を増やす</strong>ことで賢くする工夫が盛んです。代表が<span class="term">Chain-of-Thought（思考の連鎖, CoT）</span>——答える前に途中の考えをテキストで書き出させる手法ですね。もうひとつ、似た発想に<span class="term">ループ型Transformer</span>があります。これは同じネットワークを何回もぐるぐる回して、計算を深くする手法です。</p>
+<p>どちらも『推論時に計算を増やす』点では同じに見えます。でもこの論文は、両者には<strong>決定的な違いがある</strong>と主張します。その違いとは『何を、どれだけ覚えていられるか』。つまり<strong>メモリ（記憶容量）</strong>です。</p>
+<div class="pull">test-time推論で本当に効くのは『計算時間』ではなく『持続する書き換え可能なメモリ』の大きさである。</div>
+<h2><span class="n">2</span>背景：状態をどこに置くか問題</h2>
+<p>両手法の違いを、たとえ話で整理しましょう。計算を『暗算で長い問題を解く作業』だと思ってください。</p>
+<p><strong>CoT</strong>は、途中式を紙に書きながら解くタイプです。書いたメモはずっと残り、必要なら後で読み返せます。生成したトークンが文脈（コンテキスト）に積み上がっていくので、計算が進むほど『使えるメモ欄』も増えていきます。</p>
+<p>一方<strong>ループ型Transformer</strong>は、頭の中（隠れ状態, hidden activations）だけで考え続けるタイプです。紙には書かず、頭の中の限られた作業領域を上書きしながら進みます。これが速くて省メモリな反面、覚えておける情報量に上限が生まれます。</p>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>CoTは状態を『外（トークン列）』に、ループは状態を『内（隠れ表現）』に持つ。この置き場所の違いが、後で計算理論レベルの差になって効いてきます。</div>
+<h2><span class="n">3</span>3つのメモリ方式を比べる</h2>
+<p>論文は記憶のしかたを3つに分けて比較します。ここが議論の土台です。</p>
+<div class="step"><span class="si">方式A</span><p>圧縮ラテントループ（compressed latent loop）：固定サイズの小さな隠れ状態だけを使い回す。最も省メモリ。</p></div><div class="step"><span class="si">方式B</span><p>フル系列状態ループ（full sequence-state loop）：入力の各位置すべてに状態を持つ。実質的にメモが豊富な領域。</p></div><div class="step"><span class="si">方式C</span><p>CoTスクラッチパッド：生成トークンとして状態を外に書き出す。長く書くほどメモが増える。</p></div>
+<p>ポイントは、方式Aだけが『メモリが固定で増えない』ことです。方式Bと方式Cは、入力や生成が増えれば使える記憶も増えていく『メモリ豊富』な領域にいます。</p>
+<h2><span class="n">4</span>中心的な主張：ループを長く回しても『メモ欄』は増えない</h2>
+<p>この論文の主結果はとてもシャープです。<strong>圧縮ループは、繰り返し回数を増やしても、その表現力は『繰り返し状態のサイズ』で頭打ちになる</strong>、というもの。</p>
+<p>直感はこうです。たとえ100周ぐるぐる回しても、毎周持ち越せる情報が『黒板1枚ぶん』しかなければ、トータルで覚えていられるのはやっぱり黒板1枚ぶんです。回した回数だけ計算（書いては消す作業）は増えますが、<strong>同時に保持できる情報量＝作業領域は増えません</strong>。</p>
+<div class="pull">ループを長く回すのは『計算を足す』ことであって、『成長するメモ帳を作る』ことではない。</div>
+<p>つまり小さな繰り返し状態を持つループは、何ステップ回しても本質的に<strong>small-space reasoner（省メモリな推論器）</strong>のままだ、というわけです。</p>
+<h2><span class="n">5</span>計算理論からの分離：P完全問題は解けない</h2>
+<p>ここで論文は計算量理論を持ち出します。少し噛み砕きます。</p>
+<p><span class="term">logspace（対数領域）</span>とは『入力サイズの対数くらいの作業メモリしか使わない計算』を指します。圧縮ループは状態が固定サイズなので、まさにこの省メモリな世界の住人です。</p>
+<p>一方<span class="term">P完全問題</span>とは、『多項式時間で解ける問題のなかで一番手ごわい部類』で、本質的に逐次的（並列化や省メモリ化が難しい）と考えられている問題群です。</p>
+<p>標準的な複雑性仮定（おおざっぱに言えば『省メモリな計算では本質的に逐次的な問題は解けないだろう』という広く信じられた予想）のもとでは、<strong>圧縮ループはlogspace還元でP完全な問題を判定できない</strong>。これに対し、<strong>多項式長のCoTは解ける</strong>。これが理論的な『分離』です。</p>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>『仮定のもとで』という条件は誠実に押さえておきましょう。これは未解決問題（logspace ≠ P など）に依存した結果で、無条件に証明されたわけではありません。</div>
+<h2><span class="n">6</span>なぜCoTだけ強いのか：成長するメモ帳</h2>
+<p>CoTが強いのは、生成トークンが文脈に残り続けるからです。N個のトークンを書けば、N個ぶんの記憶を後から参照できる。つまり<strong>書けば書くほどメモ帳が伸びる</strong>。これが圧縮ループとの決定的な差です。</p>
+<p>そして重要なのは、この分離が<strong>圧縮ループ特有</strong>だという点。方式B（フル系列状態ループ）は入力の全位置に状態を持つので、CoTに近い『メモリ豊富』な領域にいます。だからフルループは省メモリの呪縛から自由で、CoTスクラッチパッドに近い能力を持てます。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>『計算量（時間）』と『空間（メモリ）』は別資源です。時間を増やしても空間の壁は破れない——アーキテクチャを評価するときは、この2つを分けて考えるクセをつけると見通しが良くなります。</div>
+<h2><span class="n">7</span>実験：ポインタ追跡と連想想起で『予算』を可視化</h2>
+<p>理論だけでなく、論文は2種類のタスクで実証的にこの『メモリ予算』の見方を示します。</p>
+<p>ひとつは<strong>ポインタ追跡（pointer-chasing）</strong>。『AはBを指し、BはCを指し…』とリンクをたどっていくタスクで、途中の位置を覚え続ける必要があります。もうひとつは<strong>連想想起（associative recall）</strong>。『このキーに対応する値は何だっけ？』と記憶から引き出すタスクです。</p>
+<p>これらを条件を変えて掃引（sweep）した結果、性能は<strong>持続状態の予算（保持できるメモリ量）がタスクの作業メモリ需要に合っているか</strong>に強く左右された、と報告されています。メモリ予算が足りなければ、いくらループを回しても解けない——理論の主張が実際の挙動として現れたわけです。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 共通の固定モデル f を、記憶のしかただけ変えて回す</span></div><div class="ln"><span class="no">1</span><span class="ct">f = <span class="fn">load_fixed_model</span>()</span></div><div class="ln comment"><span class="no"></span><span class="ct"># 方式A: 圧縮ループ（状態は小さく固定）</span></div><div class="ln"><span class="no">2</span><span class="ct">h = <span class="fn">small_state</span>()<span class="badge">①</span></span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="kw">for</span> t <span class="kw">in</span> range(many_steps):</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>h = f(h)   <span class="st"># 上書き。容量は増えない</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># 方式C: CoT（書いたメモが残り、増えていく）</span></div><div class="ln"><span class="no">5</span><span class="ct">tape = []<span class="badge">②</span></span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="kw">for</span> t <span class="kw">in</span> range(poly_len):</span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="ind"></span>tok = f(tape)</span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="ind"></span>tape.append(tok)  <span class="st"># メモ帳が成長する</span></span></div></div><div class="code-cap">3方式の『メモリ予算』を比べる擬似コード（概念図）</div>
+<p>①では状態 h を毎回上書きするだけなので、ループ回数を増やしても保持容量は一定。②では tape にトークンが追加され続け、書くほど参照可能な記憶が増えます。この差が『分離』の正体です。</p>
+<h2><span class="n">8</span>新規性と意義</h2>
+<p>この論文の貢献は、test-time推論を『計算をどれだけ足したか』ではなく『どれだけ記憶を持ち運べるか』という<strong>メモリ予算の観点</strong>で統一的に捉え直し、しかも計算量理論で厳密に分離した点にあります。</p>
+<div class="stats"><div class="stat"><div class="v">3方式</div><div class="k">比較した記憶レジーム（圧縮ループ／フル系列ループ／CoT）</div></div><div class="stat"><div class="v">P完全</div><div class="k">圧縮ループが（仮定下で）解けないとされる問題クラス</div></div><div class="stat"><div class="v">2タスク</div><div class="k">検証に使った系統的スイープ（ポインタ追跡・連想想起）</div></div></div>
+<div class="pull">『考える時間を増やす』だけでは越えられない壁がある。越えるには『持続する書き換え可能なメモリ』を増やす設計が要る。</div>
+<h2><span class="n">9</span>意義と限界：誠実に押さえる</h2>
+<div class="step"><span class="si">限界1</span><p>理論結果は標準的な複雑性仮定（logspaceとPの分離など未解決問題）に依存する。無条件の証明ではない。</p></div><div class="step"><span class="si">限界2</span><p>分離は『圧縮ループ』に固有。フル系列状態ループには当てはまらず、現実のモデルがどちらに近いかは設計次第。</p></div><div class="step"><span class="si">限界3</span><p>実験はポインタ追跡・連想想起という統制された設定で、実世界の複雑なタスクへの一般化は今後の課題。</p></div><div class="step"><span class="si">限界4</span><p>『多項式長CoTなら解ける』は能力の上限を示すもので、学習で実際にその能力に到達できるかは別問題。</p></div>
+<h2><span class="n">10</span>新人研究者へのひとこと</h2>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>アーキテクチャを比べるとき、つい『パラメータ数』や『計算量（FLOPs）』に目が行きがちです。でもこの論文は、<strong>メモリ（状態の置き場所とサイズ）</strong>という第3の軸の大切さを教えてくれます。新しい推論手法を見たら『これは状態をどこに、どれだけ持つ設計か？』と問う習慣をつけると、本質が見えやすくなります。</div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>『遅延（latency）を減らしたいから隠れ状態にまとめて圧縮しよう』という設計はよくありますが、この論文はそこにトレードオフ——圧縮すると解ける問題クラスが狭まる可能性——があると警告しています。速度と能力のバランスを、計算理論の視点から見直してみてください。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
