@@ -90,8 +90,8 @@ h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
   </div>
 
   <div class="page">
-    <div class="tags">#AI #論文解説 #Transformer #ChainOfThought #計算理論 #新人研究者向け</div>
-    <h1 class="headline">「考える時間」より「覚えておく場所」が大事？ ループTransformerとChain-of-Thoughtをメモリで斬る理論研究</h1>
+    <div class="tags">#AI #論文解説 #ChainOfThought #計算量理論 #新人研究者向け</div>
+    <h1 class="headline">「長く考える」だけでは賢くならない？ — 思考の連鎖とループTransformerをメモリ予算で斬る</h1>
 
     <div class="author">
       <div class="avatar">AI</div>
@@ -105,50 +105,52 @@ h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
       <div class="pc-label">本日の論文</div>
       <div class="pc-title">Chain-of-Thought and Compressed Looped Transformers: A Memory-Budget Separation</div>
       <div class="pc-row">
-        <span>著者情報は公開情報の範囲で未確認（arXiv 掲載）</span>
-        <span>arXiv cs.LG ・ 投稿年月は要確認</span>
+        <span>著者情報は原文に明記なし（arXiv プレプリント）</span>
+        <span>arXiv cs.LG ・ 投稿年月不明</span>
         <a href="https://arxiv.org/abs/2605.30757">原文 →</a>
       </div>
     </div>
 
     <div class="content">
-<h2><span class="n">1</span>「もっと考えさせる」だけでは賢くならない？</h2>
-<p>最近のAIでは、モデルそのものを大きくする代わりに「推論のときにもっと計算させる」というアプローチが人気です。代表が<strong>Chain-of-Thought（思考の連鎖）</strong>、つまり「途中の考えを文章として書き出させる」やり方ですね。もう一つは<span class="term">ループTransformer</span>、同じネットワークを何度もぐるぐる回して答えを練り上げる方式です。</p>
-<p>どちらも「テスト時の計算量（test-time computation）」を増やす点では似ています。でもこの論文は、両者の本質的な違いは<strong>計算量ではなく「何を覚えているか（メモリ）」だ</strong>と主張します。今日はこの主張を、新人研究者のみなさんと一緒にやさしく読み解いていきましょう。</p>
-<div class="pull">テスト時推論で本当に効いているのは『どれだけ考えたか』ではなく、『どれだけの作業メモリを持ち越せるか』である。</div>
-<h2><span class="n">2</span>3つの“記憶のしかた”を比べる</h2>
-<p>論文は記憶の持ち方を3つの方式に整理します。たとえ話で言うと、計算という作業をするときの「メモ帳の大きさ」の違いです。</p>
-<div class="step"><span class="si">方式A</span><p>圧縮ループ（compressed latent loop）：固定サイズの小さな隠れ状態にだけ途中経過を詰め込み、それを次のループに渡す。＝小さな付箋1枚で延々と計算する人。</p></div><div class="step"><span class="si">方式B</span><p>全系列ループ（full sequence-state loop）：入力の全位置それぞれに状態を持ち、ループのたびに全部更新する。＝入力の長さぶんだけメモ欄がある人。</p></div><div class="step"><span class="si">方式C</span><p>Chain-of-Thoughtのスクラッチパッド：途中の考えをトークンとして書き出し、それが文脈に残り続ける。＝計算するたびにノートにどんどん書き足していく人。</p></div>
-<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>ポイントは「永続的かつ可変なメモリ（persistent mutable memory）」。Chain-of-Thoughtは書いたトークンが消えずに残る＝メモリが増えていく。圧縮ループは状態のサイズが固定＝何周回してもメモ帳は1枚のまま。</div>
-<h2><span class="n">3</span>主結果：圧縮ループは『長く回しても賢くならない』</h2>
-<p>この論文の中心的な主張はとてもシャープです。<strong>圧縮ループは、ぐるぐる回す回数を増やしても、覚えておける情報の量（再帰状態のサイズ）は増えない</strong>。だから計算時間は増えても、メモ帳が広がるわけではないのです。</p>
-<p>たとえるなら、付箋1枚しか持っていない人に「もっと時間をかけていいよ」と言っても、扱える情報量は付箋1枚ぶんのまま、ということ。時間（計算量）と空間（メモリ）は別物だ、という計算理論の古典的な感覚がそのまま効いてきます。</p>
-<div class="pull">圧縮ループは、何ステップ回しても『小さなメモリしか使えない推論者』のままである。</div>
-<h2><span class="n">4</span>計算理論で“分離”を厳密に言う</h2>
-<p>ここで論文は計算複雑性理論の言葉を借ります。少しだけ専門用語が出ますが、ゆっくり噛み砕きます。</p>
-<h3>P完全・logspace還元って何？</h3>
-<p><span class="term">P完全</span>な問題というのは、ざっくり言えば「効率よく解けはするけれど、ものすごく省メモリ（対数的なメモリ＝logspace）だけでは解けそうにない、本質的に逐次的・記憶を要する問題」のことです。「<span class="term">logspace還元</span>」は、ごく小さなメモリで問題を別の問題に変換する操作を指します。</p>
-<p>論文は、標準的な複雑性の仮定（おおよそ『小メモリのクラスとPは違う』という広く信じられている仮説）のもとで、<strong>圧縮ループ＝小メモリの推論者は、logspace還元のもとでP完全な問題を解けない</strong>ことを示します。一方で、<strong>多項式の長さのChain-of-Thoughtならそれらが解ける</strong>。これがタイトルにある「メモリ予算による分離（memory-budget separation）」です。</p>
-<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「2つの手法のどちらが強いか」を曖昧な実験勝負で語る代わりに、計算理論で“原理的にできる／できない”の境界線を引く——これが理論研究の腕の見せどころです。実験は境界線の存在を確認する役割を担います。</div>
-<h2><span class="n">5</span>分離は『圧縮された』ループだけの話</h2>
-<p>重要なのは、この弱点が<strong>圧縮ループに固有</strong>だという点です。方式B（全系列ループ）は入力の各位置に状態を持つので、実質的にスクラッチパッドに近い「メモリ豊富な世界」に住んでいます。だから全系列ループはChain-of-Thoughtに近い表現力を持ち、上記の壁にぶつかりません。</p>
-<p>つまり「ループだから弱い」のではなく、「状態を小さく圧縮しているから弱い」。設計上どこにメモリ予算を割り当てるかが、推論能力の天井を決めるわけです。</p>
-<h2><span class="n">6</span>擬似コードで3方式の違いを感じる</h2>
-<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 方式A: 圧縮ループ — 状態は固定サイズ h</span></div><div class="ln"><span class="no">1</span><span class="ct">h = <span class="fn">init_small_state</span>()  # サイズ固定<span class="badge">①</span></span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="kw">for</span> t <span class="kw">in</span> range(T):  # 長く回しても…</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="ind"></span>h = <span class="fn">model</span>(h)        # メモは増えない</span></div><div class="ln comment"><span class="no"></span><span class="ct"># 方式C: Chain-of-Thought — 書いたトークンが残り続ける</span></div><div class="ln"><span class="no">4</span><span class="ct">ctx = [prompt]<span class="badge">②</span></span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="kw">for</span> t <span class="kw">in</span> range(T):</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span>tok = <span class="fn">model</span>(ctx)</span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="ind"></span>ctx.append(tok)   # メモが増えていく</span></div></div><div class="code-cap">3つの方式で『状態』がどう持ち越されるかの違い（イメージ）</div>
-<p>①で初期化した状態 h は、何周ループしても大きさが変わりません。一方②のChain-of-Thoughtは ctx にトークンを足し続けるので、実質のメモリが時間とともに伸びていきます。この一点の違いが、原理的な能力差を生むのです。</p>
-<h2><span class="n">7</span>実験：ポインタ追跡と連想想起での確認</h2>
-<p>理論だけでなく、論文は<strong>制御された実験</strong>でこの『メモリ予算の見方』を裏づけます。使われるのは2種類のタスクです。</p>
-<div class="step"><span class="si">タスク1</span><p>ポインタ追跡（pointer-chasing）：『次はここ、その次はここ』と参照をたどっていく課題。途中の位置を覚え続ける作業メモリが要る。</p></div><div class="step"><span class="si">タスク2</span><p>連想想起（associative-recall）：『あのキーに対応する値は何だっけ』と思い出す課題。保持すべき対応関係の量がメモリ需要になる。</p></div><div class="step"><span class="si">観察</span><p>持続状態の予算（persistent-state budget）がタスクの作業メモリ需要に足りているかどうかで性能が大きく変わる。予算が足りないと、いくら回しても解けない。</p></div>
-<div class="stats"><div class="stat"><div class="v">3</div><div class="k">比較したメモリ方式（圧縮ループ／全系列ループ／CoT）</div></div><div class="stat"><div class="v">P完全</div><div class="k">圧縮ループが解けないと示された問題クラス</div></div><div class="stat"><div class="v">2種</div><div class="k">検証に使った制御タスク（ポインタ追跡・連想想起）</div></div></div>
-<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>これらは「おもちゃの課題」ですが、メモリ予算という変数だけを動かして因果を見られるよう設計されています。実応用の難問でいきなり比べるより、原因を切り分けやすいのが利点です。</div>
-<h2><span class="n">8</span>なぜ重要なのか — アーキテクチャと推論能力を橋渡しする</h2>
-<p>この研究の新しさは、<strong>「アーキテクチャの設計（状態をどれだけ持つか）」と「解ける問題のクラス」を理論で直結させた</strong>点にあります。test-time scaling（推論時に計算を増やす）が話題ですが、本論文は『計算を増やすだけでは越えられない壁がある。鍵はメモリだ』と冷静に線を引きます。</p>
-<div class="pull">テスト時推論の設計指針は『どれだけ回すか』より『どれだけの可変メモリを持ち越せるか』に置くべきだ。</div>
-<h2><span class="n">9</span>意義と限界 — 誠実に書いておく</h2>
-<div class="step"><span class="si">限界1</span><p>分離の主結果は『標準的な複雑性の仮定』に依存している。P≠（小メモリのクラス）といった未証明の前提が崩れれば、結論も変わりうる。</p></div><div class="step"><span class="si">限界2</span><p>P完全問題を解けない、という主張は『最悪ケース』の話。実務で出会うタスクが本当にその難しさを要求するかは別問題。</p></div><div class="step"><span class="si">限界3</span><p>実験はポインタ追跡や連想想起という制御課題が中心で、現実の大規模LLMでの自然言語推論をそのまま保証するものではない。</p></div><div class="step"><span class="si">限界4</span><p>『圧縮ループは弱い』は固定サイズ状態の話であり、状態サイズを増やせば能力の天井も上がる。設計の選択次第という条件付きの結論である。</p></div>
-<h2><span class="n">10</span>新人研究者へのひとこと</h2>
-<div class="tip-box"><div class="tb-label">💡 持ち帰ってほしい視点</div>新しい推論手法を見たら、まず『これは時間（計算量）を増やしているのか、空間（メモリ）を増やしているのか』と分解してみましょう。両者は混同されがちですが、できること・できないことの境界を決めるのはしばしば後者です。</div>
-<div class="note-box"><div class="nb-label">⚙️ 大きな文脈</div>Transformer・State Space Model・ループ型・Chain-of-Thought——形は違えど『持ち越す状態の大きさ』という共通軸で並べ直すと、設計のトレードオフが見通しやすくなります。本論文はその地図づくりの一歩であり、性能ハイプに流されず原理から考える良いお手本です。</div>
+<p>AI に「もっと考えさせる」方法は、いま大きく分けて2つあります。ひとつは<span class="term">Chain-of-Thought（思考の連鎖）</span>、もうひとつは<span class="term">ループTransformer</span>です。どちらも『推論時にモデルへ追加の計算時間を与える』という点では同じ。でも、この論文はそこに鋭い問いを投げかけます——『<strong>長く考える＝賢くなる、は本当か？</strong>』と。</p>
+<div class="pull">計算を増やしても、それを書き留める場所（メモリ）が小さいままなら、いくら長く回しても解ける問題は増えない。</div>
+<h2><span class="n">1</span>まず登場人物を整理しよう</h2>
+<p>この論文の主役は『状態（state）をどこに、どれだけ覚えておけるか』です。同じ計算量でも、覚え方が違うと表現力が変わる——というのが核心。3つの方式を比べます。</p>
+<h3>① Chain-of-Thought（スクラッチパッド方式）</h3>
+<p>途中の考えを<strong>生成したトークン</strong>としてどんどん書き出し、それが文脈（コンテキスト）に残り続けます。たとえるなら『<strong>計算用紙に途中式を書き足していく</strong>』イメージ。書けば書くほどメモ用紙は長くなり、後から読み返せます。</p>
+<h3>② 圧縮ループ（compressed latent loop）</h3>
+<p>同じモデルを何度もループさせますが、状態は<strong>固定サイズの隠れベクトル</strong>に押し込めて持ち回ります。たとえるなら『<strong>小さな1枚のメモ用紙を毎回上書きしながら使い回す</strong>』。ループを長く回しても、メモ用紙そのものは大きくなりません。これがこの論文の最重要キャラです。</p>
+<h3>③ フル系列状態ループ（full sequence-state loop）</h3>
+<p>ループですが、<strong>入力の全位置それぞれに状態を持ち回る</strong>タイプ。入力が長ければ持てる情報も多く、実質的にスクラッチパッドに近い『メモリ豊富な』世界に住んでいます。</p>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>ポイントは『計算時間』と『メモリ容量』を切り離して考えること。普段ごっちゃにしがちな2つの資源を、理論的にきれいに分けたのがこの研究の貢献です。</div>
+<h2><span class="n">2</span>なぜこの区別が大事なのか</h2>
+<p>直感的には『ループを2倍長く回せば2倍賢くなりそう』に感じます。でも著者はこう主張します——テスト時の推論で本当に効いているのは、<strong>書き換え可能で消えずに残るメモリ（persistent mutable memory）の大きさ</strong>だ、と。計算ステップを増やしても、状態を入れる箱が小さければ、解ける問題のクラスは広がらないのです。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>『時間計算量』と『空間計算量』は別物。アルゴリズムの世界では昔から、いくら時間をかけても使えるメモリ（空間）が小さいと解けない問題がある、と知られています。この論文はその古典的な視点を、現代のLLM推論に持ち込んだのです。</div>
+<h2><span class="n">3</span>主結果：圧縮ループは『小空間の推論者』に留まる</h2>
+<p>論文の中心的な定理を、なるべく噛み砕きます。<strong>圧縮ループは、その再帰状態（持ち回る隠れ状態）のサイズによって表現力が縛られる</strong>。再帰状態が小さければ、何ステップ回そうと『小空間（small-space）の推論者』のまま、というのが結論です。</p>
+<p>ここで計算量理論の言葉が出てきます。論文は『標準的な複雑性の仮定のもとで、こうした小さい状態のループは、<strong>logspace 帰着のもとで P-完全な問題を解けない</strong>』と述べます。一方、<strong>多項式長の Chain-of-Thought はそれが解ける</strong>。つまり両者のあいだに本質的な能力差（separation）があるわけです。</p>
+<h3>P-完全・logspace って何だろう</h3>
+<p>難しそうな用語ですが、たとえで掴みましょう。<strong>logspace（対数領域）</strong>は『使えるメモ帳がものすごく小さい』状態の比喩。問題のサイズが100万でも、メモは数十文字分しか持てないようなイメージです。<strong>P-完全な問題</strong>は『ざっくり言うと、本質的に“順番に積み重ねて”解く必要があり、小さなメモだけでは（おそらく）ショートカットできない』タイプの難問の代表選手。</p>
+<p>圧縮ループの『小さな隠れ状態』は、この“小さなメモ帳”に対応します。だから、いくら長く回しても（＝時間をかけても）、本質的に大きな作業メモリを要する P-完全問題には手が届かない——これが直感的な理解です。</p>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>『標準的な複雑性の仮定のもとで』という但し書きは重要です。P-完全問題が小空間で解けない、というのは未解決問題（L ≠ P かどうか）と関わるため、完全な証明ではなく“広く信じられている前提のもとで”成り立つ主張、と誠実に読むべきです。</div>
+<h2><span class="n">4</span>分離は『圧縮ループ』に固有のもの</h2>
+<p>面白いのは、この弱点が<strong>圧縮ループだけ</strong>の話だということ。フル系列状態ループは入力の各位置に状態を持つので、メモリが豊富な領域に住み、明示的なスクラッチパッド（Chain-of-Thought）に近い能力を持ちます。</p>
+<div class="stats"><div class="stat"><div class="v">固定サイズ</div><div class="k">圧縮ループの再帰状態。ここがボトルネックになる</div></div><div class="stat"><div class="v">多項式長</div><div class="k">Chain-of-Thoughtが伸ばせるスクラッチパッドの長さ</div></div><div class="stat"><div class="v">P-完全</div><div class="k">圧縮ループが（仮定のもと）解けない問題のクラス</div></div></div>
+<p>つまり3つの方式は、こう並びます——<strong>圧縮ループ（メモリ少）＜ フル系列状態ループ ≒ Chain-of-Thought（メモリ多）</strong>。違いを生むのは計算時間ではなく、持ち回れるメモリの量なのです。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># ① Chain-of-Thought：メモ用紙が伸びていく</span></div><div class="ln"><span class="no">1</span><span class="ct">scratchpad = []</span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="kw">for</span> step <span class="kw">in</span> range(T):</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="ind"></span>token = model(scratchpad)</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>scratchpad.append(token)<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># ② 圧縮ループ：固定サイズの状態を上書き</span></div><div class="ln"><span class="no">5</span><span class="ct">h = init_state()   <span class="kw"># サイズ固定</span></span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="kw">for</span> step <span class="kw">in</span> range(T):</span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="ind"></span>h = model(h)       <span class="kw"># 上書き＝増えない</span><span class="badge">②</span></span></div></div><div class="code-cap">3つのメモリ方式の違いを擬似コードで対比（概念図）</div>
+<p><strong>①</strong> では `scratchpad` がステップごとに伸び、過去の情報が残り続けます。<strong>②</strong> では `h` が毎回上書きされ、サイズが固定。ループ回数 `T` をどれだけ増やしても、覚えておける情報の総量は増えないことが見て取れます。</p>
+<h2><span class="n">5</span>実験：ポインタ追跡と連想記憶で確かめる</h2>
+<p>理論だけでなく、制御された実験でもこの『メモリ予算』の見方を裏づけています。使われたタスクは2つ。</p>
+<div class="step"><span class="si">TASK 1</span><p>ポインタ追跡（pointer-chasing）：『AはBを指す、BはCを指す……』と参照を辿っていく課題。途中の位置を覚えておく作業メモリが要る。</p></div><div class="step"><span class="si">TASK 2</span><p>連想記憶（associative recall）：『キーに対応する値を思い出す』課題。多くのペアを保持する記憶容量が試される。</p></div>
+<p>これらをスイープ（条件を細かく振って調べる実験）した結果、<strong>性能は『持ち回れる状態の予算が、タスクが必要とする作業メモリ量に見合っているか』に敏感</strong>でした。予算が足りればうまく解け、足りなければ崩れる。理論の主張と実験がきれいに対応しているわけです。</p>
+<h2><span class="n">6</span>何が新しく、なぜ重要か</h2>
+<div class="pull">テスト時推論の本質的な資源は『計算時間』ではなく『書き換え可能な持続メモリの大きさ』である——この一点を理論と実験で示したのが本研究の核心。</div>
+<p>Chain-of-Thought とループTransformer は、しばしば『どちらも追加計算を与える似た手法』として扱われがちでした。本論文はその2つを<strong>メモリ機構の違い</strong>という軸できれいに分離し、表現力の差を計算量理論の言葉で厳密に特徴づけました。『推論モデルをどう設計すべきか』を考える上での理論的な地図を一枚増やした、と言えます。</p>
+<h2><span class="n">7</span>意義と限界——誠実に</h2>
+<div class="step"><span class="si">限界 1</span><p>主結果は『標準的な複雑性の仮定』に依存する。L≠P など未解決の前提が崩れれば、結論も揺らぐ。完全な不可能性証明ではない点に注意。</p></div><div class="step"><span class="si">限界 2</span><p>理論は最悪ケース・漸近的な議論が中心。実用スケールの有限なモデルやデータで、どこまで効くかは別問題。</p></div><div class="step"><span class="si">限界 3</span><p>実験はポインタ追跡・連想記憶という制御課題が中心。自然言語の複雑な推論にそのまま当てはまるかは、さらなる検証が必要。</p></div><div class="step"><span class="si">限界 4</span><p>『圧縮ループは弱い』という結論は、状態サイズを十分大きくすれば回避できる。つまり“ループ自体がダメ”ではなく“メモリ予算次第”という条件付きの主張。</p></div>
+<h2><span class="n">8</span>新人研究者へのひとこと</h2>
+<div class="tip-box"><div class="tb-label">💡 持ち帰ってほしい視点</div>新しい推論手法を見たとき、『計算をどれだけ増やすか』だけでなく『<strong>状態をどこに、どれだけ持てるか</strong>』を必ず分けて問いましょう。両者を混同すると“長く回せば賢くなるはず”という誤解に陥ります。メモリ予算という補助線は、設計でも評価でも強力な武器になります。</div>
+<div class="note-box"><div class="nb-label">⚙️ 大きな文脈</div>計算量理論（時間と空間の分離）という古典の知恵が、最新のLLM推論の設計指針として蘇った好例です。流行のアーキテクチャを追うだけでなく、こうした基礎理論を学んでおくと、現象の“なぜ”を深く説明できるようになります。</div>
     </div>
   </div>
 
