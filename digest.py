@@ -58,8 +58,8 @@ HISTORY_DAYS = int(os.environ.get("HISTORY_DAYS", "20"))
 # タイムゾーン: 配信日時の判定は JST で行う (GitHub Actions は既定で UTC)
 JST = timezone(timedelta(hours=9))
 
-# 追いたい技術領域。ここを書き換えれば興味の方向が変わる。
-INTERESTS = """
+# --- LLM 中心の日 (奇数日) -------------------------------------------------
+LLM_INTERESTS = """
 - 大規模言語モデルの新しいアーキテクチャ・学習手法 (attention 改良, MoE, 状態空間モデルなど)
 - 推論能力・reasoning の理論的な進展
 - 効率化技術 (量子化, 蒸留, KVキャッシュ最適化, 推論高速化)
@@ -70,11 +70,42 @@ INTERESTS = """
 単なる応用事例・ベンチマーク報告だけのものは低め。
 """
 
-FEEDS = [
+LLM_FEEDS = [
     ("arXiv cs.LG", "https://arxiv.org/rss/cs.LG"),
     ("arXiv cs.CL", "https://arxiv.org/rss/cs.CL"),
     ("arXiv cs.AI", "https://arxiv.org/rss/cs.AI"),
 ]
+
+# --- フィジカル AI / ロボティクスの日 (偶数日) -----------------------------
+PHYSICAL_INTERESTS = """
+- ロボティクスの基盤モデル (VLA / Vision-Language-Action モデル, RT-X, OpenVLA 系)
+- マニピュレーション学習 (拡散ポリシー, 模倣学習, デモから学ぶ手法)
+- 自律行動・タスク計画 (LLM を使ったタスク分解, ロボットエージェント)
+- sim-to-real, ドメイン適応, データ収集の効率化
+- ヒューマノイド / 四足 / 操作器の制御学習
+- 触覚センサー・マルチモーダル知覚
+- world model のロボット応用
+身体を持つ AI が周囲と相互作用しながら賢くなる流れに関わる研究を高く評価する。
+純粋なシミュレーションだけのものや、応用事例だけのものは低め。
+理論的・手法的に新しいものを優先。
+"""
+
+PHYSICAL_FEEDS = [
+    ("arXiv cs.RO", "https://arxiv.org/rss/cs.RO"),
+    ("arXiv cs.LG", "https://arxiv.org/rss/cs.LG"),  # VLA や policy 学習は cs.LG にも多い
+    ("arXiv cs.AI", "https://arxiv.org/rss/cs.AI"),
+    ("arXiv cs.CV", "https://arxiv.org/rss/cs.CV"),  # マニピュレーションは vision がらみ
+]
+
+
+def pick_topic_for_today():
+    """JST の日付の "日" を見て、今日のトピックを決める。
+    奇数日 → フィジカル AI / 偶数日 → LLM。
+    返り値: (feeds, interests, label)"""
+    day = datetime.now(JST).day
+    if day % 2 == 1:
+        return PHYSICAL_FEEDS, PHYSICAL_INTERESTS, "🤖 Physical AI"
+    return LLM_FEEDS, LLM_INTERESTS, "🧠 LLM"
 
 ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
 ANTHROPIC_VERSION = "2023-06-01"
@@ -88,11 +119,11 @@ def _strip_tags(text):
     return re.sub(r"<[^>]+>", " ", text or "")
 
 
-def fetch_entries():
+def fetch_entries(feeds):
     cutoff = datetime.now(timezone.utc) - timedelta(hours=LOOKBACK_HOURS)
     items, seen = [], set()
 
-    for source_name, url in FEEDS:
+    for source_name, url in feeds:
         try:
             feed = feedparser.parse(url)
         except Exception as e:
@@ -239,7 +270,7 @@ def parse_json(raw):
 # 3. 今日の1本を選定
 # ---------------------------------------------------------------------------
 
-def select_one(items):
+def select_one(items, interests):
     catalog = "\n\n".join(
         f"[{i}] {it['title']}\n{it['abstract'][:600]}"
         for i, it in enumerate(items)
@@ -249,7 +280,7 @@ def select_one(items):
     user = f"""本日収集した AI 関連論文のリストです。
 
 読者の興味:
-{INTERESTS}
+{interests}
 
 リスト:
 {catalog}
@@ -298,7 +329,7 @@ ARTICLE_SPEC = r"""
 blocks に使えるブロック (順番・個数は内容に応じて自由、ただし読み物として自然に):
 - 見出し:        {"type":"h2","n":"1","text":"見出し文"}   (n は連番の文字列)
 - 小見出し:      {"type":"h3","text":"小見出し"}
-- 段落:          {"type":"p","text":"本文。**強調**と[[専門用語]]が使える"}
+- 段落:          {"type":"p","text":"本文。**強調**と[[専門用語|短い解説]]が使える"}
 - 引用(主張):    {"type":"pull","text":"記事の核心となる一文"}
 - 数値ハイライト: {"type":"stats","items":[{"v":"50.6%","k":"説明"},...]}  (2〜3個)
 - 手順/箇条:     {"type":"steps","items":[{"si":"STEP 1","text":"..."},...]}
@@ -324,6 +355,16 @@ code のルール:
 - "tokens": コード行の中身。t は plain/kw(予約語)/fn(関数名)/st(文字列)/nm(数値)。
 - "badge": その行が処理の節目なら丸数字(①②③...)。後の解説の見出しと対応させる。
 - 読みやすさ最優先。1行を詰め込みすぎない。重要な節目だけ badge を付ける。
+
+専門用語の扱い (重要):
+- 新人研究者が「初めて見る or うろ覚えな」専門用語が出てきたら、必ず [[用語|短い解説]] を使う。
+- 縦棒 | の右側に **15〜40 字程度のやさしい解説** を入れる。これがホバー/タップで表示される説明になる。
+- 例: [[KVキャッシュ|Transformerが過去の文脈を保持するメモリ。長文ほど膨らむ]]
+- 例: [[VLAモデル|Vision-Language-Action: 視覚と言語からロボットの行動を出力するモデル]]
+- 用語の選び方: 学部レベルの教科書に出てこないもの, 略語, 最近出てきた手法名, 分野特有の概念
+- 普通の日本語や、文中で十分説明してある語には付けない。
+- 1段落あたり多くて 2 個まで。多すぎると読みにくい。
+- 解説は文章を断ち切らない自然な短文で。「〜のこと」「〜する手法」など。
 
 記事の構成指針 (厳守ではないが目安):
 1. 導入(なぜこのテーマが重要か / 問いの提示)
@@ -442,7 +483,7 @@ def post_to_discord(article, filename, paper, date_str):
         "footer": {"text": f"{paper['source']} ・ {date_str}"},
     }
     payload = {
-        "content": f"**🤖 AI Daily Digest — {date_str}**　今朝の1本が届きました",
+        "content": f"**🤖 AI Daily Digest — {date_str}**　今朝の1本が届きました　[{paper.get('topic_label', '')}]",
         "embeds": [embed],
         "components": [],
     }
@@ -483,7 +524,11 @@ def main():
     # 日付は JST 基準 (GitHub Actions は UTC で動くため明示的に変換)
     date_str = datetime.now(JST).strftime("%Y-%m-%d")
 
-    items = fetch_entries()
+    # 今日のトピックを決定 (偶数日: フィジカル AI / 奇数日: LLM)
+    feeds, interests, topic_label = pick_topic_for_today()
+    print(f"[info] 今日のトピック: {topic_label}", file=sys.stderr)
+
+    items = fetch_entries(feeds)
     if not items:
         post_discord_empty(date_str)
         return
@@ -496,7 +541,8 @@ def main():
         post_discord_empty(date_str)
         return
 
-    paper = select_one(fresh_items)
+    paper = select_one(fresh_items, interests)
+    paper["topic_label"] = topic_label
 
     print("[info] 記事生成中... (モデル: %s)" % MODEL, file=sys.stderr)
     article = generate_article(paper)
