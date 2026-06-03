@@ -80,6 +80,36 @@ h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
 .tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
 .tip-box strong{color:var(--accent-ink);}
 .term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
 .footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
 @media(max-width:560px){
   .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
@@ -98,20 +128,41 @@ def esc(text):
 
 def _inline(text):
     """
-    本文中の簡易記法を HTML に変換。Claude には以下だけ使わせる:
-      **強調**        -> <strong>
-      [[用語]]        -> <span class="term">
+    本文中の簡易記法を HTML に変換。Claude には以下を使わせる:
+      **強調**              -> <strong>
+      [[用語|解説]]         -> ホバー/タップで解説が出る用語 (推奨形式)
+      [[用語]]              -> 解説なしの用語 (後方互換)
     それ以外はエスケープして安全に。
     """
     if text is None:
         return ""
-    # まずエスケープ
-    s = _html.escape(str(text))
-    # **bold**
     import re
+    # 先に [[用語|解説]] と [[用語]] を一時マーカに退避してからエスケープ
+    # (解説文内に '<' '>' があってもエスケープで保護される)
+    terms = []
+
+    def _stash(m):
+        terms.append((m.group(1), m.group(2) if m.lastindex >= 2 else None))
+        return f"\x00TERM{len(terms)-1}\x00"
+
+    s = re.sub(r"\[\[([^\[\]|]+?)\|([^\[\]]+?)\]\]", _stash, text)
+    s = re.sub(r"\[\[([^\[\]|]+?)\]\]", _stash, s)
+    # 通常エスケープ
+    s = _html.escape(s)
+    # **bold**
     s = re.sub(r"\*\*(.+?)\*\*", r'<strong>\1</strong>', s)
-    # [[term]]
-    s = re.sub(r"\[\[(.+?)\]\]", r'<span class="term">\1</span>', s)
+    # マーカを安全な HTML に展開
+    for i, (term, desc) in enumerate(terms):
+        term_html = _html.escape(term)
+        if desc:
+            desc_html = _html.escape(desc)
+            chip = (f'<span class="term-tip" tabindex="0">'
+                    f'{term_html}'
+                    f'<span class="tip">{desc_html}</span>'
+                    f'</span>')
+        else:
+            chip = f'<span class="term">{term_html}</span>'
+        s = s.replace(f"\x00TERM{i}\x00", chip)
     return s
 
 
