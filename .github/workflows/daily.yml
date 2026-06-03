@@ -2,7 +2,9 @@ name: AI Daily Digest
 
 on:
   schedule:
-    - cron: "17 20 * * *"
+    # JST 月〜金の朝 5:17 のみ実行 (UTC 日〜木の 20:17)
+    # 曜日: 0=日 1=月 2=火 3=水 4=木 5=金 6=土
+    - cron: "17 20 * * 0-4"
   workflow_dispatch:
 
 permissions:
@@ -28,7 +30,7 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           SITE_BASE_URL: ${{ vars.SITE_BASE_URL }}
-          MODEL: "claude-opus-4-8"
+          MODEL: "claude-sonnet-4-6"
           LOOKBACK_HOURS: "30"
         run: python digest.py
 
