@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-06-03</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-06-03</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #WorldModel #VLA #新人研究者向け</div>
+    <h1 class="headline">ロボットが「やる前に未来を想像する」――行動と映像をひとつにした世界モデル τ₀-WM</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-06-03 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">τ₀-WM: A Unified Video-Action World Model for Robotic Manipulation</div>
+      <div class="pc-row">
+        <span>著者情報は公開情報からは特定できず（arXiv プレプリント）</span>
+        <span>arXiv cs.RO ・ 投稿年月不明</span>
+        <a href="https://arxiv.org/abs/2606.01027">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>なぜ「未来を想像できるロボット」が必要なのか</h2>
+<p>人間がコップを取るとき、私たちは無意識に「この角度で手を出すと倒れるかも」と一瞬だけ未来をシミュレーションしています。ロボットにも同じことをさせたい――これがこの論文の出発点です。</p>
+<p>これまでのロボット制御は、観測を入力して行動を出力する<span class="term-tip" tabindex="0">VLAモデル<span class="tip">Vision-Language-Action: 視覚と言語からロボットの行動を直接出力するモデル</span></span>が主流でした。しかしこの方式は「行動を出す」ことは得意でも、「その行動の結果どうなるか」を事前に評価するのが苦手です。</p>
+<div class="pull">行動を生成するだけでなく、実行前にその結果を映像として想像し、良し悪しを採点する――これを一つのモデルで実現したのが τ₀-WM です。</div>
+<h2><span class="n">2</span>背景：VLAと世界モデルは別々に研究されてきた</h2>
+<p>近年は<span class="term-tip" tabindex="0">世界モデル<span class="tip">world model: 環境の未来状態を予測する内部シミュレータ</span></span>という考え方が注目されています。映像を見て「次に何が起こるか」を予測できれば、ロボットは頭の中でリハーサルできるからです。</p>
+<p>ただし従来は、行動を出す『政策モデル』と未来を予測する『世界モデル』が別々に作られがちでした。τ₀-WM の新しさは、この両者を<strong>一つの共有バックボーン</strong>にまとめた点にあります。</p>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>政策（policy）とは「状況に応じてどう動くかを決めるルール」のこと。強化学習でもよく出てくる中心概念です。</div>
+<h2><span class="n">3</span>手法の全体像：1つの背骨に2つの顔</h2>
+<p>τ₀-WM の土台は<span class="term-tip" tabindex="0">ビデオ拡散モデル<span class="tip">動画をノイズから少しずつ復元する形で生成する生成モデル</span></span>です。この共有バックボーンの上に、用途の違う2つの『インターフェース（顔）』が乗っています。</p>
+<div class="step"><span class="si">顔①</span><p>Video Action Model：複数視点の観測・言語指示・ロボットの状態から、未来の映像と連続的な行動チャンク（ひとまとまりの動作列）を同時に予測する。</p></div><div class="step"><span class="si">顔②</span><p>Action-conditioned Video Simulator：候補となる行動を入力すると、その行動を実行した場合の未来映像を生成し、タスクの進み具合を密に採点する。</p></div>
+<p>つまり同じ背骨が、状況によって「行動を出す人」にも「結果を想像して採点する人」にも切り替わるわけです。一人二役、いえ一人三役と言ってもいいでしょう。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 観測から複数の行動候補をサンプリング</span></div><div class="ln"><span class="no">1</span><span class="ct">candidates = model.<span class="fn">sample_actions</span>(obs, instruction, state)<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># 各候補を再ノイズ除去の一貫性でランク付け</span></div><div class="ln"><span class="no">3</span><span class="ct">scores = model.<span class="fn">rank_by_consistency</span>(candidates)<span class="badge">②</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># 質の低い候補はシミュレータで修正</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="kw">for</span> c <span class="kw">in</span> candidates:</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span><span class="kw">if</span> scores[c] &lt; threshold:</span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="ind"></span><span class="ind"></span>c = model.<span class="fn">simulate_and_rectify</span>(c)<span class="badge">③</span></span></div><div class="ln"><span class="no">9</span><span class="ct"><span class="kw">return</span> <span class="fn">best</span>(candidates)</span></div></div><div class="code-cap">τ₀-WM の推論時の流れ（概念を擬似コードで表現）</div>
+<h2><span class="n">4</span>要素技術をやさしく分解する</h2>
+<h3>① 映像と行動を「同時に」予測する</h3>
+<p>普通の予測は「映像なら映像」「行動なら行動」と別々に学びます。τ₀-WM は未来の<span class="term-tip" tabindex="0">視覚潜在表現<span class="tip">画像を圧縮した数値ベクトル。ピクセルそのものより扱いやすい</span></span>と行動を一緒に予測します。両者を同時に学ぶことで、「この映像の未来になるには、この行動が必要」という対応関係が自然に身につくのです。</p>
+<h3>② 行動を入れると未来映像を回せるシミュレータ</h3>
+<p>顔②は、候補の行動を入れると未来の動画を『ロールアウト（先まで展開）』します。さらに、その映像から「タスクがどれくらい進んだか」を細かいスコアで返します。これは頭の中で何度もリハーサルして点数をつけるイメージです。</p>
+<h3>③ テスト時計算で「一番良い行動」を選ぶ</h3>
+<p>推論時には複数の行動候補をサンプルし、<span class="term-tip" tabindex="0">再ノイズ除去の一貫性<span class="tip">同じ行動に再びノイズを加えて復元したとき、結果がブレないかで信頼度を測る指標</span></span>でランク付けします。点数の低い候補はシミュレータで修正してから採用します。実行前に『下書きを何枚も描いて一番良いものを選ぶ』ような工夫です。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>学習時だけでなく推論時にも計算を増やして賢くする『test-time computation（テスト時計算）』は近年のホットな潮流。1回で答えを出さず、複数案を吟味させる発想です。</div>
+<h2><span class="n">5</span>学習データ：約27,300時間の多様な経験</h2>
+<p>このモデルは膨大かつ多様なデータで訓練されています。実機ロボットの遠隔操作、UMI スタイルの操作データ、一人称視点の人間の動画、そして失敗を含む試行軌跡まで含まれます。</p>
+<div class="stats"><div class="stat"><div class="v">27,300時間</div><div class="k">訓練に使われた総データ量（約）</div></div><div class="stat"><div class="v">4種類</div><div class="k">遠隔操作・UMI操作・人間動画・成功/失敗軌跡</div></div><div class="stat"><div class="v">2つ</div><div class="k">共有背骨上の相補的インターフェース</div></div></div>
+<p>重要なのは<span class="term-tip" tabindex="0">モダリティ別の教師マスク<span class="tip">データの種類ごとに、学習で使う情報を選択的にオン/オフする仕組み</span></span>です。人間動画には行動ラベルが無いなど、データごとに揃う情報が違うため、使える部分だけを学習に活かす工夫がされています。</p>
+<h2><span class="n">6</span>結果：長くて細かいタスクで強い</h2>
+<p>論文によれば、長い手順を要する<span class="term-tip" tabindex="0">ロングホライズン課題<span class="tip">多数のステップを順番にこなさないと完了しない長期的なタスク</span></span>や、精密な操作が必要なきめ細かいタスクで、関連する既存手法より高い性能を示したとされています。</p>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>アブストラクトには具体的な数値ベンチマークの値までは記載されていません。詳細なスコアは本文を確認する必要があります。</div>
+<h2><span class="n">7</span>新規性と、誠実に見るべき限界</h2>
+<div class="pull">政策学習・映像予測・行動評価という3つの役割を、一つの未来予測フレームワークに統合した点が核心の貢献です。</div>
+<p>一方で、新人研究者として冷静に押さえておきたい限界もあります。</p>
+<div class="step"><span class="si">限界1</span><p>映像生成ベースのシミュレータは計算が重く、推論時に複数候補を回すコストが実機のリアルタイム制御で課題になりうる。</p></div><div class="step"><span class="si">限界2</span><p>27,300時間という大量データが前提であり、同等の性能を小規模データで再現できるかは不明。</p></div><div class="step"><span class="si">限界3</span><p>アブストラクトには具体的な比較数値が示されておらず、どのベースラインにどれだけ勝ったかは本文での確認が必要。</p></div><div class="step"><span class="si">限界4</span><p>想像した未来映像が現実とずれる（世界モデルの予測誤差）場合、その採点も誤る可能性がある。</p></div>
+<h2><span class="n">8</span>新人研究者へのひとこと</h2>
+<p>この論文の面白さは、技術的な目新しさ以上に『身体を持つAIが、世界モデルによって賢くなる』という大きな流れを体現している点にあります。行動するモデルと未来を想像するモデルを分けず、ひとつの背骨で共有する――この設計思想自体が今後の身体性AIの一つの方向を示しています。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>『生成（予測）』と『評価』を同じモデルに兼ねさせると、データやパラメータを共有でき効率的になります。LLMでも『生成と検証の統合』は重要テーマ。分野を超えて応用できる発想なので、ぜひ自分のテーマに引き寄せて考えてみてください。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
