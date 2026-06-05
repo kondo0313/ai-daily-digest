@@ -46,8 +46,8 @@ DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL")
 SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "").rstrip("/")
 LOOKBACK_HOURS = int(os.environ.get("LOOKBACK_HOURS", "30"))
 
-# 記事の質がそのまま毎朝の教材の質になるので、既定は最上位モデル。
-MODEL = os.environ.get("MODEL", "claude-opus-4-8")
+# コスト重視で既定は Sonnet。記事の質を最優先したいなら "claude-opus-4-8" に変更。
+MODEL = os.environ.get("MODEL", "claude-sonnet-4-6")
 
 # 出力先 (GitHub Pages は docs/ を公開する設定にする)
 DOCS_DIR = os.path.join(os.path.dirname(__file__), "docs")
@@ -271,9 +271,23 @@ def parse_json(raw):
 # ---------------------------------------------------------------------------
 
 def select_one(items, interests):
+    import random
+
+    # レート制限・コスト対策: 最大 SELECT_MAX_ITEMS 件にランダムサンプリング
+    # arXiv の論文は投稿時刻順に並んでいて偏りが無いので、ランダム選出で十分。
+    SELECT_MAX_ITEMS = 150
+    SELECT_ABSTRACT_CHARS = 300
+
+    if len(items) > SELECT_MAX_ITEMS:
+        sample = random.sample(items, SELECT_MAX_ITEMS)
+        print(f"[info] 選定用サンプリング: {len(items)} → {SELECT_MAX_ITEMS} 件",
+              file=sys.stderr)
+    else:
+        sample = items
+
     catalog = "\n\n".join(
-        f"[{i}] {it['title']}\n{it['abstract'][:600]}"
-        for i, it in enumerate(items)
+        f"[{i}] {it['title']}\n{it['abstract'][:SELECT_ABSTRACT_CHARS]}"
+        for i, it in enumerate(sample)
     )
     system = ("あなたは AI 研究を追うシニアリサーチャーです。"
               "新人研究者が毎朝1本だけ学ぶのに最適な論文を選びます。")
@@ -291,9 +305,9 @@ def select_one(items, interests):
 形式: {{"index": 数値, "reason": "選定理由を一文"}}"""
     sel = parse_json(call_claude(system, user, max_tokens=1000))
     idx = sel.get("index", 0)
-    if not (isinstance(idx, int) and 0 <= idx < len(items)):
+    if not (isinstance(idx, int) and 0 <= idx < len(sample)):
         idx = 0
-    chosen = dict(items[idx])
+    chosen = dict(sample[idx])
     chosen["reason"] = sel.get("reason", "")
     print(f"[info] 選定: {chosen['title'][:70]}", file=sys.stderr)
     return chosen
@@ -543,6 +557,10 @@ def main():
 
     paper = select_one(fresh_items, interests)
     paper["topic_label"] = topic_label
+
+    # レート制限のクールダウン (選定で使ったトークンの枠を解放させる)
+    print("[info] レート制限回避のため 8秒待機...", file=sys.stderr)
+    time.sleep(8)
 
     print("[info] 記事生成中... (モデル: %s)" % MODEL, file=sys.stderr)
     article = generate_article(paper)
