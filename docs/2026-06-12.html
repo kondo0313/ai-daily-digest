@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-06-12</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-06-12</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #アーキテクチャ設計 #SSM #Transformer #新人研究者向け</div>
+    <h1 class="headline">「二次コストの呪い」を超えろ！SSM・線形注意・再帰型を横断比較し、xLSTMが勝つ理由を原理から解明</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-06-12 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">On Subquadratic Architectures: From Applications to Principles</div>
+      <div class="pc-row">
+        <span>詳細な著者情報は論文参照</span>
+        <span>arXiv cs.LG ・ 2025年</span>
+        <a href="https://arxiv.org/abs/2606.12364">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>なぜ「二次コスト問題」が現場を悩ませるのか</h2>
+<p>Transformerは現代の<span class="term-tip" tabindex="0">シーケンスモデリング<span class="tip">文章・音声・時系列など順序のあるデータを扱う機械学習の分野</span></span>の王者です。しかしその心臓部である<strong>自己注意機構（Self-Attention）</strong>には大きな欠点があります。入力の長さを `n` とすると、計算量とメモリが `n²`——つまり<strong>二乗に比例して膨らむ</strong>のです。文が2倍になれば、コストは4倍。長文・長い時系列・大規模コードの処理ではこれが痛烈な制約になります。</p>
+<p>そこで登場したのが「<strong>サブクワドラティック（二乗未満）アーキテクチャ</strong>」。計算量を `n` に対してより緩やかなスケールで抑えながら、Transformerと同等以上の性能を目指す設計群です。ただし、種類が多すぎてどれを選べばよいか分からない……というのが現場の本音でした。この論文はその混乱に正面から向き合います。</p>
+<h2><span class="n">2</span>比較対象の3つのアーキテクチャ</h2>
+<p>論文が取り上げるのは現在最も注目される3アーキテクチャです。それぞれのキャラクターを簡単に紹介しましょう。</p>
+<div class="step"><span class="si">xLSTM</span><p>古典的なLSTMを大幅に拡張した再帰型モデル。スカラーおよび行列メモリセルに「指数ゲーティング」を導入し、長距離依存を安定して記憶・修正できる設計になっている。</p></div><div class="step"><span class="si">Mamba-2</span><p><span class="term-tip" tabindex="0">State Space Model (SSM)<span class="tip">線形常微分方程式で系列を圧縮して扱う手法。連続信号処理の理論に基づく</span></span>の改良版。入力依存の選択的な状態更新が特徴で、言語・音声など幅広いドメインで実績がある。</p></div><div class="step"><span class="si">Gated DeltaNet</span><p><span class="term-tip" tabindex="0">線形注意<span class="tip">Softmaxの代わりにカーネル関数でAttentionを近似し計算量をO(n)に抑える手法</span></span>にデルタ則（誤差修正型の記憶書き換え）とゲーティングを組み合わせたモデル。連想記憶的な動作が期待される。</p></div>
+<h2><span class="n">3</span>どんな課題で比べたのか</h2>
+<p>「単純なベンチマークで勝っても意味がない」という問題意識から、論文は<strong>複雑な依存関係を要求する3つのタスク</strong>を設定しています。</p>
+<div class="step"><span class="si">タスク①</span><p>コードモデルの事前学習（code-model pre-training）：プログラムコードは変数スコープ・関数呼び出しなど長距離の構造的依存が密なため、状態追跡能力の試金石になる。</p></div><div class="step"><span class="si">タスク②</span><p>大規模LLMからのコードモデル蒸留（distillation）：<span class="term-tip" tabindex="0">知識蒸留<span class="tip">大きなモデルの出力分布を教師信号に使い、小さなモデルを訓練する手法</span></span>で、教師モデルの豊かな知識を引き継げるかを検証する。</p></div><div class="step"><span class="si">タスク③</span><p>時系列基盤モデルの事前学習（time-series foundation models）：センサーデータや金融時系列など、長い数値系列の傾向・周期を捉えられるかを問う。</p></div>
+<h2><span class="n">4</span>実験結果：xLSTMが最も優れた全体性能を達成</h2>
+<div class="pull">Across these settings, xLSTM delivers the strongest overall performance.</div>
+<p>3つのタスク全体を通じて、<strong>xLSTMが最も高い性能</strong>を示しました。Mamba-2もGated DeltaNetも強力な競合ですが、特に複雑な依存関係が必要なコード系タスクでxLSTMとの差が開く傾向がありました。論文はこの優位性が「偶然」ではなく<strong>設計原理の違いから生まれる</strong>と主張し、その理由を理論的に掘り下げています。</p>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>論文は具体的な精度数値を提示していますが、アブストラクトには個別数値が記載されていないため、本記事でも数値の創作は行いません。詳細は論文本文の実験セクションを参照してください。</div>
+<h2><span class="n">5</span>なぜxLSTMが強いのか：統一的な定式化からの分析</h2>
+<p>論文のもう一つの貢献は、3アーキテクチャを<strong>同一の数式フレームで書き直す「統一定式化」</strong>を提示したことです。これによって「どの部分が性能差を生んでいるか」を公平に比較できるようになりました。</p>
+<h3>注目ポイント①：状態追跡（State Tracking）</h3>
+<p>「状態追跡」とは、過去の情報を圧縮した<strong>内部記憶（状態ベクトル）</strong>を正しく保持・更新し続ける能力のことです。コードのスコープや時系列の傾向を正しく捉えるには、遠く離れたトークンの影響が今の状態にきちんと反映されていなければなりません。xLSTMは指数ゲーティングにより、この記憶の「積み重ね」と「保持」を柔軟にコントロールできます。</p>
+<h3>注目ポイント②：メモリ修正のダイナミクス</h3>
+<p><span class="term-tip" tabindex="0">ゲーティング機構<span class="tip">入力に応じてどの情報を記憶・忘却するかを制御する乗算的なスイッチ</span></span>は、古くからLSTMの強みでした。xLSTMはこれをさらに洗練させ、<strong>柔軟かつ安定したメモリ修正</strong>を実現します。論文の言葉を借りれば「more flexible and stable memory correction via its gating scheme」——ゲーティングの設計こそがxLSTMの優位性の根拠だと結論付けています。一方でMamba-2やGated DeltaNetのゲーティングは構造がやや異なり、複雑タスクでは修正精度が落ちやすいとされています。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方：ゲーティングはなぜ大事か</div>ゲーティングは「水道の蛇口」のようなものです。情報の流量を入力に応じて動的に調節することで、重要な情報は強く通し、不要な情報は絞ることができます。LSTM・GRU・Transformerのすべてに何らかのゲーティングが存在しますが、その<strong>設計の細部</strong>が長距離タスクの性能を大きく左右します。</div>
+<h3>注目ポイント③：制御実験による検証</h3>
+<p>「実際のタスクだけでは条件が複雑すぎて原因が分からない」という批判を先回りするように、論文は<strong>合成データによる長さ汎化タスク</strong>も実施しています。訓練より長いシーケンスを推論時に与えて、各モデルの状態追跡能力を純粋に測定する実験です。ここでもxLSTMが安定した性能を示し、実タスクの結果が設計原理によるものだという主張を裏付けています。</p>
+<h2><span class="n">6</span>手法の見取り図：統一定式化のイメージ</h2>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 共通フレーム：各ステップで「状態 S」を更新し、出力 y を計算する</span></div><div class="ln"><span class="no">1</span><span class="ct"><span class="kw">for</span> t <span class="kw">in</span> sequence:</span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># ① 入力に応じてゲート値を計算（ここが3者で最も異なる部分）</span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="ind"></span>gate = <span class="fn">compute_gate</span>(x_t)  <span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># ② ゲートで古い状態をどれだけ保持するか決定</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="ind"></span>S_forget = gate * S_prev<span class="badge">②</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># ③ 新しい情報（キーバリュー積）を加算してメモリを更新</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>S_new = S_forget + <span class="fn">outer</span>(k_t, v_t)<span class="badge">③</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># ④ クエリで状態を読み出して出力を生成</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span>y_t = q_t @ S_new<span class="badge">④</span></span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span>S_prev = S_new</span></div></div><div class="code-cap">3アーキテクチャの統一的な状態更新の擬似コード（論文の定式化をもとにしたイメージ）</div>
+<p>①のゲート計算が3アーキテクチャで最も異なる部分です。xLSTMは<strong>指数関数を使った安定した入力忘却ゲート</strong>を持ち、②での状態保持が柔軟。Mamba-2はSSMの線形ダイナミクスで状態を更新し、Gated DeltaNetは③のメモリ書き込みにデルタ則（誤差に比例した修正量）を採用します。同じ骨格を持ちながら、実装の差異が性能の差になる——これが統一定式化の面白いところです。</p>
+<h2><span class="n">7</span>この研究の新規性と重要性</h2>
+<div class="pull">xLSTMの優位性は、単なる実装の巧みさではなく「堅牢な状態追跡と記憶の蓄積」という設計原理に由来する。</div>
+<p>これまでのサブクワドラティック研究は「ベンチマークで何点取れるか」の競争になりがちでした。この論文は一歩引いて、<strong>「なぜ勝つのか」を原理レベルで問う</strong>理論的サーベイを提供しています。統一定式化によって設計原理を横断比較できる枠組みを作ったこと、そして「状態追跡とメモリ修正の安定性」という説明変数を特定したことが主要な貢献です。</p>
+<p>アーキテクチャ設計者にとっては「次に何を改良すべきか」の指針になり、応用研究者にとっては「コード・時系列などの複雑依存タスクにはxLSTMが有力」という選択基準になります。</p>
+<h2><span class="n">8</span>論文の意義と正直な限界</h2>
+<div class="step"><span class="si">意義①</span><p>サブクワドラティック設計の統一フレームを提供し、「どの設計原理が効くか」という問いに対して実験と理論の両面から答えた。</p></div><div class="step"><span class="si">意義②</span><p>コード事前学習・蒸留・時系列という3種の実用的タスクで検証しており、研究室の玩具問題に留まらない。</p></div><div class="step"><span class="si">意義③</span><p>合成タスクによる長さ汎化実験で、原理レベルの説明を対照実験で裏付けている。</p></div><div class="step"><span class="si">限界①</span><p>比較対象が3モデルに限定されており、Transformer-XL・Hyena・RetNetなど他の有力なサブクワドラティック手法は対象外。</p></div><div class="step"><span class="si">限界②</span><p>言語・コード・時系列に特化しており、画像・音声・マルチモーダルなど他のモダリティへの一般化は未検証。</p></div><div class="step"><span class="si">限界③</span><p>xLSTMが優位とはいえ、Transformerとのハイブリッド構成との比較は行われておらず、実際の大規模デプロイでの優位性は今後の課題。</p></div>
+<h2><span class="n">9</span>新人へのひとこと：「なぜ勝つか」を問える研究者になろう</h2>
+<div class="tip-box"><div class="tb-label">💡 大きな文脈：アーキテクチャ設計の「原理回帰」</div>ディープラーニングの世界では、新しいモデルが次々と登場して「SOTAを更新した！」という報告が溢れます。でも「なぜそのアーキテクチャが強いのか」を問う論文は意外と少ない。この論文が示すように、<strong>統一的な数式フレームで複数のモデルを比較し、差分を特定する</strong>というアプローチは、新人研究者が身につけるべき重要なスキルです。スコアボードの数字の奥に「設計原理」を見る目を養っていきましょう。</div>
+<p>サブクワドラティックアーキテクチャの競争はまだ続いています。Transformerが一強だった時代から、<strong>SSM・線形注意・拡張再帰型が並立する多様な時代</strong>へ。そのなかで「どの原理が本質的に大事か」を問い続けることが、次世代のモデル設計につながります。この論文はその問いを立てるための地図として、ぜひ手元に置いておきたい一本です。</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
