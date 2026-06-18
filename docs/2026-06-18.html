@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-06-18</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-06-18</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #SSM #量子化 #Mamba #効率化 #新人研究者向け</div>
+    <h1 class="headline">Mambaを1000分の1のデータで三値化できる！ゼロから学習不要のSSM量子化新手法</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-06-18 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Ternary Mamba: Grouped Quantization-Aware Training of W1.58A16 State Space Models</div>
+      <div class="pc-row">
+        <span>著者情報は公開情報から未確認</span>
+        <span>arXiv cs.LG ・ 2025年6月</span>
+        <a href="https://arxiv.org/abs/2606.18114">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>なぜ「エッジで動くSSM」が注目されているのか</h2>
+<p>スマートフォンやIoTデバイスなど、クラウドに頼れない「エッジ環境」でAIを動かしたいというニーズが急速に高まっています。<span class="term-tip" tabindex="0">SSM<span class="tip">State Space Model。シーケンスを線形時間で処理できる次世代アーキテクチャ</span></span>の代表格である<span class="term-tip" tabindex="0">Mamba-2<span class="tip">SSMの改良版。高速な推論と長文脈処理を両立する</span></span>は、従来の<span class="term-tip" tabindex="0">Transformer<span class="tip">注意機構を使う大規模言語モデルの主流アーキテクチャ</span></span>と比べて推論が高速という魅力を持ちます。しかし、モデルのパラメータを32ビットや16ビットの浮動小数点数で保持すると、メモリ使用量がかさんでエッジ機器には乗せられません。そこで注目されるのが「量子化」、つまりパラメータの精度を大胆に落としてモデルを小さくする技術です。</p>
+<p>本論文が挑むのは「<strong>1.58ビット三値量子化</strong>」という極限の圧縮です。各パラメータを -1、0、+1 の3値だけで表す（これが「ternary＝三値」）ことで、モデルのサイズを劇的に削減します。問題は、そこまで圧縮すると性能が大きく落ちてしまうこと。先行研究「<span class="term-tip" tabindex="0">Slender-Mamba<span class="tip">SSMを三値量子化するためにゼロから1500億トークンで学習した先行研究</span></span>」はこの問題を「ゼロから膨大なデータで鍛え直す」という力技で解決しましたが、<strong>1500億（150B）トークン</strong>という巨大なコストがかかりました。この論文は「それ、既存の学習済みモデルを出発点にすれば1000倍安くできるよ」と示した研究です。</p>
+<div class="pull">学習済みチェックポイントがあれば、ゼロから学習の1/1000のデータで三値SSMを実現できる。</div>
+<h2><span class="n">2</span>手法の全体像：3つの工夫を組み合わせる</h2>
+<p>手法の核心は「<strong>グループ化量子化対応学習（Grouped QAT）＋知識蒸留</strong>」の組み合わせです。料理に例えると、凄腕シェフ（FP16の元のモデル）の味を見ながら、弟子（三値モデル）が味付けの感覚を学ぶようなイメージです。弟子は食材を「塩を加える・何もしない・酢を加える」の3択しか使えない制約の中で、できる限り師匠の料理に近づけます。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 準備：教師モデルと生徒モデルを用意する</span></div><div class="ln"><span class="no">1</span><span class="ct">teacher = <span class="fn">load_fp16_pretrained</span>(&quot;Mamba-2-1.3B&quot;)<span class="badge">①</span></span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="fn">freeze</span>(teacher)  </span></div><div class="ln"><span class="no">3</span><span class="ct">student = <span class="fn">init_ternary_model</span>(teacher)<span class="badge">②</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># メイン学習ループ（約1億2千万トークン）</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="kw">for</span> batch <span class="kw">in</span> dataloader:</span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># グループ化三値量子化を適用して前向き計算</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span>w_ternary = <span class="fn">grouped_ternary_quantize</span>(student.weights)<span class="badge">③</span></span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span>out_s = <span class="fn">student_forward</span>(batch, w_ternary)</span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="ind"></span>out_t = <span class="fn">teacher_forward</span>(batch)</span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># 知識蒸留損失 + タスク損失を計算</span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="ind"></span>loss = <span class="fn">kd_loss</span>(out_s, out_t) + <span class="fn">task_loss</span>(out_s)<span class="badge">④</span></span></div><div class="ln"><span class="no">9</span><span class="ct"><span class="ind"></span><span class="fn">backward_and_update</span>(loss, student)</span></div></div><div class="code-cap">Ternary Mambaの学習ループ（概念的な擬似コード）</div>
+<h3>① 学習済みモデルを出発点にする（ウォームスタート）</h3>
+<p>ゼロから学習するのではなく、すでに良い表現を学んでいるFP16の<span class="term-tip" tabindex="0">Mamba-2 1.3B<span class="tip">13億パラメータを持つSSM。約2.6GBのメモリを消費する</span></span>を出発点にします。これにより、三値量子化という制約があっても「良い初期値」から出発できるので、少ないデータでも収束が速くなります。</p>
+<h3>②③ グループ化三値量子化</h3>
+<p>各パラメータを -1・0・+1 の3値に丸める際、単純に全体の平均でスケールを決めるのではなく、<strong>重みを小さなグループに分けて各グループごとにスケール（変換係数）を学習</strong>します。これはちょうど「クラス全員を一つの物差しで測るのではなく、身長帯ごとに別の目盛りの物差しを使う」ようなイメージです。グループ化することで、重みの分布の多様性に対応でき、精度の劣化を抑えられます。なお活性化（A）は16ビットのまま保持します（W1.58A16の意味）。</p>
+<h3>④ 知識蒸留で「先生の知識」を伝える</h3>
+<p><span class="term-tip" tabindex="0">知識蒸留<span class="tip">大きな教師モデルの出力分布を使って小さな生徒モデルを学習する手法</span></span>では、凍結したFP16教師モデルの出力を「正解」として、三値生徒モデルがその出力に近づくよう損失を計算します。単純に正解ラベルだけで学習するより、教師の「曖昧な確信度分布」を参照できるため、効率よく知識を受け継げます。</p>
+<h2><span class="n">3</span>この研究が発見した新しい落とし穴：ゼロ比崩壊</h2>
+<p>学習済みモデルからQATを行う際に、著者たちは<strong>「zero-ratio collapse（ゼロ比崩壊）」</strong>という新しい不安定現象を発見しました。これは、学習可能な<span class="term-tip" tabindex="0">量子化スケール<span class="tip">重みを量子化する際の変換係数。学習中に調整される</span></span>が誤った方向に更新され、ほとんどのパラメータが「0」に丸められてしまう現象です。モデルが「全員の答えは0」と言い始めるようなもので、表現力が一気に失われます。</p>
+<p>この崩壊はゼロから学習する設定（Slender-Mambaのような手法）では起きにくく、「学習済みチェックポイントからのQAT」に特有の現象です。さらに、<span class="term">Transformer</span>向けに有効な事後補正戦略をSSMに適用しようとしても、<strong>SSMが持つ再帰的な構造</strong>によってエラーが蓄積されるため機能しませんでした。これはSSMとTransformerの根本的なアーキテクチャの違いから来る重要な知見です。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方：量子化と再帰の相性問題</div>RNNやSSMのような再帰構造は、1ステップの量子化誤差が次のステップに引き継がれて蓄積していきます（誤差伝播の問題）。これはTransformerのように各ステップが独立しているアーキテクチャとは本質的に異なる難しさです。新しいアーキテクチャを量子化するときは「そのアーキテクチャ固有の誤差伝播特性」を考慮した方法を設計する必要がある、という教訓です。</div>
+<h2><span class="n">4</span>実験結果：たった4GPU時間で競争力ある精度を達成</h2>
+<p>実験では<span class="term">Mamba-2 1.3B</span>を対象に、7つのゼロショットタスクで平均精度を評価しています。比較対象はゼロから150Bトークンで学習した先行研究「Bi-Mamba」の48.4%です。</p>
+<div class="stats"><div class="stat"><div class="v">48.1%</div><div class="k">7タスク平均ゼロショット精度（提案手法、1億2千万トークンで達成）</div></div><div class="stat"><div class="v">3.61倍</div><div class="k">モデルサイズの圧縮率（2,687MB → 744MB）</div></div><div class="stat"><div class="v">4時間</div><div class="k">学習時間（シングルH100 GPU）</div></div></div>
+<p>Bi-Mambaの48.4%に対して本手法は48.1%と、±0.9ppの信頼区間の範囲内に収まっています。使ったデータ量はBi-Mambaの<strong>1/1000以下</strong>（150Bトークン → 102Mトークン）。しかも単一のH100 GPUで4時間という、研究者が試しやすい現実的なスケールで達成しています。</p>
+<h2><span class="n">5</span>この研究の新規性と意義</h2>
+<div class="pull">「三値SSMにはゼロからの高コスト学習が必要」という常識を覆した点が最大の貢献。</div>
+<div class="step"><span class="si">貢献 1</span><p>学習済みチェックポイントからのQATが三値SSMに有効であることを初めて実証した。</p></div><div class="step"><span class="si">貢献 2</span><p>「ゼロ比崩壊」という新しい量子化不安定現象を発見・命名・分析した。</p></div><div class="step"><span class="si">貢献 3</span><p>グループ化QATと知識蒸留の組み合わせがSSM圧縮に有効な処方箋であることを示した。</p></div><div class="step"><span class="si">貢献 4</span><p>Transformer向けの後処理補正がSSMには機能しない原因（再帰による誤差蓄積）を明らかにした。</p></div>
+<h2><span class="n">6</span>論文が認める限界と課題</h2>
+<div class="step"><span class="si">限界 1</span><p>評価はMamba-2 1.3Bの1サイズのみ。より大きい・小さいモデルへの汎化は未確認。</p></div><div class="step"><span class="si">限界 2</span><p>Bi-Mambaとの差（-0.3pp）は信頼区間内とはいえ、精度面での完全な同等性は主張できない。</p></div><div class="step"><span class="si">限界 3</span><p>ゼロ比崩壊への対処法は提案されているが、根本的な理論的解析は今後の課題として残る。</p></div><div class="step"><span class="si">限界 4</span><p>TransformerへのW1.58量子化（BitNet系）と違い、SSM特有の再帰構造への量子化設計はまだ発展途上。</p></div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ：W1.58とはどういう意味か</div>「W1.58」の1.58はlog₂(3)≈1.585から来ています。3値（-1, 0, +1）を表現するには理論上1.585ビット必要、という情報理論的な表記です。「A16」は活性化（Activation）を16ビット浮動小数点のまま保持することを意味します。完全に1ビットにしてしまうとさすがに精度が落ちすぎるので、重みだけ超圧縮して活性化は精度を保つのが現時点での実践的な落とし所です。</div>
+<h2><span class="n">7</span>新人研究者へのひとこと</h2>
+<p>この論文が教えてくれる大切なことは「<strong>既存の資産を活用しよう</strong>」というシンプルな発想の転換です。ゼロから学習するのが当たり前だと思われていた分野でも、「学習済みモデルを出発点にしたらどうか？」という問いを立てることで、コストを1000分の1に削減できました。研究でも実務でも、まず「ベースラインを疑ってみる」習慣は重要です。</p>
+<p>また、「ゼロ比崩壊」という新現象の発見は、<strong>既知の手法を新しい設定に適用したときに初めて見えてくるバグや不安定性に目を光らせることの重要性</strong>を示しています。TransformerでうまくいったことがSSMでは通用しない、という事実は、アーキテクチャの違いを深く理解することの大切さを改めて教えてくれます。新しいモデルを触るとき、「前のモデルとどこが構造的に違うか」を意識して考えてみてください。</p>
+<div class="tip-box"><div class="tb-label">💡 読んでおくと理解が深まる関連キーワード</div>【BitNet / BitNet b1.58】Transformerへの三値量子化研究（本論文はこれのSSM版に近い）。【Slender-Mamba】ゼロから学習する先行のSSM三値量子化研究。比較対象として何度も登場。【QAT vs PTQ】学習中に量子化を考慮するQAT（本論文の手法）と、学習後に量子化するPTQの違いも理解しておくと◎。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
