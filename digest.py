@@ -536,7 +536,11 @@ def main():
         sys.exit(1)
 
     # 日付は JST 基準 (GitHub Actions は UTC で動くため明示的に変換)
-    date_str = datetime.now(JST).strftime("%Y-%m-%d")
+    # JST 日曜に実行した場合は翌月曜の日付で生成（週末に月曜分を先行作成）
+    now_jst = datetime.now(JST)
+    if now_jst.weekday() == 6:  # 日曜
+        now_jst = now_jst + timedelta(days=1)
+    date_str = now_jst.strftime("%Y-%m-%d")
 
     # 今日のトピックを決定 (偶数日: フィジカル AI / 奇数日: LLM)
     feeds, interests, topic_label = pick_topic_for_today()

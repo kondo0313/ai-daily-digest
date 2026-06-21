@@ -2,9 +2,10 @@ name: AI Daily Digest
 
 on:
   schedule:
-    # JST 月〜金の朝 5:17 のみ実行 (UTC 日〜木の 20:17)
+    # JST 月〜金の朝 5:17 に実行 (UTC 日〜木の 20:17)
+    # 土曜 UTC 20:17 (= JST 日曜 5:17) に月曜分を先行生成
     # 曜日: 0=日 1=月 2=火 3=水 4=木 5=金 6=土
-    - cron: "17 20 * * 0-4"
+    - cron: "17 20 * * 0-5"
   workflow_dispatch:
 
 permissions:
