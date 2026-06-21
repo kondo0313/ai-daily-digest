@@ -44,7 +44,11 @@ from template import build_article_html, build_index_html
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL")
 SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "").rstrip("/")
-LOOKBACK_HOURS = int(os.environ.get("LOOKBACK_HOURS", "30"))
+
+# 月曜日 (JST) は週末分を含めて 78 時間さかのぼる（arXiv は週末に論文を公開しないため）
+_jst_now = datetime.now(timezone(timedelta(hours=9)))
+_default_lookback = 78 if _jst_now.weekday() == 0 else 30
+LOOKBACK_HOURS = int(os.environ.get("LOOKBACK_HOURS", str(_default_lookback)))
 
 # コスト重視で既定は Sonnet。記事の質を最優先したいなら "claude-opus-4-8" に変更。
 MODEL = os.environ.get("MODEL", "claude-sonnet-4-6")
