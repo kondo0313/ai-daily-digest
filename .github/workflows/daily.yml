@@ -31,7 +31,6 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           SITE_BASE_URL: ${{ vars.SITE_BASE_URL }}
           MODEL: "claude-sonnet-4-6"
-          LOOKBACK_HOURS: "30"
         run: python digest.py
 
       - name: Commit generated article
