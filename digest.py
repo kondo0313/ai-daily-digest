@@ -45,10 +45,9 @@ ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL")
 SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "").rstrip("/")
 
-# 月曜日 (JST) は週末分を含めて 78 時間さかのぼる（arXiv は週末に論文を公開しないため）
-_jst_now = datetime.now(timezone(timedelta(hours=9)))
-_default_lookback = 78 if _jst_now.weekday() == 0 else 30
-LOOKBACK_HOURS = int(os.environ.get("LOOKBACK_HOURS", str(_default_lookback)))
+# arXiv は週末（土日）に論文を公開しない。最大空白: 木曜バッチ公開(金曜00:00UTC)〜
+# 月曜UTC 20:17実行 = 92h以上。重複は docs/ の dedup で防ぐため 96h で統一。
+LOOKBACK_HOURS = int(os.environ.get("LOOKBACK_HOURS", "96"))
 
 # コスト重視で既定は Sonnet。記事の質を最優先したいなら "claude-opus-4-8" に変更。
 MODEL = os.environ.get("MODEL", "claude-sonnet-4-6")
