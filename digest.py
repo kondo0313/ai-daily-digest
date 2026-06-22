@@ -29,6 +29,7 @@ import re
 import json
 import time
 import html
+import xml.etree.ElementTree as ET
 from datetime import datetime, timezone, timedelta
 from email.utils import parsedate_to_datetime
 
@@ -122,6 +123,50 @@ def _strip_tags(text):
     return re.sub(r"<[^>]+>", " ", text or "")
 
 
+def _fetch_arxiv_api(category, cutoff):
+    """arXiv search API で指定カテゴリの論文を日付範囲取得 (RSS が空のフォールバック)。"""
+    start_str = cutoff.strftime("%Y%m%d")
+    end_str = datetime.now(timezone.utc).strftime("%Y%m%d")
+    url = (
+        f"https://export.arxiv.org/api/query"
+        f"?search_query=cat:{category}+AND+submittedDate:[{start_str}+TO+{end_str}]"
+        f"&start=0&max_results=100"
+        f"&sortBy=submittedDate&sortOrder=descending"
+    )
+    try:
+        r = requests.get(url, timeout=60,
+                         headers={"User-Agent": "AI-Daily-Digest/1.0 (research digest)"})
+        r.raise_for_status()
+    except Exception as e:
+        print(f"[warn] arXiv API {category} 失敗: {e}", file=sys.stderr)
+        return []
+    ns = {"atom": "http://www.w3.org/2005/Atom"}
+    try:
+        root = ET.fromstring(r.content)
+    except ET.ParseError as e:
+        print(f"[warn] arXiv API XML パース失敗 {category}: {e}", file=sys.stderr)
+        return []
+    items = []
+    for entry in root.findall("atom:entry", ns):
+        link_el = entry.find("atom:id", ns)
+        if link_el is None:
+            continue
+        link = (link_el.text or "").strip()
+        if not link:
+            continue
+        title_el = entry.find("atom:title", ns)
+        title = html.unescape(" ".join((title_el.text or "").split())) if title_el is not None else ""
+        summary_el = entry.find("atom:summary", ns)
+        abstract = html.unescape(" ".join((summary_el.text or "").split())) if summary_el is not None else ""
+        items.append({
+            "source": f"arXiv {category}",
+            "title": title,
+            "link": link,
+            "abstract": abstract[:5000],
+        })
+    return items
+
+
 def fetch_entries(feeds):
     cutoff = datetime.now(timezone.utc) - timedelta(hours=LOOKBACK_HOURS)
     items, seen = [], set()
@@ -133,6 +178,7 @@ def fetch_entries(feeds):
             print(f"[warn] {source_name} 取得失敗: {e}", file=sys.stderr)
             continue
 
+        feed_had_entries = len(feed.entries) > 0
         for entry in feed.entries:
             link = entry.get("link", "")
             if not link or link in seen:
@@ -159,6 +205,16 @@ def fetch_entries(feeds):
                 "abstract": summary[:5000],
             })
             seen.add(link)
+
+        # RSS が空 (週末・月曜UTC夜) → arXiv search API にフォールバック
+        if not feed_had_entries:
+            category = url.rsplit("/", 1)[-1]  # https://arxiv.org/rss/cs.RO → cs.RO
+            print(f"[info] {source_name} RSS 空 → arXiv API フォールバック", file=sys.stderr)
+            for it in _fetch_arxiv_api(category, cutoff):
+                if it["link"] not in seen:
+                    items.append(it)
+                    seen.add(it["link"])
+            time.sleep(3)  # arXiv API レートリミット対策
 
     print(f"[info] 収集: {len(items)} 件", file=sys.stderr)
     return items
