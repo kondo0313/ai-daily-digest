@@ -3,3 +3,5 @@ __pycache__/
 docs_test.html
 test_template.py
 .env
+papers.json
+article.json
