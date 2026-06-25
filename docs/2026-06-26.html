@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-06-26</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-06-26</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #LLM #創発 #Transformer #スケーリング則 #新人研究者向け</div>
+    <h1 class="headline">創発は「運」だった？ スパースな注意パターンが解き明かすLLMの能力覚醒の謎</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-06-26 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Emergent Capabilities Arise Randomly from Learning Sparse Attention Patterns</div>
+      <div class="pc-row">
+        <span>arXiv 著者（詳細は原文参照）</span>
+        <span>arXiv cs.LG ・ 2026年6月</span>
+        <a href="https://arxiv.org/abs/2606.25010">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>「急に賢くなる」のはなぜ？ ――LLM最大の謎のひとつ</h2>
+<p>大規模言語モデルを学習させると、ある規模を超えた瞬間に<strong>突然</strong>、算数や論理推論などの能力が出現することがあります。事前学習の損失は滑らかに改善し続けているのに、なぜ能力だけが「ブレイクスルー」するのか。これが <span class="term-tip" tabindex="0">創発的能力<span class="tip">モデル規模が閾値を超えたとき突然現れる下流タスクの能力。スケーリング則では予測できない非線形な出現が特徴</span></span> の謎です。</p>
+<p>従来の研究は「評価指標の不連続性」や「計算量の閾値効果」で説明しようとしていました。しかし今回の論文は、より根本的な答えを提示します。<strong>創発はランダムに起きる</strong>――そして、その原因は<span class="term-tip" tabindex="0">スパースなアテンションパターン<span class="tip">ごく一部の特定トークン間にだけ強く張られた注意。多くのトークンを無視し、少数の関係だけに集中する</span></span>の「学習しにくさ」にある、と。</p>
+<div class="pull">創発的能力の出現は、タスクに必要なスパースな注意パターンを学習できたかどうかという、確率的な「運」で決まる。</div>
+<h2><span class="n">2</span>背景：スケーリング則と創発の矛盾</h2>
+<p><span class="term-tip" tabindex="0">ニューラルスケーリング則<span class="tip">モデルのパラメータ数・データ量・計算量と損失の関係を記述するべき乗則</span></span>によると、Transformerの事前学習損失はパラメータ数に対して滑らかに減少します。ところが、<span class="term-tip" tabindex="0">in-context learning<span class="tip">プロンプトに数例を示すだけで新タスクをこなす能力。追加学習は不要</span></span>などの下流タスク性能は、ある規模を境に<strong>急激</strong>に向上することが知られています。この二つの現象の間にある矛盾が、長年の謎でした。</p>
+<p>本論文の著者たちはここに切り込み、「創発とは、Transformerがタスク固有のスパースな注意パターンを学習できた瞬間に起きる現象だ」という仮説を立て、実験で検証しました。</p>
+<h2><span class="n">3</span>手法：合成データで「創発の発生条件」を解剖する</h2>
+<p>実世界のモデルでは変数が複雑すぎるため、著者たちは<strong>合成データセット</strong>で制御実験を行いました。線形写像タスクと<span class="term-tip" tabindex="0">セルオートマトン<span class="tip">格子状のセルが単純なルールに従って次の状態を決める、人工生命や計算理論で使われるモデル</span></span>タスクを使い、どんな条件でアテンションパターンが急に学習されるかを丁寧に調べています。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># ① タスクごとに「必要な注意パターン」を設計</span></div><div class="ln"><span class="no">1</span><span class="ct">task = <span class="fn">LinearMapTask</span>(sparsity=s, ctx_len=L)<span class="badge">①</span></span></div><div class="ln"><span class="no">2</span><span class="ct">model = <span class="fn">Transformer</span>(heads=H, head_dim=D)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ② モデルを複数シードで学習し、能力出現タイミングを記録</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="kw">for</span> seed <span class="kw">in</span> seeds:<span class="badge">②</span></span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span><span class="fn">train</span>(model, task, seed)</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span>emergence_step = <span class="fn">detect_abrupt_jump</span>(model, task)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ③ スパース度・文脈長・ヘッド数を変えて比較</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="fn">ablate</span>(sparsity=s, ctx_len=L, heads=H, head_dim=D)<span class="badge">③</span></span></div></div><div class="code-cap">実験の大まかな流れ（擬似コード）</div>
+<h3>創発は「確率的」に起きる</h3>
+<p>最も重要な発見は、<strong>同じモデルサイズでも乱数シードによって創発の起きるタイミングがバラバラ</strong>だということです。大きなモデルほど平均的に早く創発しますが、小さいモデルでも「運良く」早期に創発することがあります。つまり、創発は規模で決まる確定的な現象ではなく、<strong>確率的なプロセス</strong>なのです。</p>
+<h3>スパース度と文脈長が「学習の難しさ」を決める</h3>
+<p>必要な注意パターンがどれくらいスパース（疎）か、そして<span class="term-tip" tabindex="0">文脈長<span class="tip">モデルが一度に処理できるトークン数。長いほど過去の情報を参照できる</span></span>が長いほど、その注意パターンを学習するのは難しくなります。たとえるなら「100人の発言の中から、特定の3人の発言だけを正確に拾い上げる」方が、「10人の中から3人を拾う」より格段に難しい――これがスパース度と文脈長の効果の直感です。この学習困難さこそが、創発が突然起きる原因だと著者たちは主張します。</p>
+<h3>ヘッド数を増やすと効率が上がる（ヘッド次元には限界効用逓減）</h3>
+<p>アーキテクチャの面では興味深い知見が得られました。<span class="term-tip" tabindex="0">アテンションヘッド数<span class="tip">Transformerが並列に処理する注意機構のユニット数。各ヘッドが異なる関係を捉える</span></span>を増やすと合成タスクでの学習効率が向上しましたが、各ヘッドの次元（ヘッド次元）を増やしても、ある最小容量を超えると効果がほとんどありませんでした。「頭数で並列に探索する」方が「一つの頭を太くする」より効果的だということです。</p>
+<h3>MLP-Mixerが複雑なタスクでTransformerを上回る</h3>
+<p>さらに、注意パターンが複雑な線形写像タスクでは、<span class="term-tip" tabindex="0">MLP-Mixer<span class="tip">アテンションを使わず、MLP（多層パーセプトロン）だけでトークン間の情報を混合するアーキテクチャ</span></span>がTransformerを上回るパフォーマンスを示しました。これは、「アテンションを使って複雑なパターンを学ぶ」こと自体に本質的な難しさがある場合は、別のアーキテクチャが有利になりうることを示唆します。</p>
+<h2><span class="n">4</span>実験結果のハイライト</h2>
+<div class="stats"><div class="stat"><div class="v">確率的</div><div class="k">創発のタイミング：同規模モデルでもシードで異なる</div></div><div class="stat"><div class="v">ヘッド数↑</div><div class="k">ヘッド数増加は合成タスクの学習効率を改善</div></div><div class="stat"><div class="v">MLP-Mixer優位</div><div class="k">複雑な注意パターンが必要なタスクでTransformerを超える</div></div></div>
+<h2><span class="n">5</span>新規性と重要性：「創発の機械論」を初めて提示</h2>
+<p>これまでの研究は「創発は起きる」という観測に留まっていましたが、この論文は<strong>なぜ起きるのか</strong>という因果的説明を与えます。「スパースな注意パターンの学習困難さ」が根本原因だという説明は、単純かつ検証可能です。また、創発が確率的であるという発見は、「あるモデルサイズで能力が出現する」という単純な理解を修正し、<strong>創発は連続的な確率分布に従って起きる</strong>という、より正確な見方を与えてくれます。</p>
+<p>実用上の示唆も重要です。同じパラメータ数でもヘッド数を増やすことで創発を早めたり、安定させたりできる可能性があります。また、タスクの「スパース度」を事前に分析することで、どの程度の規模のモデルが必要かを推測するための理論的な足がかりになるかもしれません。</p>
+<h2><span class="n">6</span>論文の誠実な限界</h2>
+<div class="step"><span class="si">限界 1</span><p>合成データセット（線形写像・セルオートマトン）での実験が中心。実世界の大規模言語モデルへの直接的な適用可能性は未検証。</p></div><div class="step"><span class="si">限界 2</span><p>「注意パターンの学習」が創発の原因であるという主張は、合成タスクで示されたもの。自然言語の複雑なタスクでも同じメカニズムが働くかは今後の研究課題。</p></div><div class="step"><span class="si">限界 3</span><p>MLP-Mixerの優位性は特定の条件下での話。汎用的な自然言語処理でTransformerを超えると主張しているわけではない。</p></div><div class="step"><span class="si">限界 4</span><p>確率的創発の「確率分布」の詳細な形状（どんな分布に従うか）は明らかにされていない。大規模モデルでの再現性も今後の課題。</p></div>
+<h2><span class="n">7</span>新人研究者へのひとこと</h2>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方：制御実験で「因果」を掘る</div>この論文の強みは、実世界の複雑なモデルではなく、変数を制御できる合成タスクで仮説を検証した点です。「なぜかわからない現象」に出会ったとき、まずシンプルな設定で因果関係を確認する――これは良い研究の基本です。創発の謎という大きな問いに対し、toy modelで本質を切り出す姿勢は参考にしてください。</div>
+<div class="note-box"><div class="nb-label">⚙️ 大きな文脈：創発研究のこれから</div>創発的能力は、AIの安全性研究でも重要なテーマです。「ある規模で突然危険な能力が出現するかもしれない」という懸念があるからです。この論文の知見――創発は確率的で、アーキテクチャの選択（ヘッド数など）で影響を受ける――は、どのモデルがどんな能力を持つかを予測・制御するための理論的基盤になりえます。スケーリング則の研究と安全性研究が交わるフロンティアに位置する重要な一歩です。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
