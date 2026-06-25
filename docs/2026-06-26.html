@@ -120,8 +120,8 @@ h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
   </div>
 
   <div class="page">
-    <div class="tags">#AI #論文解説 #LLM #創発 #Transformer #スケーリング則 #新人研究者向け</div>
-    <h1 class="headline">創発は「運」だった？ スパースな注意パターンが解き明かすLLMの能力覚醒の謎</h1>
+    <div class="tags">#AI #論文解説 #解釈可能性 #LLM #Steering #新人研究者向け</div>
+    <h1 class="headline">「検出できた、でも制御できない」── 言語モデルの知ることと操ることの幾何学的ギャップ</h1>
 
     <div class="author">
       <div class="avatar">AI</div>
@@ -133,43 +133,47 @@ h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
 
     <div class="paper-card">
       <div class="pc-label">本日の論文</div>
-      <div class="pc-title">Emergent Capabilities Arise Randomly from Learning Sparse Attention Patterns</div>
+      <div class="pc-title">Perfect Detection, Failed Control: The Geometry of Knowing vs. Steering in Language Models</div>
       <div class="pc-row">
-        <span>arXiv 著者（詳細は原文参照）</span>
-        <span>arXiv cs.LG ・ 2026年6月</span>
-        <a href="https://arxiv.org/abs/2606.25010">原文 →</a>
+        <span>著者情報は公開情報から確認できず（arXiv:2606.24952）</span>
+        <span>arXiv cs.LG ・ 2025年</span>
+        <a href="https://arxiv.org/abs/2606.24952">原文 →</a>
       </div>
     </div>
 
     <div class="content">
-<h2><span class="n">1</span>「急に賢くなる」のはなぜ？ ――LLM最大の謎のひとつ</h2>
-<p>大規模言語モデルを学習させると、ある規模を超えた瞬間に<strong>突然</strong>、算数や論理推論などの能力が出現することがあります。事前学習の損失は滑らかに改善し続けているのに、なぜ能力だけが「ブレイクスルー」するのか。これが <span class="term-tip" tabindex="0">創発的能力<span class="tip">モデル規模が閾値を超えたとき突然現れる下流タスクの能力。スケーリング則では予測できない非線形な出現が特徴</span></span> の謎です。</p>
-<p>従来の研究は「評価指標の不連続性」や「計算量の閾値効果」で説明しようとしていました。しかし今回の論文は、より根本的な答えを提示します。<strong>創発はランダムに起きる</strong>――そして、その原因は<span class="term-tip" tabindex="0">スパースなアテンションパターン<span class="tip">ごく一部の特定トークン間にだけ強く張られた注意。多くのトークンを無視し、少数の関係だけに集中する</span></span>の「学習しにくさ」にある、と。</p>
-<div class="pull">創発的能力の出現は、タスクに必要なスパースな注意パターンを学習できたかどうかという、確率的な「運」で決まる。</div>
-<h2><span class="n">2</span>背景：スケーリング則と創発の矛盾</h2>
-<p><span class="term-tip" tabindex="0">ニューラルスケーリング則<span class="tip">モデルのパラメータ数・データ量・計算量と損失の関係を記述するべき乗則</span></span>によると、Transformerの事前学習損失はパラメータ数に対して滑らかに減少します。ところが、<span class="term-tip" tabindex="0">in-context learning<span class="tip">プロンプトに数例を示すだけで新タスクをこなす能力。追加学習は不要</span></span>などの下流タスク性能は、ある規模を境に<strong>急激</strong>に向上することが知られています。この二つの現象の間にある矛盾が、長年の謎でした。</p>
-<p>本論文の著者たちはここに切り込み、「創発とは、Transformerがタスク固有のスパースな注意パターンを学習できた瞬間に起きる現象だ」という仮説を立て、実験で検証しました。</p>
-<h2><span class="n">3</span>手法：合成データで「創発の発生条件」を解剖する</h2>
-<p>実世界のモデルでは変数が複雑すぎるため、著者たちは<strong>合成データセット</strong>で制御実験を行いました。線形写像タスクと<span class="term-tip" tabindex="0">セルオートマトン<span class="tip">格子状のセルが単純なルールに従って次の状態を決める、人工生命や計算理論で使われるモデル</span></span>タスクを使い、どんな条件でアテンションパターンが急に学習されるかを丁寧に調べています。</p>
-<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># ① タスクごとに「必要な注意パターン」を設計</span></div><div class="ln"><span class="no">1</span><span class="ct">task = <span class="fn">LinearMapTask</span>(sparsity=s, ctx_len=L)<span class="badge">①</span></span></div><div class="ln"><span class="no">2</span><span class="ct">model = <span class="fn">Transformer</span>(heads=H, head_dim=D)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ② モデルを複数シードで学習し、能力出現タイミングを記録</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="kw">for</span> seed <span class="kw">in</span> seeds:<span class="badge">②</span></span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span><span class="fn">train</span>(model, task, seed)</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span>emergence_step = <span class="fn">detect_abrupt_jump</span>(model, task)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ③ スパース度・文脈長・ヘッド数を変えて比較</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="fn">ablate</span>(sparsity=s, ctx_len=L, heads=H, head_dim=D)<span class="badge">③</span></span></div></div><div class="code-cap">実験の大まかな流れ（擬似コード）</div>
-<h3>創発は「確率的」に起きる</h3>
-<p>最も重要な発見は、<strong>同じモデルサイズでも乱数シードによって創発の起きるタイミングがバラバラ</strong>だということです。大きなモデルほど平均的に早く創発しますが、小さいモデルでも「運良く」早期に創発することがあります。つまり、創発は規模で決まる確定的な現象ではなく、<strong>確率的なプロセス</strong>なのです。</p>
-<h3>スパース度と文脈長が「学習の難しさ」を決める</h3>
-<p>必要な注意パターンがどれくらいスパース（疎）か、そして<span class="term-tip" tabindex="0">文脈長<span class="tip">モデルが一度に処理できるトークン数。長いほど過去の情報を参照できる</span></span>が長いほど、その注意パターンを学習するのは難しくなります。たとえるなら「100人の発言の中から、特定の3人の発言だけを正確に拾い上げる」方が、「10人の中から3人を拾う」より格段に難しい――これがスパース度と文脈長の効果の直感です。この学習困難さこそが、創発が突然起きる原因だと著者たちは主張します。</p>
-<h3>ヘッド数を増やすと効率が上がる（ヘッド次元には限界効用逓減）</h3>
-<p>アーキテクチャの面では興味深い知見が得られました。<span class="term-tip" tabindex="0">アテンションヘッド数<span class="tip">Transformerが並列に処理する注意機構のユニット数。各ヘッドが異なる関係を捉える</span></span>を増やすと合成タスクでの学習効率が向上しましたが、各ヘッドの次元（ヘッド次元）を増やしても、ある最小容量を超えると効果がほとんどありませんでした。「頭数で並列に探索する」方が「一つの頭を太くする」より効果的だということです。</p>
-<h3>MLP-Mixerが複雑なタスクでTransformerを上回る</h3>
-<p>さらに、注意パターンが複雑な線形写像タスクでは、<span class="term-tip" tabindex="0">MLP-Mixer<span class="tip">アテンションを使わず、MLP（多層パーセプトロン）だけでトークン間の情報を混合するアーキテクチャ</span></span>がTransformerを上回るパフォーマンスを示しました。これは、「アテンションを使って複雑なパターンを学ぶ」こと自体に本質的な難しさがある場合は、別のアーキテクチャが有利になりうることを示唆します。</p>
-<h2><span class="n">4</span>実験結果のハイライト</h2>
-<div class="stats"><div class="stat"><div class="v">確率的</div><div class="k">創発のタイミング：同規模モデルでもシードで異なる</div></div><div class="stat"><div class="v">ヘッド数↑</div><div class="k">ヘッド数増加は合成タスクの学習効率を改善</div></div><div class="stat"><div class="v">MLP-Mixer優位</div><div class="k">複雑な注意パターンが必要なタスクでTransformerを超える</div></div></div>
-<h2><span class="n">5</span>新規性と重要性：「創発の機械論」を初めて提示</h2>
-<p>これまでの研究は「創発は起きる」という観測に留まっていましたが、この論文は<strong>なぜ起きるのか</strong>という因果的説明を与えます。「スパースな注意パターンの学習困難さ」が根本原因だという説明は、単純かつ検証可能です。また、創発が確率的であるという発見は、「あるモデルサイズで能力が出現する」という単純な理解を修正し、<strong>創発は連続的な確率分布に従って起きる</strong>という、より正確な見方を与えてくれます。</p>
-<p>実用上の示唆も重要です。同じパラメータ数でもヘッド数を増やすことで創発を早めたり、安定させたりできる可能性があります。また、タスクの「スパース度」を事前に分析することで、どの程度の規模のモデルが必要かを推測するための理論的な足がかりになるかもしれません。</p>
-<h2><span class="n">6</span>論文の誠実な限界</h2>
-<div class="step"><span class="si">限界 1</span><p>合成データセット（線形写像・セルオートマトン）での実験が中心。実世界の大規模言語モデルへの直接的な適用可能性は未検証。</p></div><div class="step"><span class="si">限界 2</span><p>「注意パターンの学習」が創発の原因であるという主張は、合成タスクで示されたもの。自然言語の複雑なタスクでも同じメカニズムが働くかは今後の研究課題。</p></div><div class="step"><span class="si">限界 3</span><p>MLP-Mixerの優位性は特定の条件下での話。汎用的な自然言語処理でTransformerを超えると主張しているわけではない。</p></div><div class="step"><span class="si">限界 4</span><p>確率的創発の「確率分布」の詳細な形状（どんな分布に従うか）は明らかにされていない。大規模モデルでの再現性も今後の課題。</p></div>
-<h2><span class="n">7</span>新人研究者へのひとこと</h2>
-<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方：制御実験で「因果」を掘る</div>この論文の強みは、実世界の複雑なモデルではなく、変数を制御できる合成タスクで仮説を検証した点です。「なぜかわからない現象」に出会ったとき、まずシンプルな設定で因果関係を確認する――これは良い研究の基本です。創発の謎という大きな問いに対し、toy modelで本質を切り出す姿勢は参考にしてください。</div>
-<div class="note-box"><div class="nb-label">⚙️ 大きな文脈：創発研究のこれから</div>創発的能力は、AIの安全性研究でも重要なテーマです。「ある規模で突然危険な能力が出現するかもしれない」という懸念があるからです。この論文の知見――創発は確率的で、アーキテクチャの選択（ヘッド数など）で影響を受ける――は、どのモデルがどんな能力を持つかを予測・制御するための理論的基盤になりえます。スケーリング則の研究と安全性研究が交わるフロンティアに位置する重要な一歩です。</div>
+<h2><span class="n">1</span>「見つけたら直せる」という夢が崩れるとき</h2>
+<p>AI安全研究の世界では、「モデルの中でハルシネーション（幻覚生成）の表現を見つけられたら、そこを書き換えて止められるはずだ」という楽観的な期待があります。これは<span class="term-tip" tabindex="0">メカニスティック解釈可能性<span class="tip">AIモデルの内部回路や表現を分解・理解しようとする研究分野</span></span>の中心的な希望でした。しかし本論文はこの前提を幾何学で試し、冷静に否定します。「検出方向と制御方向が同じなら介入は機能するはずだ」──でも実際にはほぼ直交していた、というのが論文のメッセージです。</p>
+<div class="pull">ハルシネーションの検出は完璧だった（AUC = 1.000）。それでも、検出方向と制御方向はほぼ直交していた（コサイン類似度 = 0.12）。</div>
+<h2><span class="n">2</span>背景：「方向」として行動を捉える考え方</h2>
+<p>LLMの内部では、各トークンの処理結果が高次元の<span class="term-tip" tabindex="0">活性化ベクトル<span class="tip">モデルの中間層が出力する数値ベクトル。そのモデルがその時点で「考えていること」を表す</span></span>として存在します。研究者たちはこのベクトル空間の中に「感情」「事実性」「有害性」などが特定の方向（1次元の軸）として埋め込まれていることを発見してきました。</p>
+<p>そこから生まれたのが<span class="term-tip" tabindex="0">アクティベーションステアリング<span class="tip">活性化ベクトルに特定の方向を足し引きして、モデルの出力を操作する手法</span></span>です。「嬉しさの方向を足すと、モデルはより肯定的な文章を書く」といった具合です。この手法の暗黙の前提は、<strong>検出に使う方向と、制御に使う方向が同じ（あるいは近い）こと</strong>。本論文はその前提の妥当性を、コサイン類似度という幾何学的な指標で直接測りました。</p>
+<h2><span class="n">3</span>実験の設計：「検出方向」と「制御方向」を分離して測る</h2>
+<h3>二種類の「方向」をどうやって求めるか</h3>
+<p>論文では主に<strong>ハルシネーション</strong>（存在しない架空のエンティティについて語ること）を研究対象に選んでいます。まず「<strong>検出方向</strong>」は、モデルが本物のエンティティを処理しているときと偽のエンティティを処理しているときの活性化ベクトルの差として求めます。次に「<strong>制御方向</strong>」は、「これは偽物です、答えを拒否してください」という方向を表すベクトルとして求めます。</p>
+<p>そして二つの方向ベクトルの<span class="term-tip" tabindex="0">コサイン類似度<span class="tip">二つのベクトルの向きの近さを−1〜1で表す指標。1なら同じ方向、0なら直交</span></span>を計算します。「検出＝制御」なら値は1に近いはず。どれだけ離れているかが、<strong>検出‐介入ギャップ</strong>の定量的な大きさになります。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># ① 活性化ベクトルを収集する</span></div><div class="ln"><span class="no">1</span><span class="ct">acts_real = <span class="fn">get_activations</span>(model, real_entities)<span class="badge">①</span></span></div><div class="ln"><span class="no">2</span><span class="ct">acts_fake = <span class="fn">get_activations</span>(model, fake_entities)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ② 検出方向を求める（本物と偽物の平均の差）</span></div><div class="ln"><span class="no">3</span><span class="ct">detect_dir = <span class="fn">mean</span>(acts_fake) - <span class="fn">mean</span>(acts_real)<span class="badge">②</span></span></div><div class="ln"><span class="no">4</span><span class="ct">detect_dir = <span class="fn">normalize</span>(detect_dir)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ③ 制御方向を求める（拒否を促す方向）</span></div><div class="ln"><span class="no">5</span><span class="ct">steer_dir = <span class="fn">get_refusal_direction</span>(model)<span class="badge">③</span></span></div><div class="ln"><span class="no">6</span><span class="ct">steer_dir = <span class="fn">normalize</span>(steer_dir)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ④ 二つの方向の角度を測る</span></div><div class="ln"><span class="no">7</span><span class="ct">gap = <span class="fn">cosine_similarity</span>(detect_dir, steer_dir)<span class="badge">④</span></span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="kw"># gap ≈ 1.0 なら「検出 = 制御」, gap ≈ 0 なら直交で制御不可</span></span></div></div><div class="code-cap">検出方向と制御方向のコサイン類似度を求める概念的な手順</div>
+<h2><span class="n">4</span>結果：ケースによって全く異なる「ギャップ」</h2>
+<h3>出力フォーマットは「検出 = 制御」が成立した</h3>
+<p>まず比較対照として、出力フォーマット（きれいなJSONで返すか、マークダウン形式で返すか）を制御するケースを調べました。こちらは検出方向と制御方向がほぼ同じ軸に乗っており、コサイン類似度は1に近い値を示しました。「形式の好み」は1本の軸で表現されており、検出も介入も同じ方向で機能します。</p>
+<h3>ハルシネーションは完璧に検出できるのに、制御できなかった</h3>
+<p>問題はハルシネーションです。モデルGemma 2-2B-itを使った実験では、<strong>5層目からすでにAUC = 1.000</strong>という完璧な線形分離が得られました。つまりモデルの内部表現を見るだけで、そのエンティティが本物か偽物かを100%の精度で見分けられるのです。ところがその検出方向と、「拒否する」方向のコサイン類似度はわずか<strong>0.12</strong>（角度にして約83度）。ほぼ直交しています。</p>
+<div class="stats"><div class="stat"><div class="v">AUC = 1.000</div><div class="k">ハルシネーション検出の精度（5層目から完璧な線形分離）</div></div><div class="stat"><div class="v">cos = 0.12</div><div class="k">検出方向と制御方向の類似度（ほぼ直交、約83度のズレ）</div></div><div class="stat"><div class="v">cos ∈ [0.12, 0.20]</div><div class="k">4モデル・3ファミリー・2スケールで一貫して観測されたギャップ範囲</div></div></div>
+<h3>このギャップは「学習」ではなく「事前学習」に由来する</h3>
+<p>さらに驚くべきことがあります。<span class="term-tip" tabindex="0">インストラクションチューニング<span class="tip">人間の指示に従いやすくするための追加学習。ファインチューニングの一種</span></span>の前後でこのコサイン値を比較すると、0.1197 vs 0.1200 と<strong>ほぼ変わりません</strong>。つまりこのギャップは、後から安全性チューニングをしても修正されない、事前学習の段階で形成された構造的な性質なのです。</p>
+<div class="tip-box"><div class="tb-label">💡 「知っている」と「やめられる」は別の回路かもしれない</div>人間でも「タバコが体に悪いと知っている」のに「禁煙できない」ことはありますよね。このギャップはそれと似ています。認識（表現）と行動制御は、脳の中でも異なる回路が担当しています。LLMでも同様の分離が起きているのかもしれません。</div>
+<h2><span class="n">5</span>では少しでも制御できるのか？ 回転ステアリングの試み</h2>
+<p>論文はただ問題を示すだけでなく、<strong>検出方向を拒否方向へ15度回転させる</strong>という部分的な橋渡しも試みています。その結果、ホールドアウトした架空エンティティのカテゴリで73%と60%の拒否率を達成し、誤検出率（偽陽性）は1.8%に抑えられました。完全ではありませんが、部分的な橋渡しは可能だと示しています。</p>
+<h2><span class="n">6</span>「コサイン値で制御可能性を予測できるか？」という問いへの答え</h2>
+<p>ここが論文の最も深い洞察です。「では、コサイン値が高いほど制御しやすいのか？」と問うと、答えは<strong>「そうではない」</strong>というのです。</p>
+<p>検出は本来、1本の方向ベクトルではなく<strong>高次元のクラス構造</strong>として存在しています。そして「制御可能かどうか」は静的なコサイン値ではなく、<strong>機能的な性質</strong>（その表現がどう使われているか）に依存します。コサイン値は「知ることと操ることが分離しているという事実のシグネチャ（署名）」であって、「どれだけ制御しやすいかの予測量」ではない、というのが結論です。</p>
+<div class="pull">コサイン値は「知ることと操ることの解離」のシグネチャであって、制御可能性の予測量ではない。</div>
+<h2><span class="n">7</span>この研究の新規性と重要性</h2>
+<div class="step"><span class="si">新規性 ①</span><p>「検出方向 = 制御方向」という暗黙の前提を、コサイン類似度という単一の幾何学的指標で定量化した。これまで曖昧だった前提を明示的に検証可能にした。</p></div><div class="step"><span class="si">新規性 ②</span><p>ギャップが4モデル・複数スケールで一貫していることを示し、特定のアーキテクチャに依存しない普遍的な性質である可能性を提示した。</p></div><div class="step"><span class="si">新規性 ③</span><p>ギャップが事前学習に由来し、インストラクションチューニングで解消されないことを実証した。安全性チューニングの根本的な限界を示唆する。</p></div><div class="step"><span class="si">重要性</span><p>アクティベーションステアリングや解釈可能性に基づく安全性研究全体の前提を問い直す。「内部表現を見つけたから制御できる」という楽観論に重要な留保をつける。</p></div>
+<h2><span class="n">8</span>論文の限界と今後の課題</h2>
+<div class="step"><span class="si">限界 ①</span><p>主にハルシネーション（架空エンティティ）という特定のタスクで検証されており、他の行動（有害性、バイアスなど）への一般化は今後の研究が必要。</p></div><div class="step"><span class="si">限界 ②</span><p>「制御方向」として「拒否方向」を使っているが、制御の方法はほかにも考えられる。制御方向の定義の選び方でギャップの大きさが変わる可能性がある。</p></div><div class="step"><span class="si">限界 ③</span><p>コサイン値が制御可能性を予測しないことは示したが、「では何が予測するのか」という問いへの答えは部分的にとどまっており、機能的な性質の具体的な中身はまだ明らかでない。</p></div><div class="step"><span class="si">限界 ④</span><p>1Bから9Bのモデルで検証されているが、GPT-4クラスのさらに大きなモデルでの検証は行われていない。</p></div>
+<div class="note-box"><div class="nb-label">⚙️ 新人研究者へのひとことメモ</div>「解釈可能性があれば制御できる」という直感は非常に魅力的ですが、この論文はその橋が自動的にはかからないことを示しています。R&amp;Dでは、プローブ（分類器）を作って「表現を見つけた！」と喜ぶ前に、「その方向は本当に因果的に機能するのか？」を問う習慣を持ちましょう。相関と因果の区別が、解釈可能性研究の根幹です。</div>
+<div class="tip-box"><div class="tb-label">💡 大きな文脈：解釈可能性研究の次のステージ</div>この研究は、解釈可能性の「フェーズ1（どこに表現があるかを探す）」から「フェーズ2（見つけた表現が実際に機能的に重要かを確かめる）」への移行を促すものです。今後のAI安全研究では、静的な表現の分析だけでなく、介入実験（因果的な操作）とのセットで研究を設計することが標準になっていくでしょう。</div>
     </div>
   </div>
 
