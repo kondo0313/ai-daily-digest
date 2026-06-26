@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-06-27</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-06-27</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #ロボット学習 #継続学習 #WorldModel #新人研究者向け</div>
+    <h1 class="headline">ロボットは「想像力」で過去を忘れない――World Action Modelが実現する記憶なき継続学習</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-06-27 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">World Action Models Enable Continual Imitation Learning with Recurrent Generative Replays</div>
+      <div class="pc-row">
+        <span>著者情報は公開情報より確認要（arXiv 掲載）</span>
+        <span>arXiv cs.RO ・ 2025年</span>
+        <a href="https://arxiv.org/abs/2606.27374">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>「昨日覚えたことを今日忘れる」――ロボット学習の根本問題</h2>
+<p>人間は新しいスキルを学んでも古いスキルを忘れません。しかしニューラルネットワークは、新しいタスクを学ぶたびに以前学んだタスクの性能がガタ落ちしてしまいます。これを<span class="term-tip" tabindex="0">破滅的忘却<span class="tip">新しいデータで再学習するとき、以前学んだ知識が上書きされて急激に失われる現象</span></span>と呼びます。ロボットに複数の作業を順番に教えようとすると、この問題が壁になります。</p>
+<p>一番シンプルな解決策は「昔のデモンストレーションデータを保存しておいて、新しい学習のたびに一緒に使う」という<span class="term-tip" tabindex="0">Experience Replay<span class="tip">過去のデータを記憶バッファに保存し、学習時に再利用する手法</span></span>です。でも現実のロボット開発では、人間が操作するデモ動画を大量に保存し続けるのは、ストレージコスト・プライバシー・データ管理の観点から現実的でないケースが多いです。</p>
+<p>この論文が問いかけるのは、<strong>「過去のデータを保存せずに、ロボット自身の『想像力』で過去を再現できないか？」</strong> というアイデアです。そしてその答えとして、<strong>REGEN（Recurrent Generative Replay）</strong> という手法を提案します。</p>
+<h2><span class="n">2</span>鍵となる技術：World Action Model（WAM）とは何か</h2>
+<p>従来のロボット行動モデルは「カメラ画像を見て、次にどう動くかを出力する」だけでした。これに対して<span class="term-tip" tabindex="0">World Action Model<span class="tip">WAM：視覚的な観測の未来予測（world model）とロボット行動の予測を同時にできるモデル</span></span>（WAM）は、行動を予測するだけでなく、「その行動をとったあと、カメラにはどんな映像が映るか」という未来の視覚観測も生成できます。</p>
+<p>これはいわば「頭の中でシミュレーションしながら動く」能力です。料理の手順を頭でイメージしながら練習できる人間のイメージトレーニングに近い概念です。WAMがこの生成能力を持っているからこそ、「過去タスクの疑似的なデモ動画」を作り出すことが可能になります。</p>
+<h2><span class="n">3</span>REGENの全体像：再帰的に「思い出す」仕組み</h2>
+<div class="pull">保存データゼロで、ロボットが自分の想像力から過去のデモを「合成」して、忘却を防ぐ。</div>
+<p>REGENのアイデアはシンプルです。新しいタスクを学ぶとき、WAMに「前のタスクの指示文（言語）」と「今の観測画像」だけを与えて、過去タスクの疑似トラジェクトリ（一連の観測と行動のシーケンス）を生成させます。そしてその生成データを、実際のデモデータのように扱って一緒に学習するのです。</p>
+<p>特に重要なのが「<strong>再帰的（Recurrent）</strong>」という点です。WAMが1ステップ生成した疑似観測を、次のステップの入力としてまた自分に与え、またその出力を次に渡す……という連鎖でトラジェクトリ全体を作り上げます。まるで「次の展開を想像して、その想像から更に次の展開を想像する」小説家のようなプロセスです。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 入力：前タスクの言語指示 prev_task_instruction、現在の観測 current_obs</span></div><div class="ln"><span class="no">1</span><span class="ct">pseudo_traj = []</span></div><div class="ln"><span class="no">2</span><span class="ct">obs = current_obs</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ① WAMに前タスクの指示を与えて疑似軌道を再帰生成</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="kw">for</span> step <span class="kw">in</span> range(horizon):<span class="badge">①</span></span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>action, next_obs = <span class="fn">WAM</span>(prev_task_instruction, obs)</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span>pseudo_traj.append((obs, action, next_obs))</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span>obs = next_obs  <span class="badge">②</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># ② 生成した疑似軌道と現タスクのデータを合わせて学習</span></div><div class="ln"><span class="no">7</span><span class="ct">combined_data = pseudo_traj + current_task_demos<span class="badge">③</span></span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="fn">finetune</span>(WAM, combined_data)</span></div></div><div class="code-cap">REGEN：疑似リプレイ軌道を再帰的に生成するアルゴリズム（概略）</div>
+<p>① WAMは「前タスクの言語指示」と「今手元にある観測」を受け取り、その状況から前タスクらしい行動と次の観測を生成します。② その生成した観測を次ステップの入力に使う「再帰ループ」が、REGEN最大の特徴です。③ 最終的に生成データと現タスクのデモを合わせてWAM自体をファインチューンします。</p>
+<h2><span class="n">4</span>手法の要素を噛み砕く</h2>
+<h3>なぜ「言語指示だけ」で前タスクを再現できるの？</h3>
+<p>WAMは大量のデモデータで事前学習されており、「コップを掴む」「引き出しを開ける」といったタスク概念と、それに対応する視覚パターン・動作パターンを内部に記憶しています。ちょうど「コップを掴む」と言われれば手の形や動きを自然に思い浮かべられるように、WAMも言語指示から対応する観測と行動のシーケンスを想起できるのです。</p>
+<h3>「合成データ」で本当に学習できるの？</h3>
+<p>これが本論文の核心的な問いです。完璧な合成データでなくても、「前タスクの観測・行動分布をおおよそ再現できていれば」ネットワークの重みが前タスクの方向に引き戻される効果があります。完璧な記憶でなく「雰囲気を思い出せれば忘却を防げる」という考え方です。ただし合成品質には限界があり、それが本手法の弱点にもなります（後述）。</p>
+<h3>Privileged Experience Replayとの違い</h3>
+<p>論文では<span class="term-tip" tabindex="0">Privileged Experience Replay<span class="tip">実際の過去デモを保存・再利用する「理想的だが現実コストが高い」ベースライン手法</span></span>（PER）を上限ベースラインとして比較しています。REGENは実データを使わずにPERに「接近する」性能を目指します。完全には超えられませんが、データ保存ゼロというコスト差を考えると意義があります。</p>
+<h2><span class="n">5</span>実験結果：どれだけ忘却を防げたか</h2>
+<p>シミュレーション環境と実世界のロボット操作タスクの両方で評価が行われました。主要な結果は以下のとおりです。</p>
+<div class="stats"><div class="stat"><div class="v">最大50%</div><div class="k">単純な逐次ファインチューンと比較した破滅的忘却の低減率</div></div><div class="stat"><div class="v">データ0件</div><div class="k">REGENが過去タスクのために保存・使用する実デモデータ数</div></div><div class="stat"><div class="v">2種類</div><div class="k">特定された主要ボトルネック（長期視覚劣化 / 行動-観測の不整合）</div></div></div>
+<p>「逐次ファインチューン（単に新タスクだけ学習し続ける）」と比べて、破滅的忘却を最大50%抑制できています。一方で、実データを使うPERには完全には届かず、その差が「生成品質の限界」から来ていることを論文は正直に分析しています。</p>
+<h2><span class="n">6</span>失敗の分析：何がボトルネックか</h2>
+<p>論文が特に評価できるのは、手法が「なぜうまくいかない場合があるか」を丁寧に分析している点です。2つの主要なボトルネックが特定されています。</p>
+<div class="step"><span class="si">問題①</span><p><strong>長期的な視覚劣化（Long-horizon Visual Degradation）</strong>：再帰的に生成を繰り返すと、1ステップの小さな誤差が積み重なり、数十ステップ後には現実とかけ離れた映像になる。ちょうどコピーのコピーを繰り返すと画質が落ちるように。</p></div><div class="step"><span class="si">問題②</span><p><strong>行動-観測の不整合（Action-Observation Inconsistency）</strong>：生成された「次の観測」と、その前ステップで予測した「行動」が物理的に矛盾するケースが出る。「右に動いた」のに「左に物がある」観測が生成されるような状況。</p></div>
+<p>この2点は<span class="term-tip" tabindex="0">自己回帰型生成モデル<span class="tip">過去の出力を次の入力に使いながら逐次生成するモデル構造。誤差が蓄積しやすい</span></span>全般の共通課題でもあり、今後の改善余地として明示されています。</p>
+<h2><span class="n">7</span>新規性のまとめ：なぜこの論文は重要か</h2>
+<div class="pull">WAMの「生成能力」を継続学習の忘却防止に使う発想は、world modelとロボット学習の交差点に新しい道を開く。</div>
+<p>これまで継続学習の研究では「いかに過去データを賢く保存・要約するか」という方向が主流でした。REGENはその発想を転換し、「データを保存せず、モデル自身の生成能力でデータを作り出す」という方向を、WAMという具体的な技術基盤で実証した点に新規性があります。</p>
+<p>また、シミュレーションだけでなく<strong>実世界のロボット操作タスク</strong>でも有効性を確認しており、研究が「机上の空論」ではないことを示しています。さらに、うまくいかないケースの分析を誠実に行い、「WAMが継続ロボット学習の有望な基盤になりうる」と控えめかつ明確に主張している姿勢も好感が持てます。</p>
+<h2><span class="n">8</span>限界と今後の課題</h2>
+<div class="step"><span class="si">限界①</span><p>生成品質の上限：WAMが生成する疑似トラジェクトリの品質は実データに劣り、タスク数や時系列が長くなるほど劣化が顕著になる。</p></div><div class="step"><span class="si">限界②</span><p>Privileged Experience Replayへの未到達：実データを使うベースラインには性能で届いていない。データ保存不要という利点とトレードオフ。</p></div><div class="step"><span class="si">限界③</span><p>スケーラビリティの未検証：実験のタスク数・環境の多様性には制限があり、より多くの異なるタスクを順次学習する設定での有効性は今後の検証が必要。</p></div><div class="step"><span class="si">限界④</span><p>ボトルネックの未解決：特定された視覚劣化と行動-観測不整合の2つの課題に対する具体的な解決策はまだ示されていない。</p></div>
+<h2><span class="n">9</span>新人研究者へのひとこと</h2>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方：生成モデルを正則化に使う</div>「モデルが生成したデータで自分自身を再学習させる」というアイデアは、REGENに限らず様々な場面で登場します。例えばGANの学習安定化やドメイン適応でも似た考え方が使われます。「モデルの出力を入力に戻すループ」がどんな効果を持つか・どんな誤差を生むかを意識する習慣は、幅広い研究プロジェクトで役立ちます。</div>
+<div class="note-box"><div class="nb-label">⚙️ 大きな文脈メモ</div>WAM（World Action Model）はVLA（Vision-Language-Actionモデル）を世界モデルとして拡張した流れに位置します。近年、ロボット基盤モデルの研究はRT-2・OpenVLA・π0などが注目されていますが、「将来観測を予測できる生成能力」をロボット学習のライフサイクル全体（データ収集・継続学習・評価）に活かす方向は、これからの重要な研究軸の一つです。本論文はその先駆的な事例として参照価値があります。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
