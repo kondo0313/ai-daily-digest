@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-06-27</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-06-27</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #ロボティクス #触覚センサー #WorldModel #新人研究者向け</div>
+    <h1 class="headline">ロボットに「触れる感覚」を——触覚汚染という罠と非対称注意の解法</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-06-27 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Tactile-WAM: Touch-Aware World Action Model with Tactile Asymmetric Attention</div>
+      <div class="pc-row">
+        <span>著者情報は論文参照（arXiv 投稿）</span>
+        <span>arXiv cs.RO ・ 2026年6月</span>
+        <a href="https://arxiv.org/abs/2606.26663">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>視覚の死角 — 接触という「見えない世界」</h2>
+<p>ロボットがネジを締める、精密な部品を差し込む、ビンの蓋を探りながら回す。こうした作業は人間なら目をつぶっていても指先の感触で補正できます。ところが、カメラ映像だけに頼るロボットにとってこれらは難関です。「ズレている」「滑っている」「詰まっている」という情報が、RGB映像にはほとんど写らないからです。</p>
+<p><span class="term-tip" tabindex="0">接触リッチなタスク<span class="tip">挿入・組み立て・探索など、物体同士が触れ合うことで初めて進む精密作業</span></span>において、視覚には根本的な限界があります。コネクタをPCIeスロットに挿すときの「カチッ」という抵抗感、組み立て中に生じる微小なアライメントエラー——これらは目ではなく指先が教えてくれる情報です。では、ロボットに触覚センサーを持たせてAIに統合すれば解決するのでしょうか？ この論文はその「当然の解」に潜む罠を明らかにし、エレガントな突破口を示しています。</p>
+<h2><span class="n">2</span>World Action Model とは何か</h2>
+<p>この論文が拡張する<span class="term-tip" tabindex="0">WAM<span class="tip">World Action Model: 未来の映像（世界状態）を予測しながら、同時にロボットの行動を出力するモデル</span></span>は、近年のロボット学習研究で急速に注目されているフレームワークです。WAMの基本的なアイデアはシンプルです——「今の状態からAIが行動を生成し、その行動をとったあと世界がどう変わるかを同時に予測する」。</p>
+<p>これはロボットが頭の中で未来をシミュレーションしながら行動を決めるようなイメージです。映像を「予測できる」ということは、モデルが世界の物理的ダイナミクスを内部に持っていることを意味します。行動を引き起こした結果まで予測できる分、単なる模倣学習より頑健な意思決定が期待できます。しかしここに、視覚だけでは埋めきれない隙間があります——<strong>視覚的に自然な未来でも、物理的に正しいとは限らない</strong>のです。</p>
+<h2><span class="n">3</span>触覚汚染 — ナイーブな解法が生む新たな問題</h2>
+<p>「触覚センサーのデータもトークンとしてWAMに入力すれば解決するはず」と誰もが考えるでしょう。ところがこの論文は、それが<strong>触覚汚染（tactile pollution）</strong>という失敗モードを引き起こすことを初めて体系的に示しました。</p>
+<p>触覚信号は映像信号と性質が根本的に異なります。映像は空間的に密（dense）で時間的に滑らか（smooth）に変化しますが、触覚信号は<strong>疎（sparse）・局所的（local）・イベント駆動（event-driven）</strong>という三つの特性を持ちます。接触していない間はゼロに近く、接触した瞬間だけ突然大きく変化します。まるで静寂の中に突然鳴り響く警報音のようなものです。</p>
+<p>この突然のスパイク信号をそのままWAMに流し込むと、<span class="term-tip" tabindex="0">拡散モデル<span class="tip">ノイズからデータを逆算的に復元するジェネレーティブモデル。WAMの行動・映像生成に使われる</span></span>が受け取る「映像の流れ」の中に、突発的で局所的な信号が紛れ込みます。映像予測モジュールが「この信号は映像として何を意味するのか」と混乱し、結果として<strong>映像予測の精度も行動の精度も両方が低下してしまいます</strong>。著者たちはこの現象を「触覚が映像と行動を汚染する」として tactile pollution と命名しました。</p>
+<div class="pull">触覚信号をそのままWAMに入れると、視覚と行動の両方を汚染する——問題は「何を入れるか」ではなく「どう見せるか」にあった。</div>
+<h2><span class="n">4</span>Tactile Asymmetric Attention — 「誰に・何を見せるか」を非対称にする</h2>
+<p>Tactile-WAM が提案する解法の核心は、触覚情報を<strong>映像クエリと行動クエリに対して非対称に扱う</strong>という発想です。この機構を TAAM（Tactile Asymmetric Attention Mechanism）と呼びます。TAAMは2つのコンポーネントで構成されます。</p>
+<h3>① VideoClean マスク — 映像は触覚を「見ない」</h3>
+<p><span class="term-tip" tabindex="0">Transformer<span class="tip">入力系列の各要素が他の要素に「注目（Attention）」して文脈を集めるアーキテクチャ</span></span>の注意機構では、クエリ（Q）がキー（K）とバリュー（V）を参照して情報を集めます。VideoClean マスクは、<strong>映像生成クエリが触覚トークンのKV（キー・バリュー）を参照することを禁止します</strong>。ただし行動生成クエリは引き続き触覚トークンを参照できます。</p>
+<p>つまり「映像を生成するAIの目には触覚データを隠す。行動を決めるAIの目には触覚データを見せる」という役割分離です。これにより、映像予測は視覚の世界だけで完結し、イベント駆動の触覚スパイクに乱されなくなります。</p>
+<h3>② touch-aware bias — 「変化の瞬間」を行動注意に伝える</h3>
+<p>さらに、予測された触覚状態の変化（「接触が始まった」「滑りが起きた」など）から <strong>touch-aware bias</strong> を導出します。このバイアスを行動クエリの注意スコアに加算することで、拡散モデルがノイズ除去するプロセス中に「今まさに接触状態が変わった」という信号が行動生成に優先的に反映されます。</p>
+<p>たとえて言えば、「工場の監督員（映像モデル）は工場全体の流れを把握するが、アセンブリの担当者（行動モデル）は手先の圧力センサーを直接確認できる」という分業体制です。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 共有トークン列の準備</span></div><div class="ln"><span class="no">1</span><span class="ct">tokens = video_tokens + tactile_tokens</span></div><div class="ln"><span class="no">2</span><span class="ct">K, V = <span class="fn">encode</span>(tokens)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ① VideoClean マスク: 映像クエリは触覚KVを見ない</span></div><div class="ln"><span class="no">3</span><span class="ct">Q_vid = <span class="fn">video_query</span>(video_tokens)<span class="badge">①</span></span></div><div class="ln"><span class="no">4</span><span class="ct">mask  = <span class="fn">VideoCleanMask</span>()  <span class="kw"># tactile KV を遮断</span></span></div><div class="ln"><span class="no">5</span><span class="ct">A_vid = <span class="fn">masked_attn</span>(Q_vid, K, V, mask)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ② touch-aware bias: 行動クエリは触覚変化を加味する</span></div><div class="ln"><span class="no">6</span><span class="ct">Q_act = <span class="fn">action_query</span>(action_tokens)<span class="badge">②</span></span></div><div class="ln"><span class="no">7</span><span class="ct">bias  = <span class="fn">touch_aware_bias</span>(predicted_touch_change)</span></div><div class="ln"><span class="no">8</span><span class="ct">A_act = <span class="fn">attn</span>(Q_act, K, V) + bias</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ③ 映像・行動それぞれのデコーダに分岐</span></div><div class="ln"><span class="no">9</span><span class="ct">next_frame  = <span class="fn">video_decoder</span>(A_vid)<span class="badge">③</span></span></div><div class="ln"><span class="no">10</span><span class="ct">next_action = <span class="fn">action_decoder</span>(A_act)</span></div></div><div class="code-cap">TAAM（非対称注意機構）の概念的な処理フロー</div>
+<h2><span class="n">5</span>実験結果 — 接触作業で劇的な改善</h2>
+<p>著者たちは <span class="term-tip" tabindex="0">ManiFeel<span class="tip">触覚センサーを持つロボットアームの接触タスクに特化したベンチマーク</span></span>を用いて評価しました。結果は顕著です。</p>
+<div class="stats"><div class="stat"><div class="v">+38.9%</div><div class="k">全タスク平均の成功率向上</div></div><div class="stat"><div class="v">+86%</div><div class="k">接触リッチなタスクに限定した場合の成功率向上</div></div></div>
+<p>全タスク平均でも約4割近い改善ですが、挿入・組み立てなど<strong>接触が本質的に重要なタスク群に絞ると86%という大幅な向上</strong>が確認されました。この差がそのまま、「視覚だけでは見えない情報がいかに重要だったか」を物語っています。触覚汚染を避ける非対称注意が、最も効果を発揮するのは正にこの接触リッチなシナリオです。</p>
+<h2><span class="n">6</span>なぜこれが重要か — 「情報の性質」を尊重した設計</h2>
+<p>この研究の核心的な貢献は、単に触覚を加えたことではなく、<strong>異なる性質を持つ感覚モダリティを統合するときの一般的な設計原則を示した</strong>点にあります。触覚はテキスト・映像・音声のどれとも異なる情報の性質を持ちます。そのまま混ぜるのではなく、「どのクエリに・どの情報を・どれだけ見せるか」を意図的に設計することが重要だという教訓です。</p>
+<p>このアプローチは触覚に限らず応用が利くかもしれません。温度センサー、振動センサー、IMU（慣性センサー）——ロボットが持ち得るさまざまな物理センサーを基盤モデルに統合する際、同じ「非対称性」の原則が有効になる可能性があります。</p>
+<div class="pull">「どんな情報でもとりあえず全部入れればよい」ではなく、情報の性質に合った見せ方を設計する——これがマルチモーダルAIの次の課題だ。</div>
+<h2><span class="n">7</span>限界と正直な評価</h2>
+<div class="step"><span class="si">限界 1</span><p>ベンチマーク依存: ManiFeel ベンチマーク上での評価であり、実環境での多様なタスクへの汎化は未確認。</p></div><div class="step"><span class="si">限界 2</span><p>触覚センサーの前提: 触覚センサー自体のキャリブレーションやセンサーの種類への依存性は詳述されていない。触覚センサーを持つロボットが限られる現状では適用範囲が限られる。</p></div><div class="step"><span class="si">限界 3</span><p>著者情報・詳細実装: 現時点でアブストラクト公開段階であり、詳細なアーキテクチャやアブレーション実験の全容は論文本文での確認が必要。</p></div><div class="step"><span class="si">限界 4</span><p>touch-aware bias の設計: bias の導出にどれほど精度の高い触覚予測が必要かは不明。触覚予測が外れた場合の robustness は今後の課題。</p></div>
+<h2><span class="n">8</span>新人研究者への文脈 — Physical AI と感覚統合の行方</h2>
+<div class="tip-box"><div class="tb-label">💡 R&amp;D でよく出る考え方</div>複数のモダリティを統合するとき、最も簡単な方法は「全部を同じ空間に投げ込んで、モデルに学ばせる」ことです（early fusion と呼ばれます）。しかし本論文が示すように、モダリティ間の統計的性質の違い（密/疎、連続/イベント駆動）が無視できない場合、明示的な設計が必要になります。「どのモダリティをどのクエリに見せるか」という問いは、マルチモーダルアーキテクチャ設計の重要な論点です。</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>触覚センサー研究は、カメラや LiDAR に比べてまだデータが少なく、標準的なベンチマークも整備途中です。ManiFeel のような触覚特化ベンチマークの整備と、Tactile-WAM のような基盤モデルへの統合が同時進行している点は、この分野が「データ収集」「モデル設計」「ベンチマーク整備」を並行して進めなければならない段階であることを示しています。新人研究者にとっては、未開拓なポジションが多い魅力的なエリアです。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
