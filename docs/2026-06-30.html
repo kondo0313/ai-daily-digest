@@ -120,8 +120,8 @@ h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
   </div>
 
   <div class="page">
-    <div class="tags">#AI #論文解説 #拡散言語モデル #LLM効率化 #Mamba #新人研究者向け</div>
-    <h1 class="headline">拡散×Mambaで言語生成を刷新！KVキャッシュ互換の双方向文脈を実現した Bifocal dLLM</h1>
+    <div class="tags">#AI #論文解説 #LLM #解釈可能性 #新人研究者向け</div>
+    <h1 class="headline">LLMの「思考」は本当に思考か？ 4つの公理で内部表現を解剖する</h1>
 
     <div class="author">
       <div class="avatar">AI</div>
@@ -133,45 +133,59 @@ h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
 
     <div class="paper-card">
       <div class="pc-label">本日の論文</div>
-      <div class="pc-title">Bifocal Diffusion Language Models: Asymmetric Bidirectional Context for Parallel Generation</div>
+      <div class="pc-title">Formalizing Latent Thoughts: Four Axioms of Thought Representation in LLMs</div>
       <div class="pc-row">
-        <span>arXiv 著者（論文参照）</span>
-        <span>arXiv cs.LG ・ 2026年6月</span>
-        <a href="https://arxiv.org/abs/2606.27732">原文 →</a>
+        <span>arXiv著者ら</span>
+        <span>arXiv cs.LG / cs.AI ・ 2026年6月</span>
+        <a href="https://arxiv.org/abs/2606.27378">原文 →</a>
       </div>
     </div>
 
     <div class="content">
-<h2><span class="n">1</span>「速いか、賢いか」──LLM生成の二律背反を超える</h2>
-<p>ChatGPT のような大規模言語モデルは、文章を「左から右へ、1トークンずつ」生成します。これを<span class="term-tip" tabindex="0">自己回帰（AR）生成<span class="tip">前のトークンを見ながら次を1個ずつ予測する生成方式。正確だが遅い</span></span>といいます。速度を上げるには並列化が必要ですが、生成物の品質と速度を同時に高めることが非常に難しく、研究者たちは長年この壁に悩んできました。</p>
-<p>そこに登場したのが <strong>拡散言語モデル（dLLM: discrete diffusion language model）</strong> です。画像生成で有名な<span class="term-tip" tabindex="0">拡散モデル<span class="tip">ノイズを徐々に除去して高品質なデータを生成するモデル。Stable Diffusion が代表例</span></span>を言語に応用したもので、マスクされた複数のトークンを「一度に」復元できます。理論上は大幅なスピードアップが期待できるのですが……実用化には厄介な設計上の問題が立ちはだかっていました。</p>
-<div class="pull">双方向を選べば賢いが遅い。因果的を選べば速いが頭が悪い。この二択こそが、拡散言語モデルの普及を阻んでいた根本的なジレンマだった。</div>
-<h2><span class="n">2</span>ジレンマの正体──アテンションとKVキャッシュの相性問題</h2>
-<p>dLLM でトークンを並列復元するとき、どの範囲の文脈を「見て」いいか、という設計選択があります。</p>
-<div class="step"><span class="si">選択肢 A</span><p><strong>双方向アテンション</strong>：左右のすべての文脈を参照できるので生成品質が高い。しかし<span class="term-tip" tabindex="0">KVキャッシュ<span class="tip">Transformerが過去の文脈の Key・Value を保存して再計算を省くメモリ上の仕組み</span></span>が使えず、バッチ処理でスループットが大幅に落ちる。</p></div><div class="step"><span class="si">選択肢 B</span><p><strong>因果的アテンション</strong>：左側しか見ないため KV キャッシュは使えるが、右側の文脈が一切参照できず生成品質が著しく低下する。dLLM の強みである「並列復元」の恩恵が消えてしまう。</p></div>
-<p>ごく簡単に言えば「品質か速度か」の二択です。そしてこれは設計上の些細なトレードオフではなく、アーキテクチャの根幹に関わる構造的な問題でした。</p>
-<h2><span class="n">3</span>Bifocal dLLM の発想──「左のアテンション」と「右のMamba」を組み合わせる</h2>
-<p>この論文が提案するのが <strong>Bifocal dLLM</strong> という新しいパラダイムです。名前の「Bifocal（バイフォーカル）」は老眼鏡の「遠近両用レンズ」から来ています。遠くは別の焦点で見て、近くも見える──その発想を言語モデルのアーキテクチャに応用しました。</p>
-<p>具体的な実装が <strong>R2LM（Right-to-Left Mamba）</strong> です。二つのコンポーネントで構成されます。① <strong>標準の因果的アテンション</strong>：左側（過去）の文脈を精密に参照し、KV キャッシュも完全に利用できる。② <strong>逆方向 <span class="term-tip" tabindex="0">Mamba SSM<span class="tip">状態空間モデル(SSM)の一種。RNNに似た再帰構造で長系列を効率処理するニューラルモジュール</span></span>サイドカー</strong>：右側（未来）の文脈を「圧縮した形で」提供する軽量な追加モジュール。この二つを組み合わせることで、右側の文脈を完全には見えないが「圧縮した要約」として参照しつつ、左側はキャッシュ付きの因果的アテンションで高精度に処理します。</p>
-<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># ① マスクされたトークン列を受け取る</span></div><div class="ln"><span class="no">1</span><span class="ct">x = <span class="fn">mask_tokens</span>(input_ids, mask_ratio)<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># ② 逆方向Mambaで右側の文脈を圧縮して要約</span></div><div class="ln"><span class="no">2</span><span class="ct">right_ctx = <span class="fn">reverse_mamba</span>(x)<span class="badge">②</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># ③ 因果的アテンション（KVキャッシュ付き）で左側を精密参照</span></div><div class="ln"><span class="no">3</span><span class="ct">left_ctx = <span class="fn">causal_attention</span>(x, kv_cache=<span class="kw">True</span>)<span class="badge">③</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># ④ 両者を統合してマスクトークンを並列復元</span></div><div class="ln"><span class="no">4</span><span class="ct">hidden = left_ctx + right_ctx</span></div><div class="ln"><span class="no">5</span><span class="ct">tokens = <span class="fn">parallel_decode</span>(hidden)<span class="badge">④</span></span></div></div><div class="code-cap">R2LM の処理フロー（概念的な擬似コード）</div>
-<h3>① マスクトークンの並列復元とは</h3>
-<p>dLLM は画像の<span class="term-tip" tabindex="0">インペインティング<span class="tip">画像の一部を塗りつぶして埋め直す処理。拡散モデルが得意とする</span></span>に似た操作を言語で行います。文章中の複数の位置を同時に「マスク（空欄）」にして、それらを同時に予測・復元します。AR 生成が「1問ずつ解く」なら、dLLM は「全問同時に解く」イメージです。</p>
-<h3>② 逆方向 Mamba SSM サイドカーの役割</h3>
-<p>Mamba はもともと「左から右」に文脈を圧縮していく状態空間モデルです。これを <strong>逆方向</strong>（右から左）に走らせると、「右側の未来文脈の圧縮要約」が得られます。この要約は完全な双方向アテンションには及ばないものの、「何もない状態」よりずっとリッチな右側情報を提供します。そして Mamba は RNN ライクな構造なので、KV キャッシュを壊しません。サイドカーなので本体の因果的アテンションに追加するだけで良く、実装が比較的シンプルなのも利点です。</p>
-<h3>③ 因果的アテンション + KV キャッシュで高速化</h3>
-<p>本体の Transformer ブロックは通常の因果的アテンションを使います。KV キャッシュが使えるので、複数ユーザーが同時リクエストするバッチサービングでも推論が高速です。dLLM の「並列デコーディング（複数トークンを一度に復元）」と KV キャッシュを組み合わせることで、AR 生成を大きく上回るスループットを達成しています。</p>
-<h2><span class="n">4</span>実験結果──スループットと品質の同時改善</h2>
-<p>実験は Qwen3-1.7B を 60B トークンで継続事前学習した設定で行われました。</p>
-<div class="stats"><div class="stat"><div class="v">2.4〜12.9×</div><div class="k">双方向dLLM比のスループット向上倍率</div></div><div class="stat"><div class="v">1.9〜2.9×</div><div class="k">AR基準比のスループット向上（バッチサービング）</div></div><div class="stat"><div class="v">60Bトークン</div><div class="k">継続事前学習の規模（Qwen3-1.7Bベース）</div></div></div>
-<p>品質面では、ほとんどのベンチマークで因果的アテンション単体のベースラインを上回り、かつ平均スコアは双方向 dLLM さえも超えたと報告されています。つまり「品質も速度も改善した」という、従来のジレンマを正面突破した結果です。</p>
-<h2><span class="n">5</span>なぜこれが重要なのか──dLLM 実用化への扉</h2>
-<div class="pull">R2LM は「並列生成の品質」と「KV キャッシュによる高速推論」という、互いに相容れないと思われていた要件を同時に達成した。これは拡散言語モデルが実用 API として登場する未来への重要な一歩だ。</div>
-<p>現在の大規模サービス（ChatGPT、Claude など）はすべて AR 生成です。dLLM が実用的なスループットを持てれば、<strong>より安いコスト・より短いレイテンシで同等品質の回答</strong>を提供できる可能性があります。この研究はその実現可能性を具体的な数値で示した点で意義深いです。</p>
-<h2><span class="n">6</span>意義と限界──論文が認める弱点も正直に</h2>
-<div class="step"><span class="si">限界 1</span><p>サイドカーの Mamba は右側文脈を「圧縮」するため、完全な双方向アテンションには情報量で劣る。特に非常に長い依存関係があるタスクでは差が出る可能性がある。</p></div><div class="step"><span class="si">限界 2</span><p>実験は Qwen3-1.7B という比較的小さなモデルで行われており、7B・70B といった大規模モデルへのスケールアップ検証はこれから。</p></div><div class="step"><span class="si">限界 3</span><p>継続事前学習（60B トークン）という設定であり、ゼロからの大規模学習での性能はまだ未知数。</p></div><div class="step"><span class="si">限界 4</span><p>スループット比較の条件（バッチサイズ、シーケンス長、ハードウェア）によって倍率が大きく変わる（2.4〜12.9× の幅はそれを反映）。</p></div>
-<h2><span class="n">7</span>新人へのひとこと──なぜこれを読むべきか</h2>
-<div class="tip-box"><div class="tb-label">💡 R&amp;D でよく出る考え方</div>アーキテクチャ設計では「A か B か」の二択に見える問題が実は「A の強みと B の強みを組み合わせられないか」という問いに変えられることが多い。Bifocal dLLM はまさにその典型例で、因果的アテンション（左精度）＋ 逆 Mamba（右要約）という異種コンポーネントの組み合わせで突破口を開いた。こういう「ハイブリッド設計」の発想は、LLM 効率化の文脈で繰り返し登場するパターンです。</div>
-<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>Mamba（状態空間モデル）は 2023〜2024 年に注目を集めたアーキテクチャで、Transformer の二次計算コストを線形に抑えられる点が特徴です。この論文はそれを「サイドカー（補助モジュール）」として使うという使い方の工夫も面白い。既存の Transformer 本体を大きく変えずに拡張できるため、実用的な採用ハードルが低いのも重要なポイントです。</div>
+<h2><span class="n">1</span>LLMは本当に「考えている」のか？</h2>
+<p>ChatGPTやClaude、Geminiなど、現代の<span class="term-tip" tabindex="0">大規模言語モデル<span class="tip">大量のテキストで事前学習された巨大なニューラルネット</span></span>（LLM）は、私たちの問いに流暢な答えを返してくれます。しかし「答えが正しかった」こと＝「モデルが正しく考えていた」こと、でしょうか？</p>
+<p>直感的には疑問を感じるかもしれません。モデルは答えを<strong>偶然</strong>正解することも、全く別の内部プロセスから「正しい答えらしき文字列」を生成することもあります。<span class="term-tip" tabindex="0">ベンチマーク<span class="tip">モデルの能力を測る標準的なテスト問題集</span></span>のスコアは上がっているのに、推論プロセス自体は改善されていない——そんな可能性は排除できません。</p>
+<p>この論文は、そのモヤモヤを「<strong>公理という数学的な物差し</strong>」で可視化しようとします。LLMが生成する「<span class="term-tip" tabindex="0">潜在思考表現<span class="tip">答えを出す前にモデル内部で形成される中間的な表現ベクトル</span></span>」（latent thought representations）を、4つの独立した基準で評価するフレームワークを提案します。</p>
+<h2><span class="n">2</span>従来評価の盲点 ─ 能力と表現を混同していた</h2>
+<p>現在の評価手法の根本的な問題を、著者たちはこう指摘します。「<strong>既存の評価は、表現の品質とモデルの能力を混同している</strong>」と。</p>
+<p>たとえば、ある推論ステップの表現が良いかどうかを確かめるために、その後のタスク精度（正答率）を使うとします。でもこれは「表現が悪くてもモデルが強ければ正解できる」という問題を抱えます。表現の失敗なのか、それともモデルの処理能力の問題なのか、区別できないのです。</p>
+<div class="pull">「表現の品質」と「モデルの処理能力」を切り離して測れる指標を、初めて提案した。</div>
+<p>この論文では、ダウンストリームのベンチマーク精度に依存しない指標を定義します。<strong>表現そのものを直接調べる</strong>ことで、「見た目の賢さ」の裏に何があるかを暴こうとします。</p>
+<h2><span class="n">3</span>4つの公理 ─ 良い思考表現が満たすべき条件</h2>
+<p>著者たちは、良い潜在思考表現が持つべき性質として、以下の4つの公理を定式化します。これらは「必要条件」です——どれか一つでも満たしていなければ、その表現には欠陥がある、と主張します。</p>
+<h3>公理①：因果性 (Causality) — 表現は答えを「引き起こして」いるか？</h3>
+<p>最も基本的な条件です。「思考表現」がモデルの最終的な出力に<strong>因果的に寄与</strong>していなければ、それは思考とは言えません。つまり、その表現を変えれば出力が変わる、という関係が必要です。</p>
+<p>たとえば<span class="term-tip" tabindex="0">活性化パッチング<span class="tip">中間層の活性化を別の入力のものに差し替えて因果関係を調べる手法</span></span>（activation patching）などが、この公理の検証に使われます。表現を変えても出力が変わらないなら、それは「飾り」にすぎません。</p>
+<h3>公理②：最小性 (Minimality) — 余分な情報を含んでいないか？</h3>
+<p>良い思考表現は、<strong>その問題を解くために必要な情報だけ</strong>を持つべきです。入力テキストにある情報をそのまま丸ごとコピーしているだけなら、それは「圧縮された思考」ではなく「情報の転送」にすぎません。</p>
+<p>最小性を測るには、表現が入力埋め込みより「どれだけ多くの情報」を追加しているかを調べます。もし入力埋め込みと表現がほぼ同じ情報を持つなら、思考が起きているとは言えないわけです。</p>
+<h3>公理③：可分性 (Separability) — 異なる問いの思考は区別できるか？</h3>
+<p>「ロンドンはイギリスの首都ですか？」と「Xは2の平方根ですか？」という全く異なる問いに対して、モデルの潜在思考表現は<strong>十分に違う方向を向いている</strong>べきです。可分性はこの「思考の多様性」を測ります。</p>
+<p>可分性が低いと、モデルはどんな問いに対しても同じような内部状態を経由して答えを生成していることになります。それは本当に「問いを理解して考えている」とは言えません。</p>
+<h3>公理④：安定性 (Stability) — 似た問いには似た思考が現れるか？</h3>
+<p>可分性と対になる公理です。「東京はアジアにありますか？」と「京都はアジアにありますか？」は、構造的に似た問いです。このとき潜在思考表現も<strong>似たような空間に現れる</strong>べきです。</p>
+<p>安定性が低いと、表現は問いの微小な違いに過剰に反応してしまいます。それは「同じ種類の問いを同じ方法で処理している」という一貫した推論の証拠を欠くことになります。</p>
+<div class="tip-box"><div class="tb-label">💡 4公理の関係</div>可分性（Separability）と安定性（Stability）は一見矛盾するように見えますが、「タスクが違えば遠く離れ、タスクが同じなら近くにまとまる」という理想的なクラスター構造を求めています。<strong>ちょうど良い分離と凝集</strong>のバランスが、良い思考表現の証拠です。</div>
+<h2><span class="n">4</span>実験結果 ─ どのモデルも4公理を同時には満たせない</h2>
+<p>著者たちは、dense（通常の密な重みのモデル）、推論特化でfinetuningされたモデル（reasoning-distilled）、強化学習で訓練されたモデル（RL-trained）の3種類にわたる複数のオープンウェイトLLMを対象に、23種類の推論タスクで大規模な監査を行いました。タスクには空間推論（Spatial Reasoning）、事実QA（Factual QA）などが含まれます。</p>
+<div class="stats"><div class="stat"><div class="v">23</div><div class="k">評価した推論タスク数
+（空間推論・事実QAなど）</div></div><div class="stat"><div class="v">0/全</div><div class="k">4公理を同時に満たすモデル
+（全モデルがいずれかで失敗）</div></div><div class="stat"><div class="v">3系統</div><div class="k">評価したモデルファミリー
+（dense / 推論distilled / RL-trained）</div></div></div>
+<p>最も驚くべき結果は次の3点です。</p>
+<div class="step"><span class="si">結果①</span><p><strong>どのモデルも4公理を同時に満たさない。</strong> 一つの公理ではある程度満足できても、別の公理で失敗する。これはモデルアーキテクチャや訓練手法に関わらず一貫した傾向だった。</p></div><div class="step"><span class="si">結果②</span><p><strong>タスクの種類は区別できるが、同一タスク内の異なる問いは区別できない。</strong> 「空間推論」と「数学」は区別できても、「空間推論の問い1」と「空間推論の問い2」は区別できない。可分性が部分的にしか機能していない。</p></div><div class="step"><span class="si">結果③</span><p><strong>潜在思考表現が入力埋め込みに比べてほとんど追加情報を持っていない。</strong> 最小性の視点から言えば「思考が情報を圧縮・変換していない」。つまり、LLMの中間層は入力をただ引き継いでいるだけかもしれない。</p></div>
+<div class="pull">結果③が最も衝撃的だ——LLMの潜在思考は「新しい情報を作っていない」かもしれない。</div>
+<h2><span class="n">5</span>なぜこれが重要か ─ 「賢さ」への根本的な問い直し</h2>
+<p>この研究が重要な理由は、<strong>ベンチマーク精度では見えないLLMの内部的な限界</strong>を明らかにしようとしているからです。GPT-4や最新のClaudeがMATHやGSM8Kで高スコアを出していても、その「正解」はどのような内部プロセスから生まれているか、まだよく分かっていません。</p>
+<p>特に「失敗はモデルサイズや訓練方法に関係なく構造的だ」という指摘は強烈です。bigger model = better reasoning という仮定を揺さぶります。<span class="term-tip" tabindex="0">スケーリング則<span class="tip">モデルサイズ・データ量・計算量を増やすと性能が予測可能に向上するという経験的法則</span></span>だけを信じてスケールアップしても、内部推論の質は変わらないかもしれない——そういうメッセージが読み取れます。</p>
+<p>また、これは<span class="term-tip" tabindex="0">解釈可能性<span class="tip">AIモデルがなぜその出力を返したかを人間が理解できるようにする研究分野</span></span>（interpretability）研究への重要な貢献でもあります。「モデルが何を考えているか」を評価するための<strong>独立した、客観的な指標</strong>が初めて提案されました。</p>
+<h2><span class="n">6</span>意義と限界</h2>
+<div class="step"><span class="si">意義①</span><p><strong>ベンチマーク精度から独立した評価フレームワーク</strong>を提案。「精度が高い ≠ 思考が良い」を測定可能にした。</p></div><div class="step"><span class="si">意義②</span><p><strong>訓練方法（dense / RL / distilled）を横断して同じ失敗パターン</strong>が観察された。これは問題がアーキテクチャレベルの構造的課題であることを示唆する。</p></div><div class="step"><span class="si">限界①</span><p>「潜在思考表現」の定義が論文によって異なる。この研究が測定する「表現」が本当にモデルの推論を代理しているかどうかは、さらなる検証が必要。</p></div><div class="step"><span class="si">限界②</span><p>23タスクは多いようで、実際にはLLMが解くタスクの多様性から見れば限定的。特にコーディングや創造的文章生成などは含まれていない。</p></div><div class="step"><span class="si">限界③</span><p>「公理を満たさない ≠ モデルが役に立たない」という点は注意が必要。実用上は素晴らしいモデルでも、この評価軸では失格になる。実用性との乖離をどう解釈するかは読者の判断に委ねられている。</p></div>
+<h2><span class="n">7</span>新人研究者へのひとこと</h2>
+<div class="note-box"><div class="nb-label">⚙️ この研究から学べること</div>この論文が教えてくれる一番大切なことは、<strong>「評価指標を設計すること」がいかに難しく、かつ重要か</strong>ということです。LLMの「賢さ」を測るとき、私たちは何を測りたいのか——精度？ 因果性？ 表現の豊かさ？ 安定性？それぞれ別の概念で、混同すると誤った結論につながります。
+
+「モデルが改善された」と言う前に、<strong>何を改善指標にしているかを問い直す習慣</strong>を持ちましょう。この論文の4つの公理は、その出発点として非常に参考になります。</div>
+<div class="tip-box"><div class="tb-label">💡 次に読むべき論文のヒント</div>この研究に興味を持ったなら、<strong>activation patching / causal tracing</strong>（Meng et al. 2022, ROME論文）と、<strong>sparse autoencoder（SAE）</strong>を使ったFeature分析（Anthropicの研究など）も合わせて読むと理解が深まります。「モデルの内部で何が起きているか」という問いへの異なるアプローチを比較することで、interpretabilityの全体像が見えてきます。</div>
     </div>
   </div>
 

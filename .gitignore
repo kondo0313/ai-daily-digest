@@ -5,3 +5,5 @@ test_template.py
 .env
 papers.json
 article.json
+learn_today.json
+article_learn.json

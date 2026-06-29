@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 30日講座 — 行列は「変換」だった ─ 線形代数の直感を身につける</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+
+.course-card{background:linear-gradient(135deg,#1c6f8c15,#2cb69615);border:1.5px solid var(--accent);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.course-card .cc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--accent-ink);text-transform:uppercase;margin-bottom:6px;}
+.course-card .cc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;color:var(--ink);}
+.course-card .cc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:4px 16px;}
+.cc-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;border-radius:6px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;}
+.progress-bar{height:4px;background:var(--line);border-radius:2px;margin:10px 0 4px;}
+.progress-bar .bar{height:100%;background:var(--accent);border-radius:2px;transition:width .4s;}
+.progress-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-faint);text-align:right;}
+/* KaTeX blocks */
+.tex-block{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;overflow-x:auto;}
+.tex-block .katex-display{margin:0;}
+.tex-block .tx-cap{font-size:12.5px;color:var(--ink-faint);margin-top:10px;text-align:center;}
+.tex-derive{margin-top:12px;border-top:1px solid var(--line);padding-top:10px;}
+.tex-derive-row{display:flex;gap:10px;align-items:baseline;margin-top:6px;font-size:14px;}
+.tex-derive-label{font-size:12px;color:var(--ink-faint);flex-shrink:0;min-width:80px;}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">📚</span> AI 30日講座</div>
+      <div class="date-pill">2026-06-30</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI30日講座 #線形代数 #行列 #固有値 #SVD #新人研究者向け</div>
+    <h1 class="headline">行列は「変換」だった ─ LLM を支える線形代数の直感</h1>
+
+    <div class="author">
+      <div class="avatar" style="background:linear-gradient(135deg,#1c6f8c,#2cb696);">📚</div>
+      <div class="author-meta">
+        <div class="name">AI 30日講座</div>
+        <div class="sub">2026-06-30 ・ Week 1: 数学的基礎 ／ 数理重視</div>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="cc-label">本日のカリキュラム</div>
+      <div class="cc-title">
+        <span class="cc-badge">DAY 1 / 30</span>
+        &nbsp;行列は「変換」だった ─ 線形代数の直感を身につける
+      </div>
+      <div class="progress-bar"><div class="bar" style="width:3%"></div></div>
+      <div class="progress-label">3% 完了</div>
+      <div class="cc-row">
+        <span>Week 1: 数学的基礎 ─ AIが動く土台</span>
+        <span>数理重視 ・ 前提: 高校数学（行列の足し算・掛け算の定義）</span>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>きょうの問い ─ 行列って結局なんですか？</h2>
+<p>「行列は数を並べた表」——そう習いましたか？ それは正しいですが、研究者にとって重要な直感は別にあります。<strong>行列は「空間を変換する機械」</strong>です。この視点の転換だけで、機械学習の多くの操作が「なぜそうなのか」と腑に落ちます。</p>
+<p>今日は「行列 = 変換」という見方を徹底的に身につけ、<span class="term-tip" tabindex="0">固有値分解<span class="tip">行列を固有値と固有ベクトルに分解する操作</span></span>と<span class="term-tip" tabindex="0">特異値分解<span class="tip">長方形行列を対角行列の形に分解する汎用的な手法（SVD）</span></span>（SVD）まで理解します。これらは LLM の重み行列、LoRA、Attention のすべてに顔を出す基本道具です。</p>
+<h2><span class="n">2</span>動機 ─ なぜ AI 研究者に線形代数が必要か</h2>
+<p>Transformer の Self-Attention は、ざっくりいうと「<strong>行列の掛け算を何度も繰り返す</strong>」操作です。入力トークンの埋め込みベクトルに Query/Key/Value の重み行列をかけ、Attention スコアを計算し、Value で重み付き和を取る——すべて線形代数です。</p>
+<p>また、<span class="term-tip" tabindex="0">LoRA<span class="tip">大きな重み行列の更新を低ランクの小さな行列の積で近似するパラメータ効率チューニング手法</span></span>の核心は「大きな行列を低ランクの積 $A \cdot B$ で近似できる」という線形代数の事実にあります。線形代数の直感なしに、これらの手法の「なぜ動くのか」を理解するのは困難です。</p>
+<h2><span class="n">3</span>行列 = 線形変換</h2>
+<p>まず「変換」とは何かを確認します。関数 $f: \mathbb{R}^n \to \mathbb{R}^m$ が<strong>線形</strong>であるとは、以下の2条件を満たすことです。</p>
+<div class="step"><span class="si">条件①</span><p><strong>加法性</strong>: $f(\mathbf{u} + \mathbf{v}) = f(\mathbf{u}) + f(\mathbf{v})$ — 先に足してから変換しても、変換してから足しても同じ</p></div><div class="step"><span class="si">条件②</span><p><strong>斉次性</strong>: $f(c\mathbf{u}) = cf(\mathbf{u})$ — スカラー倍してから変換しても、変換してからスカラー倍しても同じ</p></div>
+<p>この2条件を同時に書くと「<strong>重ね合わせの原理</strong>」になります。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="f(\alpha\mathbf{u} + \beta\mathbf{v}) = \alpha f(\mathbf{u}) + \beta f(\mathbf{v})"></div><div class="tx-cap">線形性の条件（重ね合わせの原理）</div></div>
+<p>そして「$n$ 次元空間から $m$ 次元空間への線形変換はすべて $m \times n$ 行列で表現できる」というのが、線形代数の根本定理です。逆に言えば、<strong>すべての行列は線形変換</strong>です。行列 $\mathbf{W}$ とベクトル $\mathbf{x}$ の積 $\mathbf{W}\mathbf{x}$ は、「$\mathbf{x}$ が表す点を $\mathbf{W}$ という変換機でねじ曲げて新しい点 $\mathbf{y}$ に送る」操作です。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\mathbf{y} = \mathbf{W}\mathbf{x}, \quad \mathbf{W} \in \mathbb{R}^{m \times n},\ \mathbf{x} \in \mathbb{R}^n,\ \mathbf{y} \in \mathbb{R}^m"></div><div class="tx-cap">行列-ベクトル積 = 線形変換</div></div>
+<div class="tip-box"><div class="tb-label">💡 ニューラルネットの全結合層とは</div>全結合層（Linear層）は $\mathbf{y} = \mathbf{W}\mathbf{x} + \mathbf{b}$ です。バイアス $\mathbf{b}$ がある分、厳密には<strong>アフィン変換</strong>（原点を移動する線形変換）ですが、本質は線形変換です。$\mathbf{W}$ のランクや固有値が、この層が「どんな変換をしているか」を決めます。</div>
+<h3>行列の掛け算 = 変換の合成</h3>
+<p>行列 $\mathbf{A}$ と $\mathbf{B}$ の積 $\mathbf{AB}$ は「$\mathbf{B}$ で変換してから $\mathbf{A}$ で変換する」という<strong>変換の合成</strong>を一つの行列で表したものです。（右から左の順で読む点に注意。）</p>
+<p>Transformer の Attention では、$\mathbf{Q} = \mathbf{X}\mathbf{W}_Q$, $\mathbf{K} = \mathbf{X}\mathbf{W}_K$, $\mathbf{V} = \mathbf{X}\mathbf{W}_V$ という3つの線形変換が入力トークン行列 $\mathbf{X}$ に適用されます。これはまさに「3回の変換を別々の重みで行う」操作です。</p>
+<h2><span class="n">4</span>固有値と固有ベクトル ─ 変換に「不動の軸」はあるか</h2>
+<p>行列 $\mathbf{A}$ という変換機は、ほとんどのベクトルをぐいっと別方向に曲げます。しかし特別なベクトル $\mathbf{v}$ があって、これだけは変換後も<strong>元の方向を向いたまま</strong>（スカラー倍されるだけ）のことがあります。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\mathbf{A}\mathbf{v} = \lambda\mathbf{v}"></div><div class="tx-cap">固有値方程式 — $\mathbf{v}$ は固有ベクトル、$\lambda$ は固有値</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">整理すると</span><span class="katex-display-wrapper" data-tex="(\mathbf{A} - \lambda\mathbf{I})\mathbf{v} = \mathbf{0}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">非自明解が存在する条件</span><span class="katex-display-wrapper" data-tex="\det(\mathbf{A} - \lambda\mathbf{I}) = 0"></span></div></div></div>
+<p>固有値 $\lambda$ が正なら「変換後も同じ向き（スケール変化のみ）」、負なら「向きが反転」、絶対値 $|\lambda| &gt; 1$ なら「引き伸ばされる」、$|\lambda| &lt; 1$ なら「縮む」軸です。</p>
+<h3>なぜ固有値が重要か</h3>
+<p>正方行列 $\mathbf{A}$ が n 個の<strong>線形独立な</strong>固有ベクトルを持つとき、行列は対角化できます。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\mathbf{A} = \mathbf{P}\mathbf{\Lambda}\mathbf{P}^{-1}"></div><div class="tx-cap">固有値分解（対角化） — $\mathbf{P}$ の列が固有ベクトル、$\mathbf{\Lambda}$ が固有値の対角行列</div></div>
+<p>これは「行列 $\mathbf{A}$ による変換は、①固有ベクトルを基底に変換し、②各軸を $\lambda_i$ 倍スケールし、③元の基底に戻す」という3ステップに分解できると言っています。直感的に非常にクリアです。</p>
+<p>機械学習での応用は豊富です：<span class="term-tip" tabindex="0">主成分分析<span class="tip">データの分散が最大となる方向（主成分）を固有ベクトルで求める次元削減手法（PCA）</span></span>（PCA）は共分散行列の固有ベクトルを求める操作ですし、グラフニューラルネットワークの<span class="term-tip" tabindex="0">グラフラプラシアン<span class="tip">グラフの接続構造を行列表現したもの。固有ベクトルがスペクトルグラフ理論の基礎</span></span>の固有ベクトルはグラフ構造の基底となります。</p>
+<h2><span class="n">5</span>特異値分解 (SVD) ─ 長方形行列の「真の姿」</h2>
+<p>固有値分解は正方行列にしか使えません。しかし、ニューラルネットの重み行列 $\mathbf{W} \in \mathbb{R}^{m \times n}$（$m \neq n$ が普通）には使えない。そこで登場するのが<strong>特異値分解（SVD）</strong>です。</p>
+<p>直感から入りましょう。どんな線形変換でも、「①入力空間を回転し、②各軸をスケールし、③出力空間を回転する」という3ステップで書けます。これを式にしたのが SVD です。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\mathbf{W} = \mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^\top"></div><div class="tx-cap">特異値分解 — $\mathbf{U} \in \mathbb{R}^{m \times m}$、$\boldsymbol{\Sigma} \in \mathbb{R}^{m \times n}$（対角）、$\mathbf{V} \in \mathbb{R}^{n \times n}$（直交行列）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">$\boldsymbol{\Sigma}$ の対角成分 $\sigma_1 \geq \sigma_2 \geq \cdots \geq 0$</span><span class="katex-display-wrapper" data-tex="\text{（特異値 = 各軸のスケール係数）}"></span></div></div></div>
+<p>$\mathbf{U}$（左特異ベクトル行列）と $\mathbf{V}$（右特異ベクトル行列）はどちらも<span class="term-tip" tabindex="0">直交行列<span class="tip">転置が逆行列に等しい行列。幾何的には回転・反転を表す</span></span>です（$\mathbf{U}^\top\mathbf{U} = \mathbf{I}$）。$\boldsymbol{\Sigma}$ は特異値 $\sigma_i$ が降順に並んだ対角行列です。</p>
+<h3>低ランク近似 ─ LoRA の数学的根拠</h3>
+<p>SVD の最も強力な応用が<strong>低ランク近似</strong>です。特異値 $\sigma_1 \geq \sigma_2 \geq \cdots$ のうち、大きいもの上位 $r$ 個だけを残して他を0にすると、元の行列 $\mathbf{W}$ を最もよく近似する「ランク $r$ の行列」が得られます。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\mathbf{W} \approx \mathbf{W}_r = \mathbf{U}_r\boldsymbol{\Sigma}_r\mathbf{V}_r^\top = \underbrace{(\mathbf{U}_r\boldsymbol{\Sigma}_r^{1/2})}_{\mathbf{A}} \cdot \underbrace{(\boldsymbol{\Sigma}_r^{1/2}\mathbf{V}_r^\top)}_{\mathbf{B}}"></div><div class="tx-cap">低ランク近似 — $\mathbf{A} \in \mathbb{R}^{m \times r}$、$\mathbf{B} \in \mathbb{R}^{r \times n}$（$r \ll \min(m,n)$）</div></div>
+<p>これがまさに <strong>LoRA（Low-Rank Adaptation）の設計思想</strong>です。大規模な重み行列 $\mathbf{W}$ の更新量 $\Delta\mathbf{W}$ を「低ランク $r$ の2つの小行列 $\mathbf{A}, \mathbf{B}$ の積」で近似します。なぜこれが動くのか？——「Fine-tuning によって重みに加わる変化は、実質的に低次元の構造を持つ」という仮説があり、SVD の低ランク近似がそれを捉えられるからです。</p>
+<div class="pull">LoRA は「重みの更新は低ランク」という SVD の洞察を Fine-tuning に応用した発明だった。</div>
+<h2><span class="n">6</span>応用 ─ LLM のどこに出てくるか</h2>
+<div class="stats"><div class="stat"><div class="v">Attention</div><div class="k">Q/K/V は全て線形変換
+$\mathbf{Q}=\mathbf{X}\mathbf{W}_Q$</div></div><div class="stat"><div class="v">LoRA</div><div class="k">更新量を低ランク行列の積で近似
+$\Delta\mathbf{W}=\mathbf{A}\mathbf{B}$</div></div><div class="stat"><div class="v">PCA/SVD</div><div class="k">埋め込み空間の可視化・圧縮に使用
+主要方向を特異ベクトルで抽出</div></div></div>
+<h3>Attention の行列乗算を具体的に追う</h3>
+<p>Self-Attention の計算を線形代数の言葉で書くと以下のようになります。$n$ トークン、$d$ 次元の入力行列 $\mathbf{X} \in \mathbb{R}^{n \times d}$ に対し：</p>
+<div class="code"><div class="ln comment"><span class="no">1</span><span class="ct"># ① 入力を Q/K/V 空間に線形変換（3回の行列積）</span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="nm">Q</span> = <span class="nm">X</span> @ <span class="nm">W_Q</span></span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="nm">K</span> = <span class="nm">X</span> @ <span class="nm">W_K</span></span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="nm">V</span> = <span class="nm">X</span> @ <span class="nm">W_V</span></span></div><div class="ln comment"><span class="no">5</span><span class="ct"># ② スコア行列（Q と K の内積）</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="nm">scores</span> = <span class="nm">Q</span> @ <span class="nm">K</span>.T / sqrt(d_k)<span class="badge">①</span></span></div><div class="ln comment"><span class="no">7</span><span class="ct"># ③ Softmax で確率分布に</span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="nm">attn</span> = <span class="fn">softmax</span>(<span class="nm">scores</span>)</span></div><div class="ln comment"><span class="no">9</span><span class="ct"># ④ Value の重み付き和（最終出力）</span></div><div class="ln"><span class="no">10</span><span class="ct"><span class="nm">output</span> = <span class="nm">attn</span> @ <span class="nm">V</span><span class="badge">②</span></span></div></div><div class="code-cap">Self-Attention の線形代数ステップ（疑似コード）</div>
+<div class="note-box"><div class="nb-label">⚙️ ①のスケーリングの意味</div>$\sqrt{d_k}$ で割るのは、内積が次元数 $d_k$ に比例して大きくなり<span class="term-tip" tabindex="0">Softmax<span class="tip">確率ベクトルに変換する活性化関数。大きな値に急激に集中するため温度管理が重要</span></span>が極端な値（ほぼ one-hot）に偏るのを防ぐためです。これも線形代数と確率論の組み合わせです。</div>
+<h2><span class="n">7</span>きょうの到達点</h2>
+<div class="tip-box"><div class="tb-label">💡 今日マスターしたこと</div>今日学んだことを確認しましょう。①<strong>行列 = 線形変換</strong>という視点（数の表ではなく空間の変換機）。②<strong>固有値・固有ベクトル</strong>（変換で方向が変わらない「不動の軸」）。③<strong>SVD</strong> = どんな行列でも分解できる究極のツール。④<strong>低ランク近似</strong> = LoRA の数学的根拠。これらが LLM の Attention・Fine-tuning・圧縮の至るところで使われています。明日は「微積分とバックプロパゲーション」に進み、学習の仕組みを数式で理解します。</div>
+<h2><span class="n">8</span>参照リンク</h2>
+<div class="step"><span class="si">REF①</span><p>Wikipedia: Linear map — 線形写像の定義と性質 https://en.wikipedia.org/wiki/Linear_map</p></div><div class="step"><span class="si">REF②</span><p>Wikipedia: Eigenvalues and eigenvectors — 固有値・固有ベクトルの数学的基礎 https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors</p></div><div class="step"><span class="si">REF③</span><p>Wikipedia: Singular value decomposition — SVD の定義・性質・応用 https://en.wikipedia.org/wiki/Singular_value_decomposition</p></div><div class="step"><span class="si">REF④</span><p>Wikipedia: Matrix (mathematics) — 行列演算の基礎 https://en.wikipedia.org/wiki/Matrix_(mathematics)</p></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI 30日講座 — Week 1〜6 ・ generated by Claude
+  </div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Render explicit tex-block wrappers
+      document.querySelectorAll('.katex-display-wrapper').forEach(el => {
+        const tex = el.dataset.tex;
+        if (tex) {
+          try {
+            katex.render(tex, el, {displayMode: true, throwOnError: false});
+          } catch(e) {
+            el.textContent = tex;
+          }
+        }
+      });
+      // Auto-render inline $...$ and $$...$$ in text
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+</body>
+</html>

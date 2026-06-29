@@ -26,10 +26,12 @@ import sys
 import re
 import json
 import html
+import time
+import xml.etree.ElementTree as ET
 from datetime import datetime, timezone, timedelta
 from email.utils import parsedate_to_datetime
 
-import feedparser
+import requests
 
 # ---------------------------------------------------------------------------
 # 設定 (digest.py から流用)
@@ -96,47 +98,132 @@ def pick_topic_for_today():
 # 収集 (digest.py の fetch_entries をそのまま)
 # ---------------------------------------------------------------------------
 
+_RSS_NS = {"rss": "http://purl.org/rss/1.0/", "dc": "http://purl.org/dc/elements/1.1/"}
+_ATOM_NS = {"atom": "http://www.w3.org/2005/Atom"}
+
+
 def _strip_tags(text):
     return re.sub(r"<[^>]+>", " ", text or "")
+
+
+def _parse_rss_xml(content, source_name, cutoff, seen):
+    """Parse arXiv RSS XML directly with ElementTree."""
+    items = []
+    try:
+        root = ET.fromstring(content)
+    except ET.ParseError as e:
+        print(f"[warn] RSS XML パース失敗 {source_name}: {e}", file=sys.stderr)
+        return items
+
+    # RSS 2.0 format: <rss><channel><item>...</item></channel></rss>
+    for item in root.iter("item"):
+        link_el = item.find("link")
+        if link_el is None:
+            # Try guid
+            link_el = item.find("guid")
+        link = (link_el.text or "").strip() if link_el is not None else ""
+        if not link or link in seen:
+            continue
+
+        pub_el = item.find("pubDate") or item.find("{http://purl.org/dc/elements/1.1/}date")
+        published = None
+        if pub_el is not None and pub_el.text:
+            try:
+                published = parsedate_to_datetime(pub_el.text.strip())
+            except Exception:
+                pass
+        if published and published < cutoff:
+            continue
+
+        title_el = item.find("title")
+        title = html.unescape(_strip_tags(title_el.text or "")).strip() if title_el is not None else ""
+        desc_el = item.find("description")
+        abstract = html.unescape(_strip_tags(desc_el.text or "")).strip() if desc_el is not None else ""
+
+        items.append({
+            "source": source_name,
+            "title": title,
+            "link": link,
+            "abstract": abstract[:5000],
+        })
+        seen.add(link)
+    return items
+
+
+def _fetch_arxiv_api(category, cutoff):
+    """arXiv Search API fallback when RSS is empty."""
+    start_str = cutoff.strftime("%Y%m%d")
+    end_str = datetime.now(timezone.utc).strftime("%Y%m%d")
+    url = (
+        f"https://export.arxiv.org/api/query"
+        f"?search_query=cat:{category}+AND+submittedDate:[{start_str}+TO+{end_str}]"
+        f"&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending"
+    )
+    try:
+        r = requests.get(url, timeout=60,
+                         headers={"User-Agent": "AI-Daily-Digest/1.0"})
+        r.raise_for_status()
+    except Exception as e:
+        print(f"[warn] arXiv API {category} 失敗: {e}", file=sys.stderr)
+        return []
+    try:
+        root = ET.fromstring(r.content)
+    except ET.ParseError as e:
+        print(f"[warn] arXiv API XML パース失敗 {category}: {e}", file=sys.stderr)
+        return []
+    items = []
+    for entry in root.findall("atom:entry", _ATOM_NS):
+        link_el = entry.find("atom:id", _ATOM_NS)
+        if link_el is None:
+            continue
+        link = (link_el.text or "").strip()
+        if not link:
+            continue
+        title_el = entry.find("atom:title", _ATOM_NS)
+        title = html.unescape(" ".join((title_el.text or "").split())) if title_el is not None else ""
+        summary_el = entry.find("atom:summary", _ATOM_NS)
+        abstract = html.unescape(" ".join((summary_el.text or "").split())) if summary_el is not None else ""
+        items.append({
+            "source": f"arXiv {category}",
+            "title": title,
+            "link": link,
+            "abstract": abstract[:5000],
+        })
+    return items
 
 
 def fetch_entries(feeds):
     cutoff = datetime.now(timezone.utc) - timedelta(hours=LOOKBACK_HOURS)
     items, seen = [], set()
+    rss_had_entries = False
 
     for source_name, url in feeds:
         try:
-            feed = feedparser.parse(url)
+            r = requests.get(url, timeout=30, headers={"User-Agent": "AI-Daily-Digest/1.0"})
+            r.raise_for_status()
         except Exception as e:
             print(f"[warn] {source_name} 取得失敗: {e}", file=sys.stderr)
             continue
 
-        for entry in feed.entries:
-            link = entry.get("link", "")
-            if not link or link in seen:
-                continue
+        parsed = _parse_rss_xml(r.content, source_name, cutoff, seen)
+        if parsed:
+            rss_had_entries = True
+        items.extend(parsed)
 
-            published = None
-            if entry.get("published_parsed"):
-                published = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
-            elif entry.get("published"):
-                try:
-                    published = parsedate_to_datetime(entry.published)
-                except Exception:
-                    published = None
-            if published and published < cutoff:
-                continue
-
-            summary = html.unescape(_strip_tags(
-                entry.get("summary", "") or entry.get("description", ""))).strip()
-
-            items.append({
-                "source": source_name,
-                "title": html.unescape(entry.get("title", "").strip()),
-                "link": link,
-                "abstract": summary[:5000],
-            })
-            seen.add(link)
+    # arXiv API fallback when RSS batch is between updates (common on Mon UTC)
+    if not rss_had_entries:
+        print("[info] RSS エントリなし — arXiv Search API にフォールバック", file=sys.stderr)
+        seen_cats = set()
+        for source_name, _ in feeds:
+            cat = source_name.replace("arXiv ", "")
+            if cat not in seen_cats:
+                seen_cats.add(cat)
+                api_items = _fetch_arxiv_api(cat, cutoff)
+                new_items = [it for it in api_items if it["link"] not in seen]
+                items.extend(new_items)
+                for it in new_items:
+                    seen.add(it["link"])
+                time.sleep(3)
 
     print(f"[info] 収集: {len(items)} 件", file=sys.stderr)
     return items
