@@ -31,6 +31,7 @@ import requests
 from template import STYLE, esc, _inline
 
 DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL")
+SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL")
 SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "").rstrip("/")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -330,6 +331,72 @@ def post_to_discord(article, filename, date_str):
     print("[info] Discord 配信完了", file=sys.stderr)
 
 
+def post_to_slack_learn(article, filename, date_str):
+    if not SLACK_WEBHOOK_URL:
+        return
+    if SITE_BASE_URL:
+        article_url = f"{SITE_BASE_URL}/learn/{filename}"
+        archive_url = f"{SITE_BASE_URL}/learn/index.html"
+    else:
+        article_url = f"learn/{filename}"
+        archive_url = "learn/index.html"
+
+    day_num = article.get("day_number", 1)
+    total = article.get("total_days", 30)
+    week = article.get("week", "")
+    progress_pct = min(100, int(day_num / total * 100))
+
+    preview = ""
+    for b in article.get("blocks", []):
+        if b.get("type") == "p":
+            preview = re.sub(r"\*\*(.+?)\*\*", r"\1", b.get("text", ""))
+            preview = re.sub(r"\[\[(.+?)\|[^\]]+\]\]", r"\1", preview)
+            preview = re.sub(r"\[\[(.+?)\]\]", r"\1", preview)
+            preview = re.sub(r"\$[^$]+\$", "", preview)
+            break
+    preview = preview[:200] + ("…" if len(preview) > 200 else "")
+
+    payload = {
+        "blocks": [
+            {
+                "type": "header",
+                "text": {"type": "plain_text", "text": f"📚 AI 30日講座 — {date_str}"},
+            },
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"*DAY {day_num} / {total}*　`{progress_pct}% 完了`\n*{article.get('headline', '')}*\n{preview}",
+                },
+            },
+            {
+                "type": "context",
+                "elements": [
+                    {"type": "mrkdwn", "text": f"{week}"},
+                ],
+            },
+            {
+                "type": "actions",
+                "elements": [
+                    {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "▶ 今日の授業を読む"},
+                        "url": article_url,
+                        "style": "primary",
+                    },
+                    {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "📋 カリキュラム"},
+                        "url": archive_url,
+                    },
+                ],
+            },
+        ]
+    }
+    _send_slack(payload)
+    print("[info] Slack 配信完了", file=sys.stderr)
+
+
 def _send(payload):
     r = requests.post(DISCORD_WEBHOOK_URL, json=payload, timeout=30)
     if r.status_code == 429:
@@ -339,6 +406,13 @@ def _send(payload):
     if r.status_code not in (200, 204):
         print(f"[warn] Discord 送信失敗 {r.status_code}: {r.text[:300]}", file=sys.stderr)
     time.sleep(1)
+
+
+def _send_slack(payload):
+    r = requests.post(SLACK_WEBHOOK_URL, json=payload, timeout=30)
+    if r.status_code not in (200, 204):
+        print(f"[warn] Slack 送信失敗 {r.status_code}: {r.text[:300]}", file=sys.stderr)
+    time.sleep(0.5)
 
 
 def main():
@@ -360,6 +434,7 @@ def main():
 
     filename = save_html(article, date_str)
     post_to_discord(article, filename, date_str)
+    post_to_slack_learn(article, filename, date_str)
     print("[info] 完了", file=sys.stderr)
 
 

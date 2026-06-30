@@ -44,6 +44,7 @@ from template import build_article_html, build_index_html
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
 DISCORD_WEBHOOK_URL = os.environ.get("DISCORD_WEBHOOK_URL")
+SLACK_WEBHOOK_URL = os.environ.get("SLACK_WEBHOOK_URL")
 SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "").rstrip("/")
 
 # arXiv は週末（土日）に論文を公開しない。最大空白: 木曜バッチ公開(金曜00:00UTC)〜
@@ -570,6 +571,8 @@ def post_to_discord(article, filename, paper, date_str):
 def post_discord_empty(date_str):
     _send({"content": f"**🤖 AI Daily Digest — {date_str}**\n"
                       "本日は対象期間内に新着が見つかりませんでした。"})
+    if SLACK_WEBHOOK_URL:
+        _send_slack({"text": f"🤖 AI Daily Digest — {date_str}\n本日は対象期間内に新着が見つかりませんでした。"})
 
 
 def _send(payload):
@@ -581,6 +584,83 @@ def _send(payload):
     if r.status_code not in (200, 204):
         print(f"[warn] Discord 送信失敗 {r.status_code}: {r.text[:300]}", file=sys.stderr)
     time.sleep(1)
+
+
+def post_to_slack(article, filename, paper, date_str):
+    if not SLACK_WEBHOOK_URL:
+        return
+    if SITE_BASE_URL:
+        article_url = f"{SITE_BASE_URL}/{filename}"
+        archive_url = f"{SITE_BASE_URL}/index.html"
+    else:
+        article_url = filename
+        archive_url = "index.html"
+
+    preview = ""
+    for b in article.get("blocks", []):
+        if b.get("type") == "p":
+            preview = re.sub(r"\*\*(.+?)\*\*", r"\1", b.get("text", ""))
+            preview = re.sub(r"\[\[(.+?)\|[^\]]+\]\]", r"\1", preview)
+            preview = re.sub(r"\[\[(.+?)\]\]", r"\1", preview)
+            break
+    preview = preview[:200] + ("…" if len(preview) > 200 else "")
+
+    topic = paper.get("topic_label", "")
+    reason = (paper.get("reason") or "—")[:200]
+
+    payload = {
+        "blocks": [
+            {
+                "type": "header",
+                "text": {"type": "plain_text", "text": f"🤖 AI Daily Digest — {date_str}  {topic}"},
+            },
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"*{article.get('headline', '本日のダイジェスト')}*\n{preview}",
+                },
+            },
+            {
+                "type": "section",
+                "fields": [
+                    {"type": "mrkdwn", "text": f"*📄 論文*\n{paper['title'][:200]}"},
+                    {"type": "mrkdwn", "text": f"*💡 注目理由*\n{reason}"},
+                ],
+            },
+            {
+                "type": "actions",
+                "elements": [
+                    {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "▶ じっくり読む"},
+                        "url": article_url,
+                        "style": "primary",
+                    },
+                    {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "📚 アーカイブ"},
+                        "url": archive_url,
+                    },
+                ],
+            },
+            {
+                "type": "context",
+                "elements": [
+                    {"type": "mrkdwn", "text": f"{paper.get('source', 'arXiv')} ・ {date_str}"},
+                ],
+            },
+        ]
+    }
+    _send_slack(payload)
+    print("[info] Slack 配信完了", file=sys.stderr)
+
+
+def _send_slack(payload):
+    r = requests.post(SLACK_WEBHOOK_URL, json=payload, timeout=30)
+    if r.status_code not in (200, 204):
+        print(f"[warn] Slack 送信失敗 {r.status_code}: {r.text[:300]}", file=sys.stderr)
+    time.sleep(0.5)
 
 
 # ---------------------------------------------------------------------------
@@ -630,6 +710,7 @@ def main():
 
     filename = save_html(article, date_str)
     post_to_discord(article, filename, paper, date_str)
+    post_to_slack(article, filename, paper, date_str)
     print("[info] 完了", file=sys.stderr)
 
 
