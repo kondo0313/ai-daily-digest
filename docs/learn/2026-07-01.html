@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 30日講座 — 誤差の山を下る ─ 微分とバックプロパゲーションの数学</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+
+.course-card{background:linear-gradient(135deg,#1c6f8c15,#2cb69615);border:1.5px solid var(--accent);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.course-card .cc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--accent-ink);text-transform:uppercase;margin-bottom:6px;}
+.course-card .cc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;color:var(--ink);}
+.course-card .cc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:4px 16px;}
+.cc-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;border-radius:6px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;}
+.progress-bar{height:4px;background:var(--line);border-radius:2px;margin:10px 0 4px;}
+.progress-bar .bar{height:100%;background:var(--accent);border-radius:2px;transition:width .4s;}
+.progress-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-faint);text-align:right;}
+/* KaTeX blocks */
+.tex-block{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;overflow-x:auto;}
+.tex-block .katex-display{margin:0;}
+.tex-block .tx-cap{font-size:12.5px;color:var(--ink-faint);margin-top:10px;text-align:center;}
+.tex-derive{margin-top:12px;border-top:1px solid var(--line);padding-top:10px;}
+.tex-derive-row{display:flex;gap:10px;align-items:baseline;margin-top:6px;font-size:14px;}
+.tex-derive-label{font-size:12px;color:var(--ink-faint);flex-shrink:0;min-width:80px;}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">📚</span> AI 30日講座</div>
+      <div class="date-pill">2026-07-01</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI30日講座 #バックプロパゲーション #微分 #連鎖律 #ニューラルネットワーク</div>
+    <h1 class="headline">誤差の山を下る ─ 微分とバックプロパゲーションの数学</h1>
+
+    <div class="author">
+      <div class="avatar" style="background:linear-gradient(135deg,#1c6f8c,#2cb696);">📚</div>
+      <div class="author-meta">
+        <div class="name">AI 30日講座</div>
+        <div class="sub">2026-07-01 ・ DAY 2 ・ 数学的基礎 ─ AIが動く土台</div>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="cc-label">本日のカリキュラム</div>
+      <div class="cc-title">
+        <span class="cc-badge">DAY 2 / 30</span>
+        &nbsp;誤差の山を下る ─ 微分とバックプロパゲーションの数学
+      </div>
+      <div class="progress-bar"><div class="bar" style="width:6%"></div></div>
+      <div class="progress-label">6% 完了</div>
+      <div class="cc-row">
+        <span>Week 1: 数学的基礎 ─ AIが動く土台</span>
+        <span>基礎〜中級</span>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>ニューラルネットワークはなぜ「学べる」のか？</h2>
+<p>大学受験で浪人したとき、あなたは模試の点数を見て「どの科目の、どの単元が弱いか」を特定し、そこを集中的に勉強しました。ニューラルネットワークの学習もまったく同じです。「予測がどれだけ外れているか（誤差）」を測り、「どのパラメータが誤差に最も貢献しているか」を特定し、そのパラメータを修正する。この一連の流れを数学的に実現するのが<strong>バックプロパゲーション</strong>（誤差逆伝播法）です。</p>
+<div class="pull">バックプロパゲーションとは「誤差を出力側から入力側へ逆向きに伝え、各パラメータの責任を数学的に割り当てるアルゴリズム」である。</div>
+<p>今日はその根幹にある<span class="term-tip" tabindex="0">微分<span class="tip">関数の変化率を求める演算。「少し動かしたらどれだけ出力が変わるか」を測る</span></span>と<span class="term-tip" tabindex="0">連鎖律<span class="tip">合成関数の微分を『外側の微分 × 内側の微分』で計算する規則</span></span>を丁寧に掘り下げ、バックプロパゲーションの全体像を数式で組み立てていきます。</p>
+<h2><span class="n">2</span>数学的基礎 ① ─ 勾配と損失関数</h2>
+<h3>損失関数：誤差を数値化する</h3>
+<p>学習の出発点は「どれだけ間違っているか」を一つの数値で表すことです。最もシンプルな例が<strong>平均二乗誤差（MSE）</strong>です。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="L(\mathbf{w}) = \frac{1}{N}\sum_{i=1}^{N}\left(y_i - \hat{y}_i\right)^2"></div><div class="tx-cap">平均二乗誤差（MSE）損失関数。w はモデルの全パラメータを表す。</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">y_i は正解ラベル、ŷ_i はモデルの予測値</span><span class="katex-display-wrapper" data-tex="\hat{y}_i = f(\mathbf{x}_i;\,\mathbf{w})"></span></div><div class="tex-derive-row"><span class="tex-derive-label">L を最小化する w を求めるのが学習の目標</span><span class="katex-display-wrapper" data-tex="\mathbf{w}^* = \arg\min_{\mathbf{w}} L(\mathbf{w})"></span></div></div></div>
+<h3>勾配降下法：山を下る戦略</h3>
+<p>損失関数 L を「高次元の山」と想像してください。目標は最も低い谷を見つけること。そのために「今いる場所で最も急な下り坂の方向」を計算し、少しだけ足を踏み出します。これが<span class="term-tip" tabindex="0">勾配降下法<span class="tip">損失関数の勾配（傾き）の逆方向にパラメータを更新する最適化アルゴリズム</span></span>です。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\mathbf{w} \leftarrow \mathbf{w} - \eta \,\nabla_{\mathbf{w}} L"></div><div class="tx-cap">勾配降下法のパラメータ更新則。η は学習率。</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">各パラメータ w_j についての偏微分</span><span class="katex-display-wrapper" data-tex="w_j \leftarrow w_j - \eta \,\frac{\partial L}{\partial w_j}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">η が大きすぎると振動、小さすぎると収束が遅い</span><span class="katex-display-wrapper" data-tex="\eta \in (0,\, 1] \quad \text{（ハイパーパラメータ）}"></span></div></div></div>
+<div class="stats"><div class="stat"><div class="v">∂L/∂w</div><div class="k">各重みへの損失の感度（勾配）</div></div><div class="stat"><div class="v">η</div><div class="k">学習率：一歩の大きさを制御</div></div><div class="stat"><div class="v">O(n)</div><div class="k">バックプロパゲーションの計算コスト（パラメータ数に比例）</div></div></div>
+<h2><span class="n">3</span>数学的基礎 ② ─ 連鎖律（Chain Rule）</h2>
+<p>バックプロパゲーションの「エンジン」は連鎖律です。ニューラルネットワークは「層が合成された関数」なので、最終的な損失から各パラメータへの勾配を求めるには、関数の合成を微分する連鎖律が不可欠です。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\frac{dz}{dx} = \frac{dz}{dy} \cdot \frac{dy}{dx}"></div><div class="tx-cap">1変数の連鎖律。z = g(y)、y = f(x) のとき。</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">多変数版：y が複数の変数に依存する場合</span><span class="katex-display-wrapper" data-tex="\frac{\partial z}{\partial x_i} = \sum_{j} \frac{\partial z}{\partial y_j} \cdot \frac{\partial y_j}{\partial x_i}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">ベクトル版（ヤコビアン行列）</span><span class="katex-display-wrapper" data-tex="\frac{\partial \mathbf{z}}{\partial \mathbf{x}} = \frac{\partial \mathbf{z}}{\partial \mathbf{y}} \cdot \frac{\partial \mathbf{y}}{\partial \mathbf{x}} \quad (\text{行列積})"></span></div></div></div>
+<div class="tip-box"><div class="tb-label">💡 連鎖律の直感</div>「気温が 1℃上がると売上が 2 万円増え、湿度が 1% 上がると気温が 0.5℃上がる」なら、湿度 1% の変化が売上に与える影響は 2 × 0.5 = 1 万円。これが連鎖律の本質です。ニューラルネットが深くなるほど「湿度→気温→売上」のような連鎖が長くなるだけです。</div>
+<h2><span class="n">4</span>バックプロパゲーションを分解する</h2>
+<h3>フォワードパス：予測を計算する</h3>
+<p>まず入力 x を受け取り、層を順に通過させて予測 ŷ を得ます。このとき各層の中間値（<strong>活性化値</strong>）をすべて保存しておくのがポイントです。後のバックワードパスで必ず使います。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\mathbf{a}^{(l)} = \sigma\!\left(\mathbf{W}^{(l)}\,\mathbf{a}^{(l-1)} + \mathbf{b}^{(l)}\right)"></div><div class="tx-cap">第 l 層のフォワードパス。σ は活性化関数、W は重み行列、b はバイアス。</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">線形変換の出力（活性化前の値）を z と置く</span><span class="katex-display-wrapper" data-tex="\mathbf{z}^{(l)} = \mathbf{W}^{(l)}\,\mathbf{a}^{(l-1)} + \mathbf{b}^{(l)}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">活性化関数を適用して活性化値を得る</span><span class="katex-display-wrapper" data-tex="\mathbf{a}^{(l)} = \sigma\!\left(\mathbf{z}^{(l)}\right)"></span></div></div></div>
+<h3>バックワードパス：責任を逆向きに伝える</h3>
+<p>損失 L が計算できたら、今度は出力層から入力層に向かって「各パラメータがどれだけ L に貢献したか」を計算します。<span class="term-tip" tabindex="0">デルタ（誤差信号）<span class="tip">各層の誤差を表すベクトル。損失の勾配を層ごとに逆伝播した中間値</span></span>を使うのが定石です。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\boldsymbol{\delta}^{(L)} = \nabla_{\mathbf{a}^{(L)}} L \odot \sigma&#x27;\!\left(\mathbf{z}^{(L)}\right)"></div><div class="tx-cap">出力層のデルタ。⊙ はアダマール積（要素ごとの積）。</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">中間層のデルタは1つ後ろの層から逆伝播して計算</span><span class="katex-display-wrapper" data-tex="\boldsymbol{\delta}^{(l)} = \left({\mathbf{W}^{(l+1)}}^\top \boldsymbol{\delta}^{(l+1)}\right) \odot \sigma&#x27;\!\left(\mathbf{z}^{(l)}\right)"></span></div><div class="tex-derive-row"><span class="tex-derive-label">重み行列の勾配</span><span class="katex-display-wrapper" data-tex="\frac{\partial L}{\partial \mathbf{W}^{(l)}} = \boldsymbol{\delta}^{(l)} {\mathbf{a}^{(l-1)}}^\top"></span></div><div class="tex-derive-row"><span class="tex-derive-label">バイアスの勾配</span><span class="katex-display-wrapper" data-tex="\frac{\partial L}{\partial \mathbf{b}^{(l)}} = \boldsymbol{\delta}^{(l)}"></span></div></div></div>
+<h3>アルゴリズム全体の流れ</h3>
+<div class="step"><span class="si">STEP 1</span><p>フォワードパス：入力 x を各層に通し、中間値 z^(l)、a^(l) をすべてメモリに保存しながら損失 L を計算する。</p></div><div class="step"><span class="si">STEP 2</span><p>出力層のデルタ δ^(L) を損失関数の勾配と活性化関数の微分から計算する。</p></div><div class="step"><span class="si">STEP 3</span><p>バックワードパス：δ^(l) = (W^(l+1)ᵀ δ^(l+1)) ⊙ σ&#x27;(z^(l)) で層を逆順に伝播させる。</p></div><div class="step"><span class="si">STEP 4</span><p>各層の ∂L/∂W^(l) と ∂L/∂b^(l) を δ と a から計算する。</p></div><div class="step"><span class="si">STEP 5</span><p>勾配降下法（または Adam 等）で全パラメータを更新し、STEP 1 へ戻る。</p></div>
+<h2><span class="n">5</span>直感で理解する ─ 計算グラフと「責任の分配」</h2>
+<p>バックプロパゲーションを理解するもう一つの視点が<strong>計算グラフ</strong>です。ネットワークの計算を有向非巡回グラフ（DAG）で表現し、各ノードがどの変数に依存するかを可視化します。勾配の逆伝播とは、グラフの辺を逆向きにたどりながら「責任（勾配）」を足し合わせていくことに他なりません。</p>
+<p>たとえば z = x × y という計算なら、∂z/∂x = y（y が大きいほど x の変化が z に大きく影響）、∂z/∂y = x です。これが加算、乗算、活性化など全演算で成立し、連鎖律で繋がれることで複雑なネットワーク全体の勾配が求まります。</p>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>「フォワードパスで計算した中間値をすべて保存する」のは、バックプロパゲーションがその値を再利用するためです。GPUメモリの大半はこの『活性化値のキャッシュ』に使われます。勾配チェックポイントはこれを削減する技法で、LLM訓練では必須テクニックです。</div>
+<h2><span class="n">6</span>深掘り ─ 勾配消失と活性化関数の選択</h2>
+<p>バックプロパゲーションの弱点は<span class="term-tip" tabindex="0">勾配消失問題<span class="tip">層を遡るにつれ勾配が指数的に小さくなり、深い層のパラメータがほぼ更新されなくなる現象</span></span>です。シグモイド関数の微分 σ&#x27;(z) = σ(z)(1−σ(z)) は最大でも 0.25 であり、50 層のネットワークでは 0.25^50 ≈ 10^-30 という壊滅的に小さな値になります。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\sigma(z) = \frac{1}{1+e^{-z}}, \quad \sigma&#x27;(z) = \sigma(z)\,(1-\sigma(z)) \leq 0.25"></div><div class="tx-cap">シグモイド関数とその微分。最大値 0.25 が勾配消失の原因。</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">ReLU はこの問題を大幅に緩和する</span><span class="katex-display-wrapper" data-tex="\text{ReLU}(z) = \max(0, z), \quad \frac{d}{dz}\text{ReLU}(z) = \begin{cases}1 &amp; z &gt; 0 \\ 0 &amp; z \leq 0\end{cases}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">ReLU の微分は z&gt;0 の領域では常に 1 なので勾配が消えにくい</span><span class="katex-display-wrapper" data-tex="\text{(勾配の積)} = 1^L = 1 \quad (z^{(l)}&gt;0\text{ のとき})"></span></div></div></div>
+<h2><span class="n">7</span>現代AI研究との接続 ─ 自動微分（AutoDiff）</h2>
+<p>PyTorch や JAX が実装しているのは<strong>自動微分</strong>（Automatic Differentiation）です。手でバックプロパゲーションを実装する必要はなく、フォワードパスを定義するだけでフレームワークが計算グラフを構築し、`.backward()` 一発で全勾配を計算してくれます。</p>
+<p>自動微分の方式には「<span class="term-tip" tabindex="0">前向きモード<span class="tip">入力側から微分を伝播する方式。入力次元が小さいときに有利</span></span>」と「<span class="term-tip" tabindex="0">後向きモード<span class="tip">出力側から微分を逆伝播する方式。パラメータ数が多く出力が少ないニューラルネットに最適</span></span>」があります。ニューラルネットでは出力次元（損失は1次元）よりパラメータ数の方が圧倒的に多いため、後向きモード＝バックプロパゲーションが標準です。</p>
+<h2><span class="n">8</span>実装のヒント ─ PyTorch で確かめる</h2>
+<div class="code"><div class="ln"><span class="no">1</span><span class="ct">import torch</span></div><div class="ln"><span class="no">2</span><span class="ct">import torch.nn as nn</span></div><div class="ln"><span class="no">3</span><span class="ct"></span></div><div class="ln"><span class="no">4</span><span class="ct"># 簡単な2層ネットワーク</span></div><div class="ln"><span class="no">5</span><span class="ct">model = nn.Sequential(nn.Linear(4, 8), nn.ReLU(), nn.Linear(8, 1))</span></div><div class="ln"><span class="no">6</span><span class="ct">optimizer = torch.optim.SGD(model.parameters(), lr=0.01)</span></div><div class="ln"><span class="no">7</span><span class="ct">loss_fn = nn.MSELoss()</span></div><div class="ln"><span class="no">8</span><span class="ct"></span></div><div class="ln"><span class="no">9</span><span class="ct">x = torch.randn(16, 4)   # バッチサイズ16, 特徴4次元</span></div><div class="ln"><span class="no">10</span><span class="ct">y = torch.randn(16, 1)   # 正解ラベル</span></div><div class="ln"><span class="no">11</span><span class="ct"></span></div><div class="ln"><span class="no">12</span><span class="ct"># ─── STEP 1: フォワードパス ───</span></div><div class="ln"><span class="no">13</span><span class="ct">y_hat = model(x)</span></div><div class="ln"><span class="no">14</span><span class="ct">loss  = loss_fn(y_hat, y)</span></div><div class="ln"><span class="no">15</span><span class="ct"></span></div><div class="ln"><span class="no">16</span><span class="ct"># ─── STEP 2: バックワードパス（連鎖律を自動適用）───</span></div><div class="ln"><span class="no">17</span><span class="ct">optimizer.zero_grad()   # 勾配をリセット（累積を防ぐ）</span></div><div class="ln"><span class="no">18</span><span class="ct">loss.backward()         # 全勾配を一括計算</span></div><div class="ln"><span class="no">19</span><span class="ct"></span></div><div class="ln"><span class="no">20</span><span class="ct"># ─── STEP 3: パラメータ更新 ───</span></div><div class="ln"><span class="no">21</span><span class="ct">optimizer.step()</span></div><div class="ln"><span class="no">22</span><span class="ct"></span></div><div class="ln"><span class="no">23</span><span class="ct"># 第1層の重み勾配を確認</span></div><div class="ln"><span class="no">24</span><span class="ct">print(model[0].weight.grad.shape)  # → torch.Size([8, 4])</span></div></div><div class="code-cap">PyTorch による簡単なバックプロパゲーションの例</div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>勾配をデバッグするとき、まず `loss.backward()` 後に各層の `.grad` が `None` でないか、そして極端に小さくないかを確認してください。`None` なら計算グラフが切れています（`.detach()` の使いすぎなど）。極小値なら勾配消失を疑い、BatchNorm や ResNet 的なスキップ接続の導入を検討します。</div>
+<h2><span class="n">9</span>まとめ ─ 今日のエッセンス</h2>
+<div class="step"><span class="si">KEY 1</span><p>損失関数 L は予測の「外れ具合」を1つのスカラーで表す。学習の目的は L を最小化する w を見つけること。</p></div><div class="step"><span class="si">KEY 2</span><p>勾配降下法は「損失が最も急激に下がる方向」へパラメータを少しずつ動かすアルゴリズム。</p></div><div class="step"><span class="si">KEY 3</span><p>連鎖律は「合成関数の微分＝各層の微分の積」であり、バックプロパゲーションの数学的エンジン。</p></div><div class="step"><span class="si">KEY 4</span><p>バックプロパゲーションは出力から入力へデルタ δ を逆伝播し、各パラメータの勾配 ∂L/∂W を O(n) で効率的に計算する。</p></div><div class="step"><span class="si">KEY 5</span><p>現代のフレームワーク（PyTorch/JAX）は自動微分により計算グラフを動的に構築し、.backward() 一発でバックプロパゲーションを実行する。</p></div>
+<div class="note-box"><div class="nb-label">⚙️ 次回予告</div>DAY 3 では「行列とベクトルの演算」を掘り下げます。バックプロパゲーションで登場したヤコビアン行列や転置行列の操作が、GPUで高速化される仕組みを理解することで、Transformer の内部演算への準備が整います。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI 30日講座 — Week 1〜6 ・ generated by Claude
+  </div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Render explicit tex-block wrappers
+      document.querySelectorAll('.katex-display-wrapper').forEach(el => {
+        const tex = el.dataset.tex;
+        if (tex) {
+          try {
+            katex.render(tex, el, {displayMode: true, throwOnError: false});
+          } catch(e) {
+            el.textContent = tex;
+          }
+        }
+      });
+      // Auto-render inline $...$ and $$...$$ in text
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+</body>
+</html>

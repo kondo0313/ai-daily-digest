@@ -120,8 +120,8 @@ h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
   </div>
 
   <div class="page">
-    <div class="tags">#AI #論文解説 #ロボット工学 #SimToReal #強化学習 #マニピュレーション #新人研究者向け</div>
-    <h1 class="headline">たった1回のデモから学ぶ！接触を中心に据えたロボット操作のSim-to-Real転移</h1>
+    <div class="tags">#AI #論文解説 #模倣学習 #ロボット工学 #四足歩行ロボット #新人研究者向け</div>
+    <h1 class="headline">人間の動画からロボットへ——身体の壁を越えるリターゲティング手法「WARP」</h1>
 
     <div class="author">
       <div class="avatar">AI</div>
@@ -133,49 +133,48 @@ h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
 
     <div class="paper-card">
       <div class="pc-label">本日の論文</div>
-      <div class="pc-title">ConCent: Contact-Centric Real-to-Sim-to-Real Learning from One Demonstration</div>
+      <div class="pc-title">WARP: Whole-Body Retargeting for Learning from Offline Human Demonstrations</div>
       <div class="pc-row">
-        <span>（著者情報はarXiv掲載ページをご確認ください）</span>
+        <span>詳細は論文ページを参照（arXiv:2606.29940v1）</span>
         <span>arXiv cs.RO ・ 2025年</span>
-        <a href="https://arxiv.org/abs/2606.30268">原文 →</a>
+        <a href="https://arxiv.org/abs/2606.29940">原文 →</a>
       </div>
     </div>
 
     <div class="content">
-<h2><span class="n">1</span>はじめに：なぜロボットはシミュレーターで練習するのか</h2>
-<p>ロボットに複雑な操作を教える方法として、「<span class="term-tip" tabindex="0">Sim-to-Real転移<span class="tip">シミュレーター内で学習したポリシーを現実世界のロボットに移植する手法</span></span>」が近年注目を集めています。なぜかというと、現実でデータを集めるのは時間もお金もかかる（しかもロボットが壊れるリスクもある）のに対し、シミュレーターでは何百万回でも安全に失敗できるからです。</p>
-<p>しかし「うまくシミュレーターで学べたのに、本物のロボットでは全然うまくいかない」という<strong>リアリティギャップ</strong>の壁が立ちはだかります。特に物体を掴む・押す・組み立てるなどの<strong>接触が多いタスク（Contact-rich tasks）</strong>では、力のかかり方が少し違うだけでタスクが失敗してしまいます。この論文が挑むのは、まさにその難問です。</p>
-<div class="pull">「接触の忠実な再現こそが、操作タスク成功の必要条件である」</div>
-<h2><span class="n">2</span>問題の核心：どこでリアリティギャップが生まれるのか</h2>
-<p>ロボットが物体を操作するとき、ロボットハンドと物体・環境の「接触点」が全ての情報を仲介します。つまり接触の質が変わると、タスクの結果が根本的に変わります。</p>
-<p>著者たちはこのギャップを2つのレベルで捉えています。①<strong>接触イベント列（いつ・どこで・どのように接触が起こるか）</strong>と、②<strong>局所接触ダイナミクス（各接触点で力や動きがどう変化するか）</strong>。この2つがシミュレーターと現実でズレることが、転移失敗の根本原因だと論文は主張します。</p>
-<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「何をシミュレーションで正確に再現すべきか」を絞り込むことが重要です。全てを完璧に再現しようとするとコストが爆発します。ConCentは『接触』という最重要要素だけに集中することで現実的な解を目指しています。</div>
-<h2><span class="n">3</span>ConCentの全体像：リアル→シム→リアルのループ</h2>
-<p>ConCentは「Real-to-Sim-to-Real」という3段階のループを構成します。まず現実の1回のデモンストレーション（人間がロボットを動かして見せた動作）から接触イベント列を抽出し、それをシミュレーターの学習目標として使い、最後に学習済みポリシーを現実に戻します。</p>
-<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># ステップ1: 現実のデモから接触情報を抽出</span></div><div class="ln"><span class="no">1</span><span class="ct">demo_trajectory = <span class="fn">collect_real_demonstration</span>()<span class="badge">①</span></span></div><div class="ln"><span class="no">2</span><span class="ct">contact_event_seq = <span class="fn">extract_contact_events</span>(demo_trajectory)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ステップ2: シミュレーターの物体形状を最適化</span></div><div class="ln"><span class="no">3</span><span class="ct">sim_object = <span class="fn">approximate_as_primitives</span>(object_geometry)<span class="badge">②</span></span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="fn">optimize_contact_geometry</span>(sim_object, contact_event_seq)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ステップ3: 接触イベント列を報酬信号として強化学習</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="kw">for</span> episode <span class="kw">in</span> training_loop:<span class="badge">③</span></span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span>reward = <span class="fn">contact_event_reward</span>(current_contacts, contact_event_seq)</span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="ind"></span>policy = <span class="fn">RL_update</span>(policy, reward)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ステップ4: 学習したポリシーを現実のロボットにデプロイ</span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="fn">deploy_to_real_robot</span>(policy)<span class="badge">④</span></span></div></div><div class="code-cap">ConCentのReal-to-Sim-to-Realループ（擬似コード）</div>
-<h2><span class="n">4</span>手法の要素技術を分解する</h2>
-<h3>① 現実デモから接触イベント列を自動抽出</h3>
-<p>デモンストレーション（1回の実演）を「再生（リプレイ）」することで、いつどこで接触が発生したかを自動的に記録します。これが後の報酬設計の素材になります。<strong>人手で報酬関数を設計する必要がない</strong>のがポイントです。従来の多くの手法では「タスクごとに報酬をエンジニアが設計する」手間が必要でしたが、ConCentはこれを自動化しています。</p>
-<h3>② 物体を「プリミティブの集合」で近似してシム形状を最適化</h3>
-<p>シミュレーター内の物体形状を正確にモデル化するのは難しく、わずかな形状の違いが接触ダイナミクスを大きく変えます。そこでConCentは、物体を<strong>球・直方体・円柱などの単純な形（プリミティブ）の集合</strong>として近似し、現実の接触イベント列をうまく再現できるようにプリミティブの形状・位置を最適化します。</p>
-<p>これはちょうど「子どもが積み木でリンゴを作る」ようなイメージです。本物のリンゴとは違いますが、転がり方・触れ方が近くなるように積み木の形を調整するわけです。これにより、<span class="term-tip" tabindex="0">接触ダイナミクス<span class="tip">物体同士が触れた際の力・摩擦・変形などの物理挙動</span></span>がリアルとシムで近くなります。</p>
-<h3>③ 接触イベント列を「構造化された報酬信号」として使用</h3>
-<p>強化学習では「どんな行動がよかったか」を数値（報酬）で教える必要があります。ConCentでは「現実で観測された接触イベント列と、シミュレーション内で発生した接触がどれだけ一致しているか」を報酬とします。</p>
-<p>この設計には大きなメリットがあります。シミュレーターの物理エンジンには「現実には存在しない接触（壁をすり抜けるなど）」を<span class="term-tip" tabindex="0">エクスプロイト<span class="tip">報酬を最大化するために意図せず生まれる不正な戦略を使うこと</span></span>するポリシーが生まれがちですが、現実検証済みの接触列を目標にすることでこれを防げます。</p>
-<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>「接触イベント列が自動で得られる」「報酬設計が不要」というのはエンジニアリングコストの大幅削減を意味します。実務では、タスクごとの報酬設計にかなりの時間が取られるため、この自動化は実用上とても重要です。</div>
-<h2><span class="n">5</span>実験結果と有効性</h2>
-<p>論文では、接触が多い操作タスクにおいて実験を行い、制約のない<span class="term-tip" tabindex="0">強化学習ベースライン<span class="tip">比較対象となる標準的な強化学習手法</span></span>と比べて、より安定かつロバストな<span class="term-tip" tabindex="0">Sim-to-Real転移<span class="tip">シミュレーターで学んだ行動を現実ロボットに移植すること</span></span>を実現できることを示しています。</p>
-<div class="stats"><div class="stat"><div class="v">1回</div><div class="k">必要なリアルデモの数（大規模データ不要）</div></div><div class="stat"><div class="v">自動</div><div class="k">報酬設計（タスクごとの人手設計が不要）</div></div><div class="stat"><div class="v">2段階</div><div class="k">ギャップ対策（形状最適化 ＋ 接触報酬の両輪）</div></div></div>
-<p>具体的な数値（成功率など）はアブストラクトには明示されていませんが、「制約なしのRLベースラインと比較してより安定かつロバスト」という定性的な優位性が主張されています。論文本文の実験セクションに詳細な数値があると思われますので、興味のある方はぜひ原文をご確認ください。</p>
-<h2><span class="n">6</span>なぜこのアプローチは新しいのか</h2>
-<div class="pull">「接触イベント列」という、現実で検証済みの構造的な信号を学習の中心に据えることで、リアリティギャップという長年の難問に正面から向き合った。</div>
-<p>従来のSim-to-Real研究の多くは、「<span class="term-tip" tabindex="0">ドメインランダマイゼーション<span class="tip">シミュレーションのパラメータをランダムに変えて多様な状況に対応させる手法</span></span>」や大規模データ収集に依存してきました。ConCentのユニークな点は、①たった1回の実演、②タスク非依存の自動報酬設計、③接触という物理的に意味のある指標への集中、という3つを組み合わせた点です。</p>
-<h2><span class="n">7</span>意義と限界：誠実に評価する</h2>
-<div class="step"><span class="si">意義 1</span><p>データ効率が高い：1回のデモだけで学習でき、大規模なデータ収集インフラが不要。</p></div><div class="step"><span class="si">意義 2</span><p>自動化：タスクごとの報酬設計が不要で、新しいタスクへの展開コストが低い。</p></div><div class="step"><span class="si">意義 3</span><p>物理的根拠がある：報酬が「現実で観測された接触」に基づくため、シミュレーターの抜け穴を塞ぎやすい。</p></div><div class="step"><span class="si">限界 1</span><p>1回のデモの質に依存：デモが不完全だと、抽出される接触イベント列も不完全になる可能性がある。</p></div><div class="step"><span class="si">限界 2</span><p>プリミティブ近似の限界：非常に複雑な形状の物体や柔らかい物体（ソフトボディ）には、プリミティブ近似が粗くなる恐れがある。</p></div><div class="step"><span class="si">限界 3</span><p>汎化範囲の未検証：アブストラクトの範囲では、どこまで多様なタスクに適用できるかの詳細な検証は不明。</p></div>
-<h2><span class="n">8</span>新人研究者へのひとこと：大きな文脈で捉えよう</h2>
-<div class="tip-box"><div class="tb-label">💡 この論文から学べる研究設計のコツ</div>「何を正確に再現すべきか」を絞り込む発想は、研究設計の基本です。ConCentは『全ての物理を完璧にシミュレートする』のではなく、『タスク成功に本質的な接触だけを忠実に再現する』と割り切ることで突破口を開きました。自分の研究でも『何が本当に重要な要素か』を問い続けましょう。</div>
-<p>Sim-to-Realとマニピュレーション学習は、AIロボット研究の中でも最も実用化に近い領域の一つです。ChatGPTのような言語AIが「言葉を扱う知能」だとすれば、ロボット操作は「物理世界を扱う知能」。ConCentのようなアプローチは、家庭ロボットや工場自動化の未来を少しずつ現実に引き寄せる一歩です。</p>
-<div class="note-box"><div class="nb-label">⚙️ 次のステップ</div>この論文を読み終えたら、Sim-to-Realの基礎として「ドメインランダマイゼーション（Tobin et al., 2017）」や「RMA（Rapid Motor Adaptation）」、そして接触力学の基礎（Hertz接触理論）も合わせて学ぶと、この研究の立ち位置がより明確に見えてきます。</div>
+<h2><span class="n">1</span>「人間の動きをそのままロボットに」——なぜそれが難しいのか</h2>
+<p>ロボットに新しい作業を覚えさせるとき、一番お金も手間もかかるのが「<strong>デモンストレーションデータの収集</strong>」です。人間がロボットを操作するテレオペレーション（遠隔操作）は精度は高いですが、スケールしません——専門家がつきっきりで時間をかけるからです。そこで注目されるのが「<strong>人間が普通に作業している映像や動作データをそのままロボットの学習に使えないか</strong>」というアイデアです。</p>
+<p>しかし大きな壁があります。人間と四足歩行ロボットでは体の形がまったく違います。腕の長さ、関節の数、動ける範囲——これらの違いを「<span class="term-tip" tabindex="0">embodiment gap<span class="tip">身体構造の差異のこと。人間とロボットでは関節配置や自由度が異なり、動作をそのまま移植できない</span></span>」と呼びます。この壁を乗り越えるのが本論文の主題です。</p>
+<div class="pull">人間データはテレオペレーションよりもスケールしやすい。ただし「身体の差」を正確に埋めなければ、ロボットは何も学べない。</div>
+<h2><span class="n">2</span>既存手法の問題点——「あいまいさ」が学習を壊す</h2>
+<p>これまでの<span class="term-tip" tabindex="0">リターゲティング<span class="tip">ある身体の動作を別の身体に「翻訳」する技術。アニメやゲームでも使われる</span></span>手法には大きな欠点がありました。変換された動作が「不正確」または「一意に定まらない（複数の解が存在する）」のです。</p>
+<p>たとえば、同じ人間の腕の動きに対して「ひじを内側に曲げた解」と「ひじを外側に曲げた解」が両方もっともらしく存在してしまう場合があります。これを「<strong>action multi-modality（行動の多峰性）</strong>」と呼びます。教師あり学習でロボットポリシーを訓練するとき、正解が複数ある状態は致命的です——ネットワークが「どちらの正解を学べばよいか」を決められず、平均的な中途半端な動作に収束してしまいます。料理のレシピで「塩を少々か大さじ3か、どちらか正しい」と言われたシェフが混乱するのと同じです。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「行動の多峰性」は模倣学習全体に共通する難問です。BCやDAggerなどの手法でも、データに複数の正解行動が混在していると収束が難しくなります。データ収集段階でいかに「一意で正確なラベル」を作れるかが、学習の成功を大きく左右します。</div>
+<h2><span class="n">3</span>WARPの全体像——3つのアイデアで壁を越える</h2>
+<p>WARPは「<strong>Whole-body-Aware Retargeting from human Pose</strong>」の略で、オフラインのパイプラインとして設計されています。リアルタイムの遠隔操作を一切必要とせず、事前収集した人間の動作データだけから、ロボットが学習できる軌跡を生成します。核心となる技術要素は大きく3つです。</p>
+<div class="step"><span class="si">STEP 1</span><p>人間の全身姿勢を推定する。動画や動作キャプチャデータから、肩・ひじ・手首などの関節位置を取得する。</p></div><div class="step"><span class="si">STEP 2</span><p>SEW幾何ソルバーで腕の解を一意に決定する。肩(Shoulder)・ひじ(Elbow)・手首(Wrist)の3点から閉形式で正確な逆運動学解を求め、曖昧さを排除する。</p></div><div class="step"><span class="si">STEP 3</span><p>レイジー移動台座制御と組み合わせる。ロボットの移動台座をできる限り動かさず、腕の動きで補える範囲はそちらで吸収することで、全身の軌跡を安定・一貫したものにする。</p></div>
+<h2><span class="n">4</span>要素技術を深掘りする</h2>
+<h3>① SEW幾何ソルバー——「ひじの向き」を数学で一意に固定する</h3>
+<p>腕の<span class="term-tip" tabindex="0">逆運動学<span class="tip">手先位置から各関節の角度を逆算する計算。解が複数存在することが多い</span></span>では「手首をこの位置に持ってきて」という指令に対して、ひじの向きがさまざまに変わりえます。WARPはS(肩)・E(ひじ)・W(手首)の3点に着目し、<strong>閉形式（closed-form）</strong>の幾何的公式でひじの角度を一意に決定します。閉形式とは「繰り返し計算なしに、式を一度解くだけで答えが出る」ことを意味します。数値最適化と違って誤差がなく、常に同じ入力から同じ出力が得られるため、データの一貫性が保証されます。</p>
+<p>また、腕の解を求めるだけでなく「<strong>全身の構造的な意図</strong>」も維持します。つまり人間が体重を左に傾けながら棚に手を伸ばすような「体全体の動きのニュアンス」も、できる限り保存する設計になっています。</p>
+<h3>② レイジー移動台座制御——「なるべく動かない」哲学</h3>
+<p>四足歩行ロボットは移動台座（体全体の位置）と腕（マニピュレータ）を同時に動かす「<span class="term-tip" tabindex="0">モバイルマニピュレーション<span class="tip">移動しながら物を操作するタスク。台座と腕の協調が難しい</span></span>」を行います。このとき台座をどのタイミングでどれだけ動かすか、という判断が非常に曖昧になりがちです。WARPの「レイジー（怠惰な）」制御とは、腕の可動域で届く範囲はなるべく台座を動かさず、本当に必要なときだけ台座を移動させる戦略です。これにより台座の動きが最小限かつ決定論的になり、データの揺れ（分散）が大幅に減ります。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 入力: 人間のポーズシーケンス</span></div><div class="ln"><span class="no">1</span><span class="ct">human_poses = <span class="fn">load_human_motion</span>(video_or_mocap)<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># 各フレームについてリターゲティングを実行</span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="kw">for</span> pose <span class="kw">in</span> human_poses:</span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># SEW幾何ソルバーで腕関節角を一意に決定</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="ind"></span>arm_joints = <span class="fn">SEW_solver</span>(pose.shoulder, pose.elbow, pose.wrist)<span class="badge">②</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># レイジー台座制御で移動量を最小化</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>base_motion = <span class="fn">lazy_base_control</span>(arm_joints, robot.workspace)<span class="badge">③</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># 全身ロボット軌跡として記録</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span>trajectory.<span class="fn">append</span>(arm_joints, base_motion)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># 出力: ロボット学習用の一意・正確な軌跡データセット</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="fn">save</span>(trajectory)  # → ポリシー学習に使用<span class="badge">④</span></span></div></div><div class="code-cap">WARPパイプラインの擬似コード（概念的なイメージ）</div>
+<p>①で人間の動作データを読み込み、②のSEWソルバーで腕の解を一意に確定、③のレイジー制御で台座動作を最小化、④として一貫した軌跡データを出力します。このパイプライン全体がオフラインで動作するため、人間がリアルタイムに介在する必要がありません。</p>
+<h2><span class="n">5</span>実験結果——「そのまま再生できる」データの精度</h2>
+<p>論文ではWARPが生成したロボット軌跡を<strong>オープンループでリアル環境に再生</strong>する評価を行っています。オープンループとはフィードバック補正なしに、生成した軌跡をそのまま流すという厳しいテストです。それでも高い信頼性を示したことが報告されています。さらに本フレームワークは「<strong>ゼロショット</strong>」——事前のロボット固有のデモなし——で全身モバイルマニピュレーションを実現した、著者らの知る限り初の手法とされています。</p>
+<div class="stats"><div class="stat"><div class="v">初</div><div class="k">オフライン人間デモのみからゼロショット全身モバイルマニピュレーションを達成（著者ら調べ）</div></div><div class="stat"><div class="v">0</div><div class="k">人間によるリアルタイム介在（テレオペレーション）が不要</div></div><div class="stat"><div class="v">閉形式</div><div class="k">SEWソルバーによる解の一意性保証（数値最適化ではなく解析解）</div></div></div>
+<h2><span class="n">6</span>なぜこれが重要か——データ収集の民主化</h2>
+<div class="pull">WARPは「テレオペレーションなしでもロボットを教えられる」未来への、重要な一歩。人間の普通の行動がそのままロボットの教師データになる。</div>
+<p>これまで大規模なロボット学習データを集めるには、熟練したオペレーターが長時間テレオペレーションを行う必要がありました。WARPが示すのは「<strong>インターネット上の動画や既存の動作キャプチャデータが、そのままロボット学習データになりうる</strong>」という可能性です。スケーラビリティが劇的に向上し、データ収集コストが大幅に削減できます。</p>
+<p>また、全身（腕＋移動台座）を<strong>一体として</strong>扱う点も重要です。腕だけ、あるいは移動だけを個別に学ばせるのではなく、人間が自然にやっているような「歩きながら棚から物を取る」といった全身協調動作をまるごと学習できます。これは<span class="term-tip" tabindex="0">全身制御<span class="tip">ロボットの腕・体幹・移動台座など全関節を統合的に制御すること</span></span>の難題に正面から取り組んでいます。</p>
+<h2><span class="n">7</span>意義と限界——誠実に見るWARPの現在地</h2>
+<div class="step"><span class="si">意義①</span><p>ゼロショットで全身モバイルマニピュレーションを達成。テレオペレーション不要という点で、データ収集コストを根本から変える可能性がある。</p></div><div class="step"><span class="si">意義②</span><p>閉形式ソルバーにより、データの一意性・一貫性が数学的に保証される。学習データの質を担保する設計思想が明確。</p></div><div class="step"><span class="si">限界①</span><p>オフラインパイプラインのため、インタラクティブ（双方向）なタスクや環境との接触が複雑なシナリオへの対応は別途検討が必要。</p></div><div class="step"><span class="si">限界②</span><p>評価はオープンループ再生が中心。強化学習や閉ループポリシーとの統合、および汎化性能についての詳細な検証は今後の課題とみられる。</p></div><div class="step"><span class="si">限界③</span><p>SEWソルバーは肩・ひじ・手首の3点に特化した設計。指の細かい操作や多指ハンドへの拡張には追加の工夫が必要になるかもしれない。</p></div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>論文のアブストラクトには具体的な成功率の数値は明示されていません。「高い信頼性」という記述はありますが、詳細な定量評価はプロジェクトページ（https://warp-retarget.github.io/）や論文本文を確認してください。数値を根拠に判断するときは、必ず原文をあたりましょう。</div>
+<h2><span class="n">8</span>新人研究者へ——この論文から学べる設計思想</h2>
+<p>WARPが教えてくれる大切なことは「<strong>データの質は設計段階で決まる</strong>」ということです。学習アルゴリズムをいくら工夫しても、多峰性のある曖昧なデータでは収束しません。WARPはその問題を「数学的に一意な解を保証する」ことで解決しました。これは「<span class="term-tip" tabindex="0">帰納バイアス<span class="tip">解の探索空間を正しく絞り込むための事前知識や制約</span></span>を賢く設計する」という、古典的だが今も有効な考え方の実践例です。</p>
+<p>あなたがロボット学習や模倣学習の研究をするなら、「<strong>自分のデータはどれだけ一意で一貫しているか</strong>」を常に問う習慣を持ちましょう。派手なモデル改良より、データの曖昧さを取り除くほうが、劇的に学習結果が改善することは珍しくありません。</p>
+<div class="tip-box"><div class="tb-label">💡 さらに深掘りするなら</div>リターゲティング・逆運動学・模倣学習に興味があれば、BC（Behavior Cloning）・DAgger・ACT（Action Chunking with Transformers）などのキーワードで関連論文を探してみましょう。また、身体性の差（embodiment gap）を扱う研究はヒューマノイドロボットの分野でも急速に増えており、WARPと合わせて読むと理解が深まります。</div>
     </div>
   </div>
 
