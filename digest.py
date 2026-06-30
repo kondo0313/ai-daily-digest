@@ -456,7 +456,7 @@ code のルール:
 """
 
 
-def generate_article(paper):
+def generate_article(paper, retries=3):
     user = f"""次の論文を解説する記事を JSON で作ってください。
 
 論文タイトル: {paper['title']}
@@ -470,14 +470,25 @@ URL: {paper['link']}
 注意: アブストラクトに無い数値や事実を創作しないこと。
 不明な著者名・所属・投稿月は無理に埋めず、分かる範囲で簡潔に書く。
 """
-    raw = call_claude(ARTICLE_SPEC, user, max_tokens=12000)
-    article = parse_json(raw)
+    last_err = None
+    for attempt in range(retries):
+        raw = call_claude(ARTICLE_SPEC, user, max_tokens=12000)
+        try:
+            article = parse_json(raw)
+        except (ValueError, KeyError) as e:
+            last_err = e
+            print(f"[warn] JSON パース失敗 (試行 {attempt + 1}/{retries}): {e}", file=sys.stderr)
+            if attempt < retries - 1:
+                time.sleep(5)
+            continue
 
-    # paper.url が空なら元リンクで補完
-    article.setdefault("paper", {})
-    if not article["paper"].get("url"):
-        article["paper"]["url"] = paper["link"]
-    return article
+        # paper.url が空なら元リンクで補完
+        article.setdefault("paper", {})
+        if not article["paper"].get("url"):
+            article["paper"]["url"] = paper["link"]
+        return article
+
+    raise RuntimeError(f"記事 JSON のパースが {retries} 回失敗: {last_err}")
 
 
 # ---------------------------------------------------------------------------
