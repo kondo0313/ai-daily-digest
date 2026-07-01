@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 30日講座 — 不確かさを測る ─ 確率・エントロピー・KL ダイバージェンス</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+
+.course-card{background:linear-gradient(135deg,#1c6f8c15,#2cb69615);border:1.5px solid var(--accent);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.course-card .cc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--accent-ink);text-transform:uppercase;margin-bottom:6px;}
+.course-card .cc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;color:var(--ink);}
+.course-card .cc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:4px 16px;}
+.cc-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;border-radius:6px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;}
+.progress-bar{height:4px;background:var(--line);border-radius:2px;margin:10px 0 4px;}
+.progress-bar .bar{height:100%;background:var(--accent);border-radius:2px;transition:width .4s;}
+.progress-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-faint);text-align:right;}
+/* KaTeX blocks */
+.tex-block{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;overflow-x:auto;}
+.tex-block .katex-display{margin:0;}
+.tex-block .tx-cap{font-size:12.5px;color:var(--ink-faint);margin-top:10px;text-align:center;}
+.tex-derive{margin-top:12px;border-top:1px solid var(--line);padding-top:10px;}
+.tex-derive-row{display:flex;gap:10px;align-items:baseline;margin-top:6px;font-size:14px;}
+.tex-derive-label{font-size:12px;color:var(--ink-faint);flex-shrink:0;min-width:80px;}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">📚</span> AI 30日講座</div>
+      <div class="date-pill">2026-07-02</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI30日講座 #情報理論 #エントロピー #KLダイバージェンス #機械学習基礎</div>
+    <h1 class="headline">不確かさを測る ─ 確率・エントロピー・KL ダイバージェンス</h1>
+
+    <div class="author">
+      <div class="avatar" style="background:linear-gradient(135deg,#1c6f8c,#2cb696);">📚</div>
+      <div class="author-meta">
+        <div class="name">AI 30日講座</div>
+        <div class="sub">2026-07-02 ・ DAY 3 ・ 数学的基礎 ─ AIが動く土台</div>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="cc-label">本日のカリキュラム</div>
+      <div class="cc-title">
+        <span class="cc-badge">DAY 3 / 30</span>
+        &nbsp;不確かさを測る ─ 確率・エントロピー・KL ダイバージェンス
+      </div>
+      <div class="progress-bar"><div class="bar" style="width:10%"></div></div>
+      <div class="progress-label">10% 完了</div>
+      <div class="cc-row">
+        <span>Week 1: 数学的基礎 ─ AIが動く土台</span>
+        <span>基礎〜中級</span>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>なぜ「不確かさ」を数値化するのか？</h2>
+<p>天気予報を考えてみましょう。「明日は晴れか雨か五分五分」と言われるのと、「明日は 99% の確率で晴れ」と言われるのでは、どちらの予報の方が「情報量」が多いでしょうか？ 直感的には、当たり前のことを言っている予報よりも、意外性のある予報ほど多くの情報を伝えている気がします。この直感を数学的に厳密に定式化したのが<strong>情報理論</strong>であり、その核心概念が <span class="term-tip" tabindex="0">エントロピー<span class="tip">確率分布の「不確かさ」や「乱雑さ」を一つの数値で表す量</span></span> です。</p>
+<p>現代の AI・機械学習の研究では、エントロピーとその仲間たちが至るところに登場します。言語モデルの学習損失である<span class="term-tip" tabindex="0">クロスエントロピー<span class="tip">二つの確率分布間のズレを測る量で、予測分布が正解分布にどれだけ近いかを表す</span></span>、生成モデルの評価指標 KL ダイバージェンス、強化学習の探索戦略など、これらをしっかり理解することが AI 研究者としての確固たる基盤になります。</p>
+<div class="pull">「情報量」とは驚きの大きさ ─ 起こりにくいことほど、起きたときに多くの情報を運ぶ。</div>
+<h2><span class="n">2</span>確率と情報量 ─ 数学的基礎</h2>
+<h3>自己情報量：1 つの事象が持つ情報量</h3>
+<p>事象 $x$ が確率 $p(x)$ で起こるとき、その<strong>自己情報量</strong>（surprisal）は次のように定義されます。確率が小さいほど情報量が大きくなるように、対数の逆数を使います。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="I(x) = -\log_2 p(x) \quad [\text{bit}]"></div><div class="tx-cap">自己情報量の定義。底を 2 にとると単位は bit、自然対数なら nat。</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">p(x)=1（確実）のとき</span><span class="katex-display-wrapper" data-tex="I(x) = -\log_2 1 = 0 \quad \text{（確実な出来事は情報を運ばない）}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">p(x)=1/2（コイン表）のとき</span><span class="katex-display-wrapper" data-tex="I(x) = -\log_2 \tfrac{1}{2} = 1 \quad \text{[bit]}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">p(x)=1/1024 のとき</span><span class="katex-display-wrapper" data-tex="I(x) = -\log_2 \tfrac{1}{1024} = 10 \quad \text{[bit]}"></span></div></div></div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>底を 2 にするか自然対数にするかは慣習の問題。情報工学では bit（底 2）、機械学習の実装では nat（底 e）が多い。PyTorch の CrossEntropyLoss は自然対数を使用します。</div>
+<h3>シャノンエントロピー：分布全体の平均的な不確かさ</h3>
+<p>自己情報量は 1 つの事象に対するものでした。確率分布 $P$ 全体の「平均的な不確かさ」を求めるには、自己情報量の<span class="term-tip" tabindex="0">期待値<span class="tip">確率で重み付けした平均値</span></span> を計算します。これが <strong>シャノンエントロピー</strong> $H(P)$ です。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="H(P) = -\sum_{x \in \mathcal{X}} p(x) \log p(x) = \mathbb{E}_{x \sim P}[-\log p(x)]"></div><div class="tx-cap">シャノンエントロピーの定義。分布が均一なほど大きく、確定的なほど 0 に近づく。</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">コイン投げ（公平）p=(0.5, 0.5) のとき</span><span class="katex-display-wrapper" data-tex="H = -(0.5\log 0.5 + 0.5\log 0.5) = 1 \text{ [bit]} \quad \text{（最大不確かさ）}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">コイン投げ（偏り）p=(0.9, 0.1) のとき</span><span class="katex-display-wrapper" data-tex="H = -(0.9\log_2 0.9 + 0.1\log_2 0.1) \approx 0.469 \text{ [bit]}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">確定的な分布 p=(1, 0) のとき</span><span class="katex-display-wrapper" data-tex="H = -(1\cdot\log 1 + 0\cdot\log 0) = 0 \quad \text{（※ } 0\log 0 = 0 \text{ と定義）}"></span></div></div></div>
+<div class="stats"><div class="stat"><div class="v">0 bit</div><div class="k">完全に予測可能な分布のエントロピー（下限）</div></div><div class="stat"><div class="v">log|X| bit</div><div class="k">一様分布のエントロピー（上限）</div></div><div class="stat"><div class="v">~10.8 bit</div><div class="k">日本語テキスト 1 文字あたりの情報量の目安</div></div></div>
+<h2><span class="n">3</span>直感でつかむ ─ エントロピーは「驚きの平均」</h2>
+<p>エントロピーをもっと直感的に理解するために、<strong>図書館のたとえ</strong>を使いましょう。すべての本が全く同じ内容だったら（確定的な分布）、図書館から一冊取り出しても「知っている内容」なので驚きゼロ ─ エントロピー 0 です。一方、ランダムな内容の本が均等に並んでいたら（一様分布）、どの本を手に取っても最大の驚きがある ─ エントロピーは最大です。</p>
+<p>言語モデルにとってのエントロピーも同じ意味を持ちます。次の単語を完璧に予測できれば<span class="term-tip" tabindex="0">パープレキシティ<span class="tip">言語モデルの評価指標。エントロピーを指数化したもので、平均的に何択から選んでいるかを表す</span></span> は 1（驚きなし）、全く予測できなければパープレキシティは語彙数と同じ（最大の驚き）になります。</p>
+<h2><span class="n">4</span>クロスエントロピー ─ 予測のズレを測る</h2>
+<p>実際の分布（正解）を $P$、モデルが予測した分布を $Q$ とするとき、<strong>クロスエントロピー</strong> $H(P, Q)$ は「$P$ に従う出来事を、$Q$ を使って説明したときの平均情報量」です。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="H(P, Q) = -\sum_{x} p(x) \log q(x) = \mathbb{E}_{x \sim P}[-\log q(x)]"></div><div class="tx-cap">クロスエントロピーの定義。Q が P に近いほど H(P,Q) は H(P) に近づく。</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">Q = P のとき（完璧な予測）</span><span class="katex-display-wrapper" data-tex="H(P, P) = -\sum_x p(x)\log p(x) = H(P) \quad \text{（最小値はエントロピー）}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">Q が P から外れるほど</span><span class="katex-display-wrapper" data-tex="H(P, Q) \geq H(P) \quad \text{（常にエントロピー以上）}"></span></div></div></div>
+<p>機械学習では、正解ラベルが one-hot ベクトル（$p(y^*) = 1$、他は 0）の場合、クロスエントロピー損失は非常にシンプルな形になります。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\mathcal{L}_{\text{CE}} = -\log q(y^*)"></div><div class="tx-cap">one-hot 正解ラベルに対するクロスエントロピー損失。正解クラスの確率の対数のみが残る。</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">q(y*)=0.9（自信を持った正解）</span><span class="katex-display-wrapper" data-tex="\mathcal{L} = -\log 0.9 \approx 0.105"></span></div><div class="tex-derive-row"><span class="tex-derive-label">q(y*)=0.1（自信を持った不正解）</span><span class="katex-display-wrapper" data-tex="\mathcal{L} = -\log 0.1 \approx 2.303 \quad \text{（大きなペナルティ）}"></span></div></div></div>
+<h2><span class="n">5</span>KL ダイバージェンス ─ 分布間の距離</h2>
+<h3>定義と直感</h3>
+<p><strong>KL ダイバージェンス</strong>（Kullback–Leibler divergence）$D_{\text{KL}}(P \| Q)$ は、分布 $Q$ を使って分布 $P$ を近似したときの「情報の無駄」を測る量です。クロスエントロピーからシャノンエントロピーを引いたものと考えると直感が掴みやすいです。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="D_{\text{KL}}(P \| Q) = \sum_{x} p(x) \log \frac{p(x)}{q(x)} = H(P, Q) - H(P)"></div><div class="tx-cap">KL ダイバージェンスの定義。「クロスエントロピー ー エントロピー」で、余分な情報量を表す。</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">期待値表現に書き換える</span><span class="katex-display-wrapper" data-tex="D_{\text{KL}}(P \| Q) = \mathbb{E}_{x \sim P}\left[\log \frac{p(x)}{q(x)}\right]"></span></div><div class="tex-derive-row"><span class="tex-derive-label">Q = P のとき（KL の最小値）</span><span class="katex-display-wrapper" data-tex="D_{\text{KL}}(P \| P) = \sum_x p(x) \log 1 = 0"></span></div><div class="tex-derive-row"><span class="tex-derive-label">非負性（ギブスの不等式）</span><span class="katex-display-wrapper" data-tex="D_{\text{KL}}(P \| Q) \geq 0 \quad \forall P, Q"></span></div></div></div>
+<h3>KL は「非対称」─ 距離ではなく乖離度</h3>
+<p>重要な注意点として、KL ダイバージェンスは一般に $D_{\text{KL}}(P \| Q) \neq D_{\text{KL}}(Q \| P)$ です。つまり数学的な意味での「距離」ではなく「乖離度」です。この非対称性は AI 研究では重要な意味を持ちます。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="D_{\text{KL}}(P \| Q) \neq D_{\text{KL}}(Q \| P) \quad \text{（一般に）}"></div><div class="tx-cap">KL ダイバージェンスの非対称性。どちらの方向で測るかで意味が変わる。</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">Forward KL: P を Q で近似（P に従うデータを Q で説明）</span><span class="katex-display-wrapper" data-tex="D_{\text{KL}}(P \| Q) = \mathbb{E}_{x \sim P}\left[\log\frac{p(x)}{q(x)}\right] \quad \text{（P がゼロの場所は無視）}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">Reverse KL: Q を P で近似（Q に従うデータを P で説明）</span><span class="katex-display-wrapper" data-tex="D_{\text{KL}}(Q \| P) = \mathbb{E}_{x \sim Q}\left[\log\frac{q(x)}{p(x)}\right] \quad \text{（Q がゼロの場所は無視）}"></span></div></div></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>VAE（変分オートエンコーダ）の損失関数には Reverse KL が登場します。また RLHF（人間フィードバックによる強化学習）では、学習後のモデルが元のモデルから逸脱しすぎないように KL ペナルティ $D_{\text{KL}}(\pi_{\theta} \| \pi_{\text{ref}})$ を損失に加えます。どちらの方向の KL を使うかで学習の挙動が変わります。</div>
+<h2><span class="n">6</span>3 つの量の関係を整理する</h2>
+<p>ここまで学んだ 3 つの量をひとつの式でまとめます。この関係を頭に入れておくと、論文を読むときに迷子になりません。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\underbrace{H(P,Q)}_{\text{クロスエントロピー}} = \underbrace{H(P)}_{\text{エントロピー（真の分布の不確かさ）}} + \underbrace{D_{\text{KL}}(P \| Q)}_{\text{KL ダイバージェンス（予測の余分なコスト）}}"></div><div class="tx-cap">3 量の関係式。機械学習ではHが定数（データは変わらない）なので、CEを最小化 ≡ KLを最小化。</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">機械学習での含意：データ分布 P が固定なら</span><span class="katex-display-wrapper" data-tex="\min_Q H(P, Q) \iff \min_Q D_{\text{KL}}(P \| Q)"></span></div></div></div>
+<h2><span class="n">7</span>現代 AI における活用シーン</h2>
+<div class="step"><span class="si">STEP 1</span><p>【言語モデルの訓練】GPT などの大規模言語モデルは、次トークン予測タスクでクロスエントロピー損失を最小化して学習します。「正解トークンの対数確率の平均」を最大化する操作です。</p></div><div class="step"><span class="si">STEP 2</span><p>【生成モデル（VAE）】変分オートエンコーダの ELBO（証拠下限）は「再構成損失（クロスエントロピー）＋ KL ダイバージェンス」の形をしています。KL 項が潜在表現を正規分布に近づけます。</p></div><div class="step"><span class="si">STEP 3</span><p>【RLHF・PPO】ChatGPT に使われた技術。強化学習でモデルを微調整する際、KL ダイバージェンスを正則化項として使い、学習が暴走（Mode Collapse）するのを防ぎます。</p></div><div class="step"><span class="si">STEP 4</span><p>【知識蒸留】大きなモデル（教師）の出力分布 P と、小さなモデル（生徒）の出力分布 Q の KL ダイバージェンスを最小化することで、知識を転移します。</p></div><div class="step"><span class="si">STEP 5</span><p>【情報ボトルネック・探索戦略】エントロピーを「探索の指標」として使う手法（Maximum Entropy RL など）は、強化学習の探索問題に広く応用されています。</p></div>
+<h2><span class="n">8</span>実装で確かめる ─ Python での計算</h2>
+<div class="code"><div class="ln"><span class="no">1</span><span class="ct">import numpy as np</span></div><div class="ln"><span class="no">2</span><span class="ct">from scipy.special import rel_entr</span></div><div class="ln"><span class="no">3</span><span class="ct"></span></div><div class="ln"><span class="no">4</span><span class="ct"># 確率分布を定義</span></div><div class="ln"><span class="no">5</span><span class="ct">P = np.array([0.4, 0.4, 0.2])   # 真の分布（正解）</span></div><div class="ln"><span class="no">6</span><span class="ct">Q = np.array([0.3, 0.5, 0.2])   # モデルの予測分布</span></div><div class="ln"><span class="no">7</span><span class="ct"></span></div><div class="ln"><span class="no">8</span><span class="ct"># シャノンエントロピー H(P)</span></div><div class="ln"><span class="no">9</span><span class="ct">H_P = -np.sum(P * np.log2(P))</span></div><div class="ln"><span class="no">10</span><span class="ct">print(f&#x27;H(P) = {H_P:.4f} bit&#x27;)</span></div><div class="ln"><span class="no">11</span><span class="ct"></span></div><div class="ln"><span class="no">12</span><span class="ct"># クロスエントロピー H(P, Q)</span></div><div class="ln"><span class="no">13</span><span class="ct">H_PQ = -np.sum(P * np.log2(Q))</span></div><div class="ln"><span class="no">14</span><span class="ct">print(f&#x27;H(P,Q) = {H_PQ:.4f} bit&#x27;)</span></div><div class="ln"><span class="no">15</span><span class="ct"></span></div><div class="ln"><span class="no">16</span><span class="ct"># KL ダイバージェンス D_KL(P || Q)</span></div><div class="ln"><span class="no">17</span><span class="ct">KL_PQ = np.sum(rel_entr(P, Q)) / np.log(2)  # nat→bit変換</span></div><div class="ln"><span class="no">18</span><span class="ct">print(f&#x27;KL(P||Q) = {KL_PQ:.4f} bit&#x27;)</span></div><div class="ln"><span class="no">19</span><span class="ct"></span></div><div class="ln"><span class="no">20</span><span class="ct"># 確認: H(P,Q) = H(P) + KL(P||Q)</span></div><div class="ln"><span class="no">21</span><span class="ct">print(f&#x27;H(P) + KL = {H_P + KL_PQ:.4f} bit  ← H(P,Q) と一致するはず&#x27;)</span></div></div><div class="code-cap">NumPy と SciPy でエントロピー・KL ダイバージェンスを計算する</div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「クロスエントロピーを最小化する」=「KL ダイバージェンスを最小化する」であることを、この計算で実際に確かめてみてください。データ分布 P が変わらない限り、H(P) は定数なので、H(P,Q) を下げることと KL(P‖Q) を下げることは完全に等価です。これが分類問題の損失関数に CrossEntropy が使われる数学的な理由です。</div>
+<h2><span class="n">9</span>まとめと次への架け橋</h2>
+<p>今日は情報理論の三本柱を学びました。<strong>自己情報量</strong>（驚きの大きさ）→<strong>エントロピー</strong>（分布全体の平均的な驚き）→<strong>クロスエントロピー</strong>（予測の精度）→<strong>KL ダイバージェンス</strong>（分布間の乖離）という流れで、それぞれが自然につながっています。</p>
+<p>明日の DAY 4 では、これらの概念の親戚にあたる<span class="term-tip" tabindex="0">最尤推定<span class="tip">観測データの生成確率を最大化するパラメータを求める手法。クロスエントロピーの最小化と等価</span></span>と <span class="term-tip" tabindex="0">ベイズ推定<span class="tip">事前知識（事前分布）と観測データを組み合わせてパラメータを推定する手法</span></span>を扱います。今日学んだエントロピーが「ベイズ更新の情報ゲイン」として再登場します。乞うご期待！</p>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>KL ダイバージェンスの非対称性から生まれた対称版「Jensen–Shannon ダイバージェンス（JSD）」も重要です。GAN（敵対的生成ネットワーク）の理論的な基盤となっており、Week 3 の生成モデル回で詳しく扱います。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI 30日講座 — Week 1〜6 ・ generated by Claude
+  </div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Render explicit tex-block wrappers
+      document.querySelectorAll('.katex-display-wrapper').forEach(el => {
+        const tex = el.dataset.tex;
+        if (tex) {
+          try {
+            katex.render(tex, el, {displayMode: true, throwOnError: false});
+          } catch(e) {
+            el.textContent = tex;
+          }
+        }
+      });
+      // Auto-render inline $...$ and $$...$$ in text
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+</body>
+</html>

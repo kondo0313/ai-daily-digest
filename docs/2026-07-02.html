@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-07-02</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-07-02</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #GRPO #強化学習 #LLM #ポスト学習 #新人研究者向け</div>
+    <h1 class="headline">GRPOの「なぜ学習が進むのか」をついに数式で説明できた――学習ダイナミクスの理論モデル</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-07-02 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Predictable GRPO: A Closed-Form Model of Training Dynamics</div>
+      <div class="pc-row">
+        <span>著者情報は公開情報から確認できず（arXiv:2606.30789）</span>
+        <span>arXiv cs.LG ・ 2025年</span>
+        <a href="https://arxiv.org/abs/2606.30789">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>なぜ「学習曲線が予測できない」ことが問題なのか</h2>
+<p><span class="term-tip" tabindex="0">GRPO<span class="tip">Group Relative Policy Optimization：グループ内の相対スコアで方策を最適化するRLHF手法</span></span>は、大規模言語モデルに数学的推論や論理的思考を身につけさせる「<span class="term-tip" tabindex="0">ポスト学習<span class="tip">事前学習済みモデルを特定タスクに合わせて追加学習するフェーズ</span></span>」の標準ツールとして急速に普及しました。DeepSeekやQwenなど有力モデルの推論能力向上にも使われています。</p>
+<p>ところが「GRPOで学習すると報酬がどう伸びるか」は、これまで<strong>経験的な観察</strong>でしか語られてきませんでした。「なんとなく単調増加してから頭打ちになる」というのを低パラメータの関数でフィッティングし、その定数に物理的な意味はない――という状況です。ハイパーパラメータも試行錯誤任せ。これは橋の設計で材料強度を「だいたいこれくらい」で決めるようなもので、理論的根拠がありません。</p>
+<div class="pull">「経験則のフィッティングから脱し、独立に計測できる量から学習軌跡を予測できる、第一原理モデルを作る」――これがこの論文の核心的な目標だ。</div>
+<h2><span class="n">2</span>背景：これまでの経験則モデルの限界</h2>
+<p>従来は報酬の時間変化を「単一指数の飽和則（シグモイドっぽい曲線）」でフィッティングしていました。たとえば r(t) = r_max × (1 − exp(−t/τ)) のような形です。この式の r_max（最終報酬）や τ（時定数）は<strong>データに合わせて後付けで決める定数</strong>であり、「なぜその値になるのか」は説明できません。</p>
+<p>また、この単一指数モデルには<strong>「学習開始直後がなぜ遅いか（スロースタート相）」を表現できない</strong>という構造的欠点もあります。現実の学習曲線では最初にじわじわ動き出す期間があるのに、指数関数は t=0 から一気に動き始めてしまいます。</p>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>単一指数飽和則は「<span class="term-tip" tabindex="0">過減衰<span class="tip">振動せず緩やかに目標値へ近づく減衰の特別なケース</span></span>（overdamped）」の近似に相当します。この論文はそれをより一般的な力学モデルの特殊ケースとして位置づけます。</div>
+<h2><span class="n">3</span>手法の全体像：「縮約モデル」という発想</h2>
+<p>著者らは、GRPOの確率的最適化プロセスを<strong>縮約次数モデル（reduced-order model）</strong>として定式化します。これは「複雑なシステム全体をそのまま解くのではなく、本質的な自由度だけを残した低次元の方程式で近似する」というアプローチで、物理学や工学では古くから使われる強力な技法です。</p>
+<p>具体的には、報酬の時間発展を<strong>ポテンシャルをもつ力学系</strong>として記述します。「山を転がり落ちるボール」のイメージで、報酬の現在値がボールの位置、最終的な高報酬状態が谷底（固定点）に対応します。ここで重要なのが<strong>慣性項（inertial term）</strong>を残すことです。これが従来の単一指数モデルにはなかったもので、スロースタート相と振動的遷移を自然に表現できるようになります。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># ステップ1: 各イテレーションで報酬を観測</span></div><div class="ln"><span class="no">1</span><span class="ct"><span class="kw">for</span> t <span class="kw">in</span> training_steps:<span class="badge">①</span></span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="ind"></span>r_t = <span class="fn">compute_group_reward</span>(policy, prompts, G=group_size)</span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># ステップ2: アドバンテージの計算（グループ内相対スコア）</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="ind"></span>adv_t = <span class="fn">normalize_within_group</span>(r_t)<span class="badge">②</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># ステップ3: 縮約モデルによる軌跡の予測</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>r_pred = <span class="fn">closed_form_trajectory</span>(<span class="badge">③</span></span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span><span class="ind"></span>r_star,  <span class="st"># 固定点（ポテンシャルの谷底）</span></span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span><span class="ind"></span>stiffness,  <span class="st"># ポテンシャルの曲率（収束速度）</span></span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="ind"></span><span class="ind"></span>inertia,  <span class="st"># 慣性項（スロースタート・振動を決める）</span></span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="ind"></span>)</span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># ステップ4: 不安定性・失敗モードの診断</span></div><div class="ln"><span class="no">9</span><span class="ct"><span class="ind"></span><span class="fn">diagnose_failure_modes</span>(r_t, adv_t, r_pred)<span class="badge">④</span></span></div></div><div class="code-cap">GRPOの縮約モデル：擬似コードで理解する学習ダイナミクス</div>
+<h2><span class="n">4</span>モデルの3つの主要な予測</h2>
+<h3>① 従来の単一指数則を内包する</h3>
+<p>縮約モデルの「<span class="term-tip" tabindex="0">過減衰極限<span class="tip">慣性が十分小さく振動が起きない状態への極限</span></span>」を取ると、従来の単一指数飽和則がそのまま導出されます。これは重要な整合性チェックです。さらに、従来モデルの定数に<strong>機械論的な意味</strong>が与えられます：フィッティングされていた「プラトー値」は固定点、「時定数」は逆剛性、「サイズ指数」はポテンシャルの曲率スケーリング指数に対応します。</p>
+<h3>② グループサイズ不変性と 1/G スケーリング</h3>
+<p>縮約モデルは「<span class="term-tip" tabindex="0">決定論的軌跡<span class="tip">ノイズを平均化した期待値としての学習曲線</span></span>はグループサイズ G に依存しない」と予測します。つまり G=4 でも G=8 でも平均的な報酬曲線の形は変わらない。一方で、軌跡の<strong>確率的なゆらぎ（分散）は 1/G に比例して小さくなる</strong>と予測します。Gを増やすと安定するが速くはならない、という定量的な主張です。</p>
+<h3>③ リフレッシュ間隔の安定閾値と振動遷移</h3>
+<p>GRPOでは<span class="term-tip" tabindex="0">リフレッシュ間隔<span class="tip">報酬計算に使うグループサンプルを何ステップごとに更新するか</span></span>という重要なハイパーパラメータがあります。縮約モデルは「このリフレッシュ間隔が長くなりすぎると学習が不安定化する」という<strong>鋭い安定閾値</strong>を予測します。また、モデルのパラメータ次第で学習が「振動なく収束（過減衰）」か「振動しながら収束（<span class="term-tip" tabindex="0">臨界減衰<span class="tip">振動と過減衰の境界付近の挙動</span></span>〜過少減衰）」かが変わる遷移点も予測できます。</p>
+<h2><span class="n">5</span>失敗モードの診断ツールとしての活用</h2>
+<p>これは実務的に非常に重要なポイントです。報酬曲線が「途中で止まった」「急落した」とき、その原因は複数考えられます：</p>
+<div class="step"><span class="si">失敗モード①</span><p><strong>報酬ハッキング（reward hacking）</strong>：モデルが本来の目標ではなく報酬関数の抜け穴を学習している</p></div><div class="step"><span class="si">失敗モード②</span><p><strong>アドバンテージ縮退（advantage degeneracy）</strong>：グループ内のスコアが均一になりすぎて勾配信号がゼロに近づく</p></div><div class="step"><span class="si">失敗モード③</span><p><strong>方策集中（policy concentration）</strong>：出力の多様性が失われて特定の答えばかり生成するようになる</p></div><div class="step"><span class="si">失敗モード④</span><p><strong>動的不安定性（dynamical instability）</strong>：リフレッシュ間隔が長すぎて最適化が発散・振動する</p></div>
+<p>報酬曲線だけを見るとこれらは区別できません。縮約モデルが提供する診断量（固定点、剛性、慣性、ゆらぎの分散など）を組み合わせることで、<strong>どの失敗モードが起きているかを分離して診断できる</strong>というのが論文の主張です。</p>
+<div class="pull">報酬曲線は「結果」しか語らない。縮約モデルは「原因」を語る診断ツールになる。</div>
+<h2><span class="n">6</span>実験結果：どこまで予測できたか</h2>
+<div class="stats"><div class="stat"><div class="v">R² ≥ 0.91</div><div class="k">3モデル・2グループサイズでの学習報酬への閉形式フィッティング精度</div></div><div class="stat"><div class="v">8ベンチマーク</div><div class="k">グループサイズ不変性が成立することを確認した数学OODベンチマーク数</div></div><div class="stat"><div class="v">1/G</div><div class="k">定常ゆらぎのグループサイズスケーリング（理論予測と一致）</div></div></div>
+<p>3つの異なるモデルと2種類のグループサイズの組み合わせで、閉形式の軌跡が学習報酬を R²≥0.91 の精度で記述しました。また予測されたグループサイズ不変性は、学習中の報酬曲線だけでなく、学習後の<strong><span class="term-tip" tabindex="0">OOD汎化<span class="tip">学習に使っていない分布外データへの性能転移</span></span></strong>（数学8ベンチマーク）においても成立することが確認されています。</p>
+<p>安定閾値と振動遷移の予測については、<span class="term-tip" tabindex="0">平均場近似<span class="tip">多数の変数の相互作用を代表的な平均的変数との相互作用で置き換える近似</span></span>が厳密に成立する「<span class="term-tip" tabindex="0">ソフトマックス・バンディット<span class="tip">多腕バンディット問題をソフトマックス方策で解く縮約設定</span></span>」という制御された設定で検証され、理論予測と一致することが示されました。深層ネットワークでの完全な検証は今後の課題とされています。</p>
+<h2><span class="n">7</span>この研究の新規性と重要性</h2>
+<p>従来研究はすべて「観測→フィッティング→経験則」の流れでした。この論文は「第一原理→閉形式モデル→予測→検証」という<strong>理論駆動のアプローチ</strong>を初めて本格的に持ち込んでいます。特に重要なのは、予測に使うパラメータが「フィッティングで決める定数」ではなく「独立に計測できる量」である点です。これは再現性と説明可能性の観点から大きな前進です。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「縮約次数モデル（reduced-order model）」は制御工学や流体力学で長年使われてきた手法です。複雑な高次元系を「本質的な少数の変数」で近似するこのアプローチをLLM訓練に持ち込んだのがこの論文のキモ。今後「<span class="term-tip" tabindex="0">平均場理論<span class="tip">多体系を代表的な1体の問題に落とし込む統計力学の手法</span></span>をNNに適用する」系の論文が増えると思われるので、物理学的な直感を持っておくと役立ちます。</div>
+<h2><span class="n">8</span>限界と今後の課題</h2>
+<div class="step"><span class="si">限界①</span><p>安定閾値と振動遷移の予測は、<strong>平均場近似が厳密に成立するソフトマックス・バンディット設定でのみ実験的に検証</strong>されており、実際の深層ネットワークでの検証は明示的に「今後の課題」とされている</p></div><div class="step"><span class="si">限界②</span><p>縮約モデルは「決定論的な平均軌跡」を中心に構築されており、<strong>個々の学習ランの確率的なばらつき</strong>を完全に記述するものではない（1/Gスケーリングは示しているが）</p></div><div class="step"><span class="si">限界③</span><p>モデルが前提とする<strong>平均場近似の妥当性</strong>はタスクやモデルアーキテクチャによって異なる可能性があり、どのような条件下で崩れるかは未解明</p></div><div class="step"><span class="si">限界④</span><p>実験は3モデル・2グループサイズに限定されており、<strong>非常に大規模なモデル（100B+など）での挙動</strong>が同じ理論で記述できるかは不明</p></div>
+<h2><span class="n">9</span>新人研究者へのひとこと</h2>
+<div class="note-box"><div class="nb-label">⚙️ 大きな文脈で捉えよう</div>この論文は「LLM訓練を理論的に理解する」という流れの重要な一歩です。現状のAI研究は「動いた・動かなかった」の経験則が多く、なぜそうなるかの理解が追いついていません。この論文のように「第一原理から予測できる量を導く」アプローチが増えると、ハイパーパラメータ探索コストが劇的に下がり、失敗の原因診断も速くなります。R&amp;D現場では「なぜこのハイパーパラメータが効くのか説明できますか？」と問われる場面が必ずあります。そのとき、経験則ではなくこうした理論的根拠を持てると、研究の説得力が大きく変わります。まず論文の §3（縮約モデルの導出）を精読し、ポテンシャル関数の形と固定点の概念を自分の言葉で説明できるようにしてみてください。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
