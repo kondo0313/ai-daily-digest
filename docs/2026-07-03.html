@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-07-03</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-07-03</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #世界モデル #ロボティクス #新人研究者向け</div>
+    <h1 class="headline">見えない部分を先に埋める——ロボットの未来予測を安定させる「3D点群世界モデル」</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-07-03 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">3D Point World Models: Point Completion Enables More Accurate Dynamics Learning</div>
+      <div class="pc-row">
+        <span>Skand Peri, Hung Nguyen, Chanho Kim, Li Fuxin, Stefan Lee</span>
+        <span>arXiv cs.RO ・ 2026年6月</span>
+        <a href="https://arxiv.org/abs/2607.00148">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>ロボットは「頭の中」でリハーサルできるか</h2>
+<p>人がコップを掴む前に「こう動かせば倒れずに持てそうだ」と頭の中で一瞬シミュレーションするように、ロボットにも行動を実際に試す前に結果を予測できる能力があると便利です。この「頭の中のシミュレーター」にあたる技術が<span class="term-tip" tabindex="0">世界モデル<span class="tip">エージェントが行動した結果、次にどんな状態になるかを予測する内部モデル</span></span>です。ロボットの行動計画をこの世界モデルの中で試行錯誤できれば、実機を壊すリスクや実験コストを大きく減らせます。今日紹介する論文は、この世界モデルを「もっと壊れにくく、長く使えるもの」にするための工夫を提案しています。</p>
+<h2><span class="n">2</span>動画で予測すると、なぜ「すり抜け」が起きるのか</h2>
+<p>世界モデルを作る有力な方法の一つが、カメラ映像（2D動画）から次のフレームを予測する学習です。ただしこの方式には弱点があります。2D画像は奥行きの情報を潰してしまっているため、何十ステップも先まで予測を続けると、物体同士の位置関係が少しずつずれ、やがて「アームが物体をすり抜ける」ような幾何学的に破綻した予測になりがちです。この問題を避けるため、近年は<span class="term-tip" tabindex="0">点群<span class="tip">物体表面の3D座標点の集まり。深度カメラなどから得られる</span></span>を使い、3D空間のまま予測する世界モデルも登場しました。しかしカメラからは物陰など見えない部分（<span class="term-tip" tabindex="0">オクルージョン<span class="tip">物体や障害物に遮られてセンサーから見えなくなる領域</span></span>）がどうしても生じるため、そこが欠けたまま予測を続けると誤差が蓄積してしまう、という新たな弱点が残っていました。</p>
+<h2><span class="n">3</span>手法の全体像:見る前に「補って」から予測する</h2>
+<p>この論文が提案する <strong>3D Point World Models（3DPWM）</strong> のアイデアはシンプルです。カメラに見えている部分だけの点群をそのまま使うのではなく、まず見えていない部分を推定して埋め（点群補完）、シーン全体の完全な3D形状を作ってから、その上で行動を条件とした未来予測を行います。「欠けた地図のまま進むのではなく、先に地図を補完してから旅程を計画する」というイメージです。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># ① 部分的にしか見えていない点群を、完全な3D形状に補完する</span></div><div class="ln"><span class="no">1</span><span class="ct">partial_pc = <span class="fn">observe_scene</span>()</span></div><div class="ln"><span class="no">2</span><span class="ct">full_pc = <span class="fn">complete_pointcloud</span>(partial_pc)<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># ② 補完済みの3D状態から、行動ごとに未来を予測する（世界モデル本体）</span></div><div class="ln"><span class="no">3</span><span class="ct">state = <span class="fn">encode</span>(full_pc)</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="kw">for</span> action_seq <span class="kw">in</span> candidate_sequences:</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span>future_states = <span class="fn">predict_dynamics</span>(state, action_seq)<span class="badge">②</span></span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span>cost[action_seq] = <span class="fn">evaluate</span>(future_states, goal)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ③ 最もコストが低い行動列を選び、最初の一手だけ実行する</span></div><div class="ln"><span class="no">7</span><span class="ct">best_seq = <span class="fn">argmin</span>(cost)<span class="badge">③</span></span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="fn">execute</span>(best_seq[0])</span></div></div><div class="code-cap">3DPWMの処理の流れを単純化した疑似コード（論文のアイデアに基づく）</div>
+<h3>① 点群補完:見えない部分を「もっともらしく」埋める</h3>
+<p>カメラが捉えられるのは物体の手前側だけで、裏側や物陰は原理的に見えません。3DPWMはまずこの欠けた点群を、物体の形の妥当性を学習したモデルで補完し、シーン全体の完全な3D構造を作ります。これによって、後段の予測モデルは「最初から完全な地図」を相手にできるため、見えない部分の欠損が原因で予測がずれていく、という問題を根本から抑えられます。</p>
+<h3>② 行動条件付きダイナミクス学習:『こう動かしたら次はこうなる』を3Dで学ぶ</h3>
+<p>補完済みの3D状態を入力に、ロボットの<span class="term-tip" tabindex="0">行動条件付きダイナミクス<span class="tip">エージェントの行動(action)を条件として、次の状態がどう変化するかを予測するモデル</span></span>を学習します。ポイントは、予測が2D画像のピクセルではなく3D空間の中で完結していることです。3D空間でシーン全体を扱うため、視点が変わっても物体同士の位置関係の整合性が崩れにくく、<span class="term-tip" tabindex="0">ドリフト<span class="tip">予測を繰り返すたびに少しずつ誤差が蓄積し、現実からずれていく現象</span></span>が起きにくい設計になっています。</p>
+<h3>③ プランニングへの応用:頭の中で試して、一番良い行動を選ぶ</h3>
+<p>世界モデルができれば、実際にロボットを動かす前に多数の行動系列を頭の中（モデル内）でシミュレーションし、ゴールに最も近づけそうな行動を選んで実行できます。3DPWMは、行動系列をまとめて決めてから一括で実行する<span class="term-tip" tabindex="0">open-loop<span class="tip">最初に決めた行動計画を、途中で観測を見直さずに最後まで実行する方式</span></span>と、1歩実行するたびに観測し直して計画を練り直す<span class="term-tip" tabindex="0">closed-loop<span class="tip">1ステップ行動するたびに新しい観測を取り込み、計画を更新し続ける方式</span></span>の両方の計画方式に対応しています。</p>
+<h2><span class="n">4</span>実験結果:どれくらい「壊れにくく」なったか</h2>
+<div class="stats"><div class="stat"><div class="v">100〜300+</div><div class="k">幾何的に破綻せず予測を続けられた行動ステップ数（長期ロールアウト）</div></div><div class="stat"><div class="v">複数embodiment</div><div class="k">異なるロボットの身体構成・複数のテーブルトップ操作ベンチマークで検証</div></div><div class="stat"><div class="v">Sim → Real</div><div class="k">シミュレーションで学習したモデルの実機への転移に成功</div></div></div>
+<p>論文では、テーブルトップでの物体操作タスクを対象に、複数のロボットの身体構成とベンチマークをまたいで評価を行っています。従来の2D動画ベースの世界モデルや、補完を行わない3D点群モデルと比べて、3DPWMは100〜300ステップを超える長期の予測でも幾何学的な破綻が少なく、行動計画のコスト評価がより正確になることを報告しています。</p>
+<div class="pull">見えない部分を後回しにせず先に埋めておく——たったそれだけの工夫が、世界モデルの長期予測を大きく安定させる。</div>
+<h2><span class="n">5</span>なぜこの論文が面白いのか</h2>
+<p>この研究の面白さは、派手な新アーキテクチャではなく「問題の立て方」にあります。3D点群を使えば2D動画より幾何学的に正しい予測ができるはず、というのは自然な発想ですが、実際にはオクルージョンによる欠損がボトルネックになっていました。3DPWMは、その欠損を先に解消してから予測するという順序の工夫だけで精度を大きく改善しており、<span class="term-tip" tabindex="0">タスク非依存<span class="tip">特定のタスクに特化させず、様々な下流タスクに使い回せる設計であること</span></span>な世界モデルとして、新しいタスクへの適応にも活かせる点が評価できます。</p>
+<h2><span class="n">6</span>意義と限界</h2>
+<div class="step"><span class="si">意義</span><p>2D動画ベースの世界モデルが抱える幾何学的不整合という根本課題に、点群補完という具体的な手立てで切り込んでいる。</p></div><div class="step"><span class="si">意義</span><p>open-loop・closed-loopの両方の計画方式に対応し、実機への転移も確認しており、実用に近い形で検証されている。</p></div><div class="step"><span class="si">限界</span><p>評価はテーブルトップでの物体操作が中心で、より広い空間や接触の激しいタスクでの挙動は今後の検証課題と考えられる。</p></div><div class="step"><span class="si">限界</span><p>点群補完の精度に予測全体が依存するため、補完自体が苦手な形状や大きな欠損があるシーンでは性能が下がる可能性がある。</p></div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>「世界モデル」は動画生成や自動運転など、ロボット以外の文脈でも急速に注目が高まっている分野です。今回のように、扱うデータの表現（2D画像 vs 3D点群）を変えるだけで性能が大きく変わることがある、という点は覚えておくと他の課題にも応用が利きます。</div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>うまくいかない時、モデルのアーキテクチャをいきなり複雑にする前に、「入力データの表現方法や前処理に問題はないか」を疑ってみるのは有効な戦略です。3DPWMも、予測モデル自体より前段の点群補完という前処理の工夫が効いています。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
