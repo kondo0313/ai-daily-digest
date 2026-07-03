@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-07-04</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-07-04</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #LLMアーキテクチャ #潜在推論 #新人研究者向け</div>
+    <h1 class="headline">考えてから話すLLM: 「潜在空間でループする」新アーキテクチャOuroの正体</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-07-04 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Scaling Latent Reasoning via Looped Language Models</div>
+      <div class="pc-row">
+        <span>Rui-Jie Zhu, Zixuan Wang, Kai Hua ほか32名（Yoshua Bengio 含む）</span>
+        <span>arXiv cs.CL ・ 2025年10月投稿（2026年7月改訂）</span>
+        <a href="https://arxiv.org/abs/2510.25741">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>なぜ今「考える場所」が問われているのか</h2>
+<p>今のLLMが「賢く」見えるとき、その多くは<span class="term-tip" tabindex="0">Chain-of-Thought (CoT)<span class="tip">途中の思考過程を文章として書き出しながら答えを導く手法</span></span>のおかげです。ただしCoTには根本的な制約があります。モデルは事前学習では「次の単語を当てる」ことだけを学び、「推論する」という能力は事後の強化学習やファインチューニングで後付けされます。つまり、事前学習という一番データ量の多いフェーズで、モデルの「考える力」そのものはあまり鍛えられていないのです。今日紹介する論文は、この前提そのものを疑い、「推論を事前学習の段階からモデルの構造に埋め込んでしまおう」という大胆な提案をしています。</p>
+<h2><span class="n">2</span>背景: CoTは「声に出して考える」方式</h2>
+<p>CoTは例えるなら、頭の中で考えず、常に独り言をブツブツ喋りながら思考する人のようなものです。喋った言葉(トークン)がそのまま思考過程になるので、長く考えたいほど大量のトークンを生成しなければならず、計算コストも待ち時間も増えます。また、喋りながら考えている内容(CoTの文章)が、実際に脳内で起きている計算過程を正確に表しているとは限らない、という指摘も近年よくされています。もし「声に出さず頭の中だけで考える」computational な仕組みをモデルに持たせられたら、もっと効率よく、かつ実態に忠実な推論ができるかもしれません。</p>
+<h2><span class="n">3</span>Ouroの全体像: Looped Language Model</h2>
+<p>著者らが提案するのが Ouro（自分の尾を食べる蛇 Ouroboros にちなむ名前）と呼ばれる <span class="term-tip" tabindex="0">Looped Language Model (LoopLM)<span class="tip">同じ計算ブロックを何度も繰り返し通すことで、出力せずに内部で計算を深める言語モデル</span></span> です。通常のTransformerは層を1回ずつ順番に通過するだけですが、Ouroは同じブロックを <span class="term-tip" tabindex="0">潜在空間<span class="tip">人間には直接読めない、モデル内部の数値表現(隠れ状態)の空間</span></span> の中で何度もループさせ、次のトークンを出す前に「頭の中で考え直す」ステップを挟みます。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 通常のTransformerは層を1回ずつ一方向に進むだけ</span></div><div class="ln"><span class="no">1</span><span class="ct">z = <span class="fn">embed</span>(token)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># LoopLMは同じブロックを繰り返し通し、内部で『考え直す』</span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="kw">for</span> step <span class="kw">in</span> range(max_loops):</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="ind"></span>z = <span class="fn">shared_block</span>(z)<span class="badge">①</span></span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>stop_prob = <span class="fn">halting_head</span>(z)<span class="badge">②</span></span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span><span class="kw">if</span> should_stop(stop_prob):</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span><span class="ind"></span><span class="kw">break</span><span class="badge">③</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># 十分『考えた』ところで初めてトークンを出力</span></div><div class="ln"><span class="no">7</span><span class="ct">next_token = <span class="fn">output_head</span>(z)</span></div></div><div class="code-cap">Ouro (LoopLM) の推論イメージ（概念図・簡略化）</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>停止判定の厳密な数式は論文本体で定義されており、上のコードはあくまで「同じブロックをループし、途中で計算を打ち切って出力する」という考え方を掴むための簡略図です。</div>
+<h3>① 潜在空間での反復計算</h3>
+<p>ループのたびにモデルは隠れ状態zを少しずつ更新していきます。これは下書きを何度も推敲するようなイメージです。1回目の下書き（1回目のループ）よりも、5回書き直した下書き（5回ループ後）の方が、より練られた「考え」になっている、というわけです。しかもこの推敲はすべて<span class="term-tip" tabindex="0">潜在空間<span class="tip">人間には直接読めない、モデル内部の数値表現(隠れ状態)の空間</span></span>の中で完結するため、CoTのように大量の単語を生成する必要がありません。</p>
+<h3>② どれだけ考えるかを自分で学習する</h3>
+<p>ずっとループし続ければ精度は上がるかもしれませんが、計算コストがかさみます。そこでOuroは、各トークンに対して「あと何回ループすべきか」という深さ配分自体を学習します。論文ではこれを<span class="term-tip" tabindex="0">エントロピー正則化<span class="tip">出力の確信度にばらつきを持たせすぎないよう罰則を与える学習テクニック</span></span>を使った目的関数で実現しており、簡単な部分は少ないループで、難しい部分にはより多くのループを割り当てることを狙っています。これは著者らが7.7兆トークンという大規模なデータでこの仕組みを事前学習の段階から鍛え上げた、という点が特に野心的です。</p>
+<div class="stats"><div class="stat"><div class="v">7.7兆</div><div class="k">事前学習に使ったトークン数</div></div><div class="stat"><div class="v">1.4B / 2.6B</div><div class="k">Ouroのパラメータ数</div></div><div class="stat"><div class="v">最大12B相当</div><div class="k">性能が並ぶとされる既存モデルの規模</div></div></div>
+<div class="pull">Ouroの性能向上は、モデルが持つ知識量の増加からではなく、その知識を『操作する』能力の向上からもたらされている。</div>
+<h2><span class="n">4</span>新規性: なぜこの結果が重要なのか</h2>
+<p>著者らは対照実験を通じて、Ouroの強さの正体を掘り下げています。もし単に「モデルが多くの知識を記憶している」だけなら、それはパラメータ数を増やすのと本質的に同じ話です。しかし論文が示したのは、Ouroの優位性は知識の量ではなく、持っている知識をどう組み合わせ、どう推論に使うかという「知識操作能力」に由来するという点でした。さらに興味深いのは、LoopLMが内部で行っている推論の跡（潜在空間での計算過程）が、CoTの文章よりも最終的な出力と整合的である、という指摘です。これは「モデルが本当は何を考えて答えを出したのか」を理解する上でも意味のある発見です。</p>
+<h2><span class="n">5</span>意義と限界</h2>
+<div class="step"><span class="si">限界1</span><p>検証されているのは1.4B・2.6Bという比較的小さいモデルであり、「既存の最大12B級モデルに匹敵する」のはあくまでこの規模での話。LoopLM自体をさらに大規模化した場合にも同じ優位性が保たれるかはまだ実証されていません。</p></div><div class="step"><span class="si">限界2</span><p>同じブロックを何度もループさせる設計上、1トークンあたりの計算回数は通常のTransformerより増える可能性があり、推論時の速度・コストとのトレードオフを常に意識する必要があります。</p></div><div class="step"><span class="si">限界3</span><p>「知識操作能力が向上した」という説明は対照実験に基づく解釈であり、なぜ潜在空間でのループがその能力を引き出すのかという、より深いメカニズムの解明は今後の課題として残されています。</p></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「推論をどこで行わせるか」は、CoTのように出力トークンとして表に出すか、Ouroのように内部の潜在空間に隠すか、という設計上の大きな分岐点です。新人研究者のうちは、ある手法を見たときに「これは計算をどこに、どれだけ割り当てているのか」という視点で読み解く癖をつけると、アーキテクチャ間の違いがぐっと理解しやすくなります。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
