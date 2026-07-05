@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 30日講座 — 汎化とは何か ─ 統計的学習理論と PAC 学習の入口</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+
+.course-card{background:linear-gradient(135deg,#1c6f8c15,#2cb69615);border:1.5px solid var(--accent);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.course-card .cc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--accent-ink);text-transform:uppercase;margin-bottom:6px;}
+.course-card .cc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;color:var(--ink);}
+.course-card .cc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:4px 16px;}
+.cc-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;border-radius:6px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;}
+.progress-bar{height:4px;background:var(--line);border-radius:2px;margin:10px 0 4px;}
+.progress-bar .bar{height:100%;background:var(--accent);border-radius:2px;transition:width .4s;}
+.progress-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-faint);text-align:right;}
+/* KaTeX blocks */
+.tex-block{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;overflow-x:auto;}
+.tex-block .katex-display{margin:0;}
+.tex-block .tx-cap{font-size:12.5px;color:var(--ink-faint);margin-top:10px;text-align:center;}
+.tex-derive{margin-top:12px;border-top:1px solid var(--line);padding-top:10px;}
+.tex-derive-row{display:flex;gap:10px;align-items:baseline;margin-top:6px;font-size:14px;}
+.tex-derive-label{font-size:12px;color:var(--ink-faint);flex-shrink:0;min-width:80px;}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">📚</span> AI 30日講座</div>
+      <div class="date-pill">2026-07-06</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI30日講座 #統計的学習理論 #PAC学習 #汎化誤差 #バイアスバリアンストレードオフ</div>
+    <h1 class="headline">「暗記」と「理解」の数学的正体 ─ 汎化・PAC学習・バイアス＝バリアンスの深層</h1>
+
+    <div class="author">
+      <div class="avatar" style="background:linear-gradient(135deg,#1c6f8c,#2cb696);">📚</div>
+      <div class="author-meta">
+        <div class="name">AI 30日講座</div>
+        <div class="sub">2026-07-06 ・ DAY 5 ・ 数学的基礎 ─ AIが動く土台</div>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="cc-label">本日のカリキュラム</div>
+      <div class="cc-title">
+        <span class="cc-badge">DAY 5 / 30</span>
+        &nbsp;汎化とは何か ─ 統計的学習理論と PAC 学習の入口
+      </div>
+      <div class="progress-bar"><div class="bar" style="width:16%"></div></div>
+      <div class="progress-label">16% 完了</div>
+      <div class="cc-row">
+        <span>Week 1: 数学的基礎 ─ AIが動く土台</span>
+        <span>基礎〜中級</span>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>問い：なぜAIは「見たことのないデータ」にも答えられるのか？</h2>
+<p>試験勉強を思い出してください。過去問を丸暗記するだけでは、本番で見たことのない問題には歯が立ちません。一方、数学の「解き方の本質」を理解した人は、初めての問題でも正解できる。AIモデルも全く同じ構造を持ちます。訓練データへの「丸暗記」を<strong>過学習（Overfitting）</strong>、そして初見のデータにも通用する能力を<strong>汎化（Generalization）</strong>と呼びます。DAY5では、この「汎化」を数学的に厳密に定義し、<span class="term-tip" tabindex="0">PAC学習<span class="tip">Probably Approximately Correct 学習。確率的・近似的に正しい学習を保証する理論的枠組み</span></span>という強力な理論で武装しましょう。</p>
+<div class="pull">汎化とは「訓練データの丸暗記」ではなく「未知のデータへの転移能力」であり、その限界は数学で計算できる。</div>
+<h2><span class="n">2</span>汎化誤差の数学的定義</h2>
+<p>まず舞台設定を整えましょう。入力空間を $\mathcal{X}$、出力空間を $\mathcal{Y}$ とします。データはある未知の<span class="term-tip" tabindex="0">分布<span class="tip">確率分布 $\mathcal{D}$。現実世界がどのようにデータを生成するか、その「神様視点」の仕組み</span></span> $\mathcal{D}$ から独立同分布（i.i.d.）でサンプリングされます。学習器が出力する仮説を $h: \mathcal{X} \to \mathcal{Y}$、真の正解関数（ターゲット）を $c^*$ とします。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="L_{\mathcal{D}}(h) = \Pr_{(x,y)\sim\mathcal{D}}\bigl[h(x) \neq y\bigr]"></div><div class="tx-cap">汎化誤差（真の誤差）の定義。分布 D 全体で評価した誤り確率</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">期待値形式で書くと</span><span class="katex-display-wrapper" data-tex="L_{\mathcal{D}}(h) = \mathbb{E}_{(x,y)\sim\mathcal{D}}\bigl[\mathbf{1}[h(x)\neq y]\bigr]"></span></div><div class="tex-derive-row"><span class="tex-derive-label">訓練誤差（経験誤差）との対比</span><span class="katex-display-wrapper" data-tex="L_{S}(h) = \frac{1}{m}\sum_{i=1}^{m}\mathbf{1}[h(x_i)\neq y_i]"></span></div></div></div>
+<p>問題の核心は、私たちが直接観測できるのは $L_S(h)$（<strong>訓練誤差</strong>）だけであり、本当に最小化したい $L_{\mathcal{D}}(h)$（<strong>汎化誤差</strong>）は見えないということです。過学習とは $L_S(h) \approx 0$ なのに $L_{\mathcal{D}}(h) \gg 0$ な状態。これを理論的にどう制御するか、が学習理論の主戦場です。</p>
+<h2><span class="n">3</span>PAC学習 ─「たぶん、だいたい正しい」の厳密な意味</h2>
+<p>1984年にレスリー・ヴァリアントが提唱した<strong>PAC（Probably Approximately Correct）学習</strong>は、「どれだけのデータがあれば、どれだけ良い学習器が作れるか」を保証する理論です。P（Probably）は確率的保証、AC（Approximately Correct）は近似的正しさを意味します。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\Pr_{S\sim\mathcal{D}^m}\bigl[L_{\mathcal{D}}(h_S) \leq \varepsilon\bigr] \geq 1 - \delta"></div><div class="tx-cap">PAC学習の核心条件：m 個のサンプルから学習した仮説 h_S の汎化誤差が ε 以下である確率が 1−δ 以上</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">パラメータの読み方</span><span class="katex-display-wrapper" data-tex="\varepsilon \in (0,1):\text{精度パラメータ},\quad \delta \in (0,1):\text{失敗確率}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">必要サンプル数（有限仮説クラスの場合）</span><span class="katex-display-wrapper" data-tex="m \geq \frac{1}{\varepsilon}\left(\ln|\mathcal{H}| + \ln\frac{1}{\delta}\right)"></span></div></div></div>
+<p>この式が語ること：仮説クラス $\mathcal{H}$ が大きいほど（複雑なモデルほど）、同じ保証を得るためにより多くのデータが必要です。また、より高い精度（$\varepsilon$ を小さく）や高い信頼度（$\delta$ を小さく）を求めるほど、必要サンプル数は増えます。<span class="term-tip" tabindex="0">仮説クラス<span class="tip">モデルが取りうる関数の全集合。例えば線形モデルなら「全直線の集合」がH に対応する</span></span></p>
+<div class="stats"><div class="stat"><div class="v">ε（イプシロン）</div><div class="k">許容誤差。小さいほど精度が高い</div></div><div class="stat"><div class="v">δ（デルタ）</div><div class="k">失敗確率。小さいほど信頼性が高い</div></div><div class="stat"><div class="v">ln|H|</div><div class="k">モデル複雑度の対数。クラスが大きいと必要データ増</div></div></div>
+<h3>有限仮説クラスでのPAC保証の導出</h3>
+<p>なぜ上記の不等式が成り立つのか、Union Bound（合併限界）を使って追ってみましょう。「悪い仮説」、つまり $L_{\mathcal{D}}(h) &gt; \varepsilon$ なのに訓練誤差ゼロに見える仮説が存在する確率を抑えます。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\Pr\bigl[\exists h\in\mathcal{H}: L_S(h)=0 \land L_{\mathcal{D}}(h)&gt;\varepsilon\bigr]"></div><div class="tx-cap">「訓練誤差ゼロなのに汎化誤差が大きい仮説が存在する」確率の上界を求める</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">Union Bound を適用</span><span class="katex-display-wrapper" data-tex="\leq \sum_{h\in\mathcal{H}}\Pr\bigl[L_S(h)=0 \land L_{\mathcal{D}}(h)&gt;\varepsilon\bigr]"></span></div><div class="tex-derive-row"><span class="tex-derive-label">各サンプルが独立なので（L_D(h)&gt;ε より）</span><span class="katex-display-wrapper" data-tex="\leq \sum_{h\in\mathcal{H}}(1-\varepsilon)^m \leq |\mathcal{H}|\cdot e^{-\varepsilon m}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">右辺を δ 以下にする m の条件</span><span class="katex-display-wrapper" data-tex="|\mathcal{H}|\cdot e^{-\varepsilon m} \leq \delta \implies m \geq \frac{\ln|\mathcal{H}|+\ln(1/\delta)}{\varepsilon}"></span></div></div></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>Union Bound は非常に粗い上界ですが、「最悪ケースでも保証できる」という安全網になります。実際の研究では Rademacher 複雑度や VC 次元を使ってより鋭い上界を導きますが、PAC の本質的ロジックはこの導出に凝縮されています。</div>
+<h2><span class="n">4</span>VC次元 ─ 無限仮説クラスへの拡張</h2>
+<p>現代のニューラルネットワークは無限に多くの仮説を表現できるため、$|\mathcal{H}|$ が無限大になります。そこで登場するのが<strong>VC次元（Vapnik-Chervonenkis次元）</strong>。モデルの「複雑さ」を有限数で測る概念です。<span class="term-tip" tabindex="0">VC次元<span class="tip">仮説クラスHが完全に分類（shatter）できる最大の点の個数。モデルの表現力を表す自然数</span></span></p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="m \geq \frac{C}{\varepsilon^2}\left(d\ln\frac{1}{\varepsilon} + \ln\frac{1}{\delta}\right)"></div><div class="tx-cap">VC次元 d を使ったPAC学習の必要サンプル数（Fundamental Theorem of Statistical Learning）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">2次元の線形分類器のVC次元</span><span class="katex-display-wrapper" data-tex="\text{VCdim}(\text{halfspaces in }\mathbb{R}^2) = 3"></span></div><div class="tex-derive-row"><span class="tex-derive-label">d次元の線形分類器のVC次元</span><span class="katex-display-wrapper" data-tex="\text{VCdim}(\text{halfspaces in }\mathbb{R}^d) = d+1"></span></div></div></div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>統計的学習理論の「基本定理」：有限VC次元はPAC学習可能であることの必要十分条件です。VC次元が有限 ⟺ そのクラスはPAC学習可能。これは学習理論で最も美しい結果の一つです。</div>
+<h2><span class="n">5</span>バイアス＝バリアンス・トレードオフ ─ 汎化誤差の分解</h2>
+<p>汎化誤差をより細かく分解すると、モデル設計の指針が見えてきます。回帰問題（二乗誤差）の文脈で、汎化誤差は<strong>バイアス</strong>と<strong>バリアンス</strong>（とノイズ）に分解されます。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\mathbb{E}\bigl[(y - \hat{f}(x))^2\bigr] = \underbrace{\text{Bias}[\hat{f}(x)]^2}_{\text{モデルの限界}} + \underbrace{\text{Var}[\hat{f}(x)]}_{\text{データへの敏感さ}} + \underbrace{\sigma^2}_{\text{既約ノイズ}}"></div><div class="tx-cap">汎化誤差のバイアス・バリアンス分解（回帰の場合）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">バイアスの定義</span><span class="katex-display-wrapper" data-tex="\text{Bias}[\hat{f}(x)] = \mathbb{E}[\hat{f}(x)] - f^*(x)"></span></div><div class="tex-derive-row"><span class="tex-derive-label">バリアンスの定義</span><span class="katex-display-wrapper" data-tex="\text{Var}[\hat{f}(x)] = \mathbb{E}\bigl[(\hat{f}(x) - \mathbb{E}[\hat{f}(x)])^2\bigr]"></span></div><div class="tex-derive-row"><span class="tex-derive-label">既約ノイズ（どんなモデルでも除去不可能）</span><span class="katex-display-wrapper" data-tex="\sigma^2 = \mathbb{E}\bigl[(y - f^*(x))^2\bigr]"></span></div></div></div>
+<h3>弓道の的で理解するバイアスとバリアンス</h3>
+<p>バイアスとバリアンスは弓道の的で直感的に理解できます。<strong>高バイアス</strong>＝狙いがずれている（的の中心から体系的にずれて刺さる）。<strong>高バリアンス</strong>＝バラつきが大きい（刺さる場所がバラバラ）。理想は的の中心に集中して刺さること（低バイアス・低バリアンス）ですが、モデルの複雑さを上げると一般にバリアンスが増えてバイアスが下がり、<span class="term-tip" tabindex="0">正則化<span class="tip">モデルの複雑さにペナルティを課し、過学習を抑える手法。L1・L2正則化など</span></span>を強めるとその逆になります。</p>
+<div class="stats"><div class="stat"><div class="v">高バイアス</div><div class="k">モデルが単純すぎる → 過小適合（Underfitting）</div></div><div class="stat"><div class="v">高バリアンス</div><div class="k">モデルが複雑すぎる → 過学習（Overfitting）</div></div><div class="stat"><div class="v">最適点</div><div class="k">バイアス²＋バリアンスが最小になるモデル複雑度</div></div></div>
+<h3>二重降下現象 ─ 深層学習が古典理論を超えた場所</h3>
+<p>古典的バイアス＝バリアンス理論では「モデルが大きすぎると汎化誤差は単調に増加する」と予測されました。しかし現代の超大規模ニューラルネットワークでは、パラメータ数がデータ数を超えても汎化誤差が<strong>再び低下</strong>する「<strong>二重降下（Double Descent）</strong>」が観測されています。これはPAC学習の古典的な枠組みでは説明が困難で、暗黙的正則化・フラットな最小値・勾配降下法の幾何学などの新しい理論が研究されています。</p>
+<h2><span class="n">6</span>LLM・現代AIへの接続</h2>
+<p>GPT-4やGeminiのような巨大言語モデルのパラメータ数は数千億を超え、VC次元は天文学的な数になります。古典的PAC理論の上界では「汎化するはずがない」サイズですが、実際には驚異的な汎化能力を見せます。これが現代AI研究の最前線の謎であり、以下の研究テーマにつながっています：<strong>PAC-Bayes理論</strong>（事前分布を使ったより鋭い上界）、<strong>双対化による一般化</strong>、<strong>スケーリング則</strong>（データ・パラメータ・計算量と汎化性能の関係）。Day 5の理論を土台にしてこそ、これらの最先端論文が読めるようになります。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>論文で「汎化誤差の上界を導出した」とあれば、PAC学習の枠組みで「どのδ・εで・何のノルムを使って・どんな仮説クラスを想定しているか」を必ず確認してください。これを習慣にするだけで論文読解の深さが格段に変わります。</div>
+<h2><span class="n">7</span>実装のヒント：過学習を検出する最小コード</h2>
+<div class="code"><div class="ln"><span class="no">1</span><span class="ct">for epoch in range(num_epochs):</span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="ind"></span>train_loss = train_one_epoch(model, train_loader)</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="ind"></span>val_loss   = evaluate(model, val_loader)</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span># 汎化ギャップ = L_D(h) の代理指標</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span>gen_gap = val_loss - train_loss</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span>if gen_gap &gt; threshold:</span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="ind"></span><span class="ind"></span># 過学習のシグナル → 正則化・ドロップアウト・データ拡張を検討</span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="ind"></span><span class="ind"></span>apply_regularization(model, lambda_=1e-4)</span></div><div class="ln"><span class="no">9</span><span class="ct"><span class="ind"></span>log(epoch, train_loss, val_loss, gen_gap)</span></div></div><div class="code-cap">訓練誤差と検証誤差の乖離で過学習を監視する（PyTorch 風擬似コード）</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>検証誤差（val_loss）は L_D(h) の経験的推定量です。PAC理論が保証するのは「十分な検証データがあれば、val_loss は L_D(h) に確率的に近い」ということ。つまり val_loss の監視はPAC理論を実践しているのと同じです。</div>
+<h2><span class="n">8</span>まとめ：5日間の旅のチェックポイント</h2>
+<div class="step"><span class="si">KEY 1</span><p>汎化誤差 L_D(h) は「分布全体での真の誤り確率」であり、観測できない。訓練誤差 L_S(h) との乖離が過学習の本質。</p></div><div class="step"><span class="si">KEY 2</span><p>PAC学習は「m 個のデータで (ε, δ)-保証が得られるか」を定式化。必要サンプル数はモデルの複雑度（ln|H| や VC次元）に依存する。</p></div><div class="step"><span class="si">KEY 3</span><p>バイアス＝バリアンス分解で汎化誤差を構造化して見ると、正則化・モデル選択の判断基準が明確になる。</p></div><div class="step"><span class="si">KEY 4</span><p>現代の深層学習は古典的PAC理論の予測を超えており、二重降下・PAC-Bayes・スケーリング則など新しい理論が急速に発展中。</p></div>
+<div class="pull">「なぜこのモデルは汎化できるのか？」と問い続けることが、AI研究者としての出発点になる。</div>
+<p>Week 1もいよいよ終盤です。DAY 1〜4で整えた線形代数・確率論・最適化の基礎が、今日の学習理論へと結びつきました。来週からは確率的勾配降下法・正規化・深層学習の構造へと踏み込んでいきます。今日学んだ「汎化」という問いを常に頭の片隅に置きながら、すべての技術的選択を「なぜこれが未知データに通用するのか？」という眼で見る習慣をつけてください。それがAI研究者としての数学的センスの核になります。</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI 30日講座 — Week 1〜6 ・ generated by Claude
+  </div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Render explicit tex-block wrappers
+      document.querySelectorAll('.katex-display-wrapper').forEach(el => {
+        const tex = el.dataset.tex;
+        if (tex) {
+          try {
+            katex.render(tex, el, {displayMode: true, throwOnError: false});
+          } catch(e) {
+            el.textContent = tex;
+          }
+        }
+      });
+      // Auto-render inline $...$ and $$...$$ in text
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+</body>
+</html>

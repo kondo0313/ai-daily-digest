@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-07-06</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-07-06</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #線形アテンション #状態空間モデル #メモリ機構 #新人研究者向け</div>
+    <h1 class="headline">海馬から学んだ記憶術：線形アテンションが「忘れっぽさ」を克服する仕組み</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-07-06 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">A Hippocampus for Linear Attention: An Exact Memory for What the Recurrent State Forgets</div>
+      <div class="pc-row">
+        <span>詳細不明（arXiv 投稿）</span>
+        <span>arXiv cs.AI ・ 2025年</span>
+        <a href="http://arxiv.org/abs/2607.02303v1">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>「昔読んだこと、覚えてる？」—— 線形アテンションの根本的な悩み</h2>
+<p>大規模言語モデルには大きく分けて2つの設計思想があります。一方は <span class="term-tip" tabindex="0">Transformerのアテンション<span class="tip">入力全体を参照する仕組みで、精度は高いがメモリが文脈長に比例して増える</span></span>、もう一方は <span class="term-tip" tabindex="0">線形アテンション・SSM<span class="tip">状態空間モデルや線形アテンションと呼ばれ、固定サイズの「記憶箱」に過去を圧縮して格納する</span></span>。後者はメモリ使用量が O(1) と非常に効率的ですが、困った弱点があります。記憶箱が満杯になると、古い情報が上書きされて消えてしまうのです。</p>
+<p>たとえば「3ページ前に書いてあったパスワードは？」と聞かれると、圧縮された記憶から正確に答えを取り出せないことがあります。これが「<span class="term-tip" tabindex="0">ニードル・イン・ア・ヘイスタック<span class="tip">長い文書の中に埋め込まれた1つの事実を正確に取り出せるかを測るテスト</span></span>」と呼ばれる評価でよく顕在化する問題です。今回紹介する論文はこの問題を、脳科学の知見から着想を得た優雅な方法で解決しようとしています。</p>
+<h2><span class="n">2</span>脳の海馬から借りたアイデア：補完学習システム</h2>
+<p>ここで登場するのが脳科学の概念「<span class="term-tip" tabindex="0">CLS（補完学習システム）<span class="tip">Complementary Learning Systems。脳は大脳皮質で緩やかな統計的学習を、海馬で素早い正確な記憶の保存を並行して行うという理論</span></span>」です。人間の脳は「だいたいこういうパターンだ」という知識を大脳皮質にゆっくり蓄える一方で、「今日の昼食のメニュー」のような具体的なエピソードを海馬に即座に正確に保存します。この2系統の協調が、人間の記憶の柔軟性と正確さを両立させています。</p>
+<p>論文が提案する <strong>HOLA（Hippocampal Linear Attention）</strong> は、まさにこの2系統構造をモデルに組み込みます。通常の線形アテンションの再帰状態が「大脳皮質」として統計的パターンを圧縮保持し、新たに追加する小さな外部キャッシュが「海馬」として正確なキーバリューペアを保存します。</p>
+<div class="pull">「圧縮で失われる記憶」を補う海馬を付け足すことで、効率と正確さを同時に手に入れる。</div>
+<h2><span class="n">3</span>HOLAの仕組み：3つの工夫</h2>
+<h3>① キャッシュに「何を書き込むか」—— ベータ×残差ノルムで選ぶ</h3>
+<p>HOLAが特に巧妙なのは、海馬キャッシュへの書き込み方針です。すべてのトークンをキャッシュに入れるのではなく、「再帰状態が上手く学習できなかった情報」を優先的に保存します。具体的には β × ‖e‖ という値が大きいトークンを選びます。ここで β は<span class="term-tip" tabindex="0">デルタルール<span class="tip">誤り訂正型の重み更新則で、予測誤差が大きいほど更新量も大きくなる</span></span>の更新ゲート、‖e‖ は予測残差のノルム（予測の外れ具合の大きさ）です。「状態がなかなか覚えられなかった情報ほどキャッシュに残す」という直感は非常に自然ですね。</p>
+<p>しかも、この選択に学習済みのモジュールを別途用意する必要がありません。既にデルタルールの計算過程で出てくる値を使いまわすだけなので、追加のパラメータも学習コストも最小限で済みます。</p>
+<h3>② キャッシュからの「読み出し方」—— デカップルドRMSNorm-gamma</h3>
+<p>キャッシュから情報を読み出す際にも工夫があります。通常のソフトなアテンション計算をそのまま使うと、キャッシュ内の複数エントリが混ざって平均化されてしまい、正確な事実の取り出しが曖昧になります。論文では「<span class="term-tip" tabindex="0">デカップルドRMSNorm-gamma<span class="tip">クエリとキーの正規化スケールを分離することで、ソフトな平均化ではなくシャープな一点取り出しを可能にする手法</span></span>」を採用し、キャッシュのエントリが鋭くピンポイントで検索されるようにしています。</p>
+<h3>③ 全体構造：セミパラメトリックなテスト時メモリ</h3>
+<p>こうして完成するHOLAは「<span class="term-tip" tabindex="0">セミパラメトリックメモリ<span class="tip">パラメータに埋め込まれた知識と、外部キャッシュの明示的な記憶の両方を使うハイブリッド型</span></span>」と言えます。再帰状態が「線形に圧縮しやすい統計パターン」を担当し、キャッシュが「圧縮を強いるべきでない正確な連想」を担当するという役割分担です。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 各トークンを処理するメインループ</span></div><div class="ln"><span class="no">1</span><span class="ct"><span class="kw">for</span> token <span class="kw">in</span> sequence:</span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># ① デルタルールで再帰状態を更新し、残差を計算</span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="ind"></span>e = token.value - <span class="fn">state_predict</span>(token.key)<span class="badge">①</span></span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="ind"></span>beta = <span class="fn">compute_gate</span>(token)</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>state = <span class="fn">delta_rule_update</span>(state, token.key, e, beta)</span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># ② キャッシュ書き込み：残差が大きいものを優先</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span>score = beta * <span class="fn">norm</span>(e)<span class="badge">②</span></span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span><span class="kw">if</span> score &gt; cache.min_score:</span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="ind"></span><span class="ind"></span><span class="fn">cache.write</span>(token.key, token.value)</span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># ③ 読み出し：状態とキャッシュを組み合わせてシャープに検索</span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="ind"></span>out_state = <span class="fn">state_read</span>(query, state)<span class="badge">③</span></span></div><div class="ln"><span class="no">9</span><span class="ct"><span class="ind"></span>out_cache = <span class="fn">cache_read_sharp</span>(query, cache)  </span></div><div class="ln"><span class="no">10</span><span class="ct"><span class="ind"></span>output = <span class="fn">combine</span>(out_state, out_cache)</span></div></div><div class="code-cap">HOLAの処理フロー（擬似コード）</div>
+<h2><span class="n">4</span>実験結果：数値で見る改善の大きさ</h2>
+<p>340Mパラメータのモデルを15Bトークンの SlimPajama データセットで学習した結果が報告されています。比較対象は同サイズのベースライン線形アテンションモデルと、フルアテンションの Transformer++ です。</p>
+<div class="stats"><div class="stat"><div class="v">-16.1%</div><div class="k">Wikitext <span class="term-tip" tabindex="0">パープレキシティ<span class="tip">言語モデルの予測の難しさ。低いほど良い</span></span> 改善（27.32 → 22.92）</div></div><div class="stat"><div class="v">26.88</div><div class="k">フルアテンション Transformer++ のWikitext PPL（HOLAは22.92でこれを下回る）</div></div><div class="stat"><div class="v">32k tokens</div><div class="k">ニードルテストの外挿長（学習長16kの2倍、訓練長の16倍）でも堅牢</div></div></div>
+<p>特に注目すべきは、HOLAの Wikitext パープレキシティ 22.92 がフルアテンション Transformer++ の 26.88 を下回っている点です。「圧縮型モデルが全文脈参照型モデルより低パープレキシティ」という結果は、キャッシュの補完効果の大きさを示しています。また <span class="term-tip" tabindex="0">LAMBADA<span class="tip">文章の最後の単語を文脈全体から推測するベンチマーク</span></span> パープレキシティも 30.95 から 30.26 に改善しています。</p>
+<p>さらに長文でのニードル・イン・ア・ヘイスタック評価では、HOLAはGDN（学習済み退去モジュール付きモデル）や単純なrecencyキャッシュ（最近のトークンだけ保持するキャッシュ）と比べて、訓練長（おそらく2kトークン程度）の16倍にあたる32kトークン長まで堅牢な性能を維持しています。</p>
+<h2><span class="n">5</span>この研究の新規性：何が本当に新しいのか</h2>
+<div class="pull">「学習不要の書き込み判断」と「シャープな読み出し」の組み合わせが、シンプルながら強力な外部記憶を生む。</div>
+<p>外部メモリを線形アテンションに付け足すアイデア自体は新しくありませんが、HOLAの貢献は3点にまとめられます。第一に、キャッシュへの書き込みルールを<strong>学習不要</strong>にした点。GDNなどの先行研究では退去モジュール（どのエントリを消すか決める部品）を別途学習する必要がありましたが、HOLAは既存の計算の副産物（β × ‖e‖）をそのまま使います。第二に、読み出しにシャープネスを持たせるデカップルドRMSNorm-gammaの導入。第三に、この組み合わせが<strong>訓練長の16倍の長さに外挿できる</strong>という驚くべき汎化性を示したことです。</p>
+<h2><span class="n">6</span>意義と正直な限界</h2>
+<div class="step"><span class="si">意義 1</span><p>O(1) メモリ効率を保ちながら事実の正確な想起を改善。長文処理が必要なアプリケーションで線形モデルの実用性を高める。</p></div><div class="step"><span class="si">意義 2</span><p>脳科学の補完学習システム理論をアーキテクチャ設計に直結させた理論的な枠組みは、今後のメモリ研究の指針になり得る。</p></div><div class="step"><span class="si">限界 1</span><p>キャッシュサイズには上限（bounded）があるため、超長文では依然として情報の取捨選択が発生する。キャッシュが満杯になった場合の劣化挙動の詳細は本アブストラクトからは不明。</p></div><div class="step"><span class="si">限界 2</span><p>評価は340Mパラメータ・15Bトークンという比較的小規模な設定。より大規模なモデルや多様なデータセットでの検証は今後の課題。</p></div><div class="step"><span class="si">限界 3</span><p>デカップルドRMSNorm-gammaのハイパーパラメータ感度や、他のアーキテクチャ（Mamba系など）への適用性は論文アブストラクトからは確認できず、追試が必要。</p></div>
+<h2><span class="n">7</span>新人研究者へのひとこと</h2>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方：「すでにある計算の副産物を使え」</div>HOLAの書き込みルール（β × ‖e‖）が秀逸なのは、モデルがすでに計算している値を再利用しているからです。研究でも実装でも「追加コストゼロで使える情報がないか」を探す習慣は非常に重要です。新しいモジュールを増やす前に、既存の計算の副産物を眺めてみましょう。</div>
+<div class="note-box"><div class="nb-label">⚙️ 大きな文脈：線形モデル vs Transformerの戦い</div>Mamba、RetNet、RWKV、GLA など、固定サイズ再帰状態を持つモデルは「推論が速くメモリ効率が良い」として注目を集めています。しかし「正確な事実想起」という点でフルアテンションに劣る弱点は業界全体の課題でした。HOLAはその弱点を脳科学的なアプローチで直接狙い打ちにしており、線形モデルが実用ドメインで Transformer と対等に戦うための重要な一歩といえます。新人のうちにこの「効率 vs 正確さ」のトレードオフを意識しておくと、アーキテクチャ選択の議論でも役立ちます。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
