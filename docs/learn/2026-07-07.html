@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 30日講座 — なぜ深さが必要か ─ 多層パーセプトロンと表現の階層性</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+
+.course-card{background:linear-gradient(135deg,#1c6f8c15,#2cb69615);border:1.5px solid var(--accent);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.course-card .cc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--accent-ink);text-transform:uppercase;margin-bottom:6px;}
+.course-card .cc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;color:var(--ink);}
+.course-card .cc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:4px 16px;}
+.cc-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;border-radius:6px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;}
+.progress-bar{height:4px;background:var(--line);border-radius:2px;margin:10px 0 4px;}
+.progress-bar .bar{height:100%;background:var(--accent);border-radius:2px;transition:width .4s;}
+.progress-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-faint);text-align:right;}
+/* KaTeX blocks */
+.tex-block{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;overflow-x:auto;}
+.tex-block .katex-display{margin:0;}
+.tex-block .tx-cap{font-size:12.5px;color:var(--ink-faint);margin-top:10px;text-align:center;}
+.tex-derive{margin-top:12px;border-top:1px solid var(--line);padding-top:10px;}
+.tex-derive-row{display:flex;gap:10px;align-items:baseline;margin-top:6px;font-size:14px;}
+.tex-derive-label{font-size:12px;color:var(--ink-faint);flex-shrink:0;min-width:80px;}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">📚</span> AI 30日講座</div>
+      <div class="date-pill">2026-07-07</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI30日講座 #ニューラルネットワーク #MLP #表現学習 #深層学習理論</div>
+    <h1 class="headline">「浅い」ネットワークに何が足りないのか ─ 多層パーセプトロンと表現の階層性</h1>
+
+    <div class="author">
+      <div class="avatar" style="background:linear-gradient(135deg,#1c6f8c,#2cb696);">📚</div>
+      <div class="author-meta">
+        <div class="name">AI 30日講座</div>
+        <div class="sub">2026-07-07 ・ DAY 6 ・ ニューラルネットワーク基礎</div>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="cc-label">本日のカリキュラム</div>
+      <div class="cc-title">
+        <span class="cc-badge">DAY 6 / 30</span>
+        &nbsp;なぜ深さが必要か ─ 多層パーセプトロンと表現の階層性
+      </div>
+      <div class="progress-bar"><div class="bar" style="width:20%"></div></div>
+      <div class="progress-label">20% 完了</div>
+      <div class="cc-row">
+        <span>Week 2: ニューラルネットワーク基礎 ─ 層を重ねる意味</span>
+        <span>基礎〜中級</span>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>なぜ「深さ」という概念が生まれたのか</h2>
+<p>画像を見て「猫だ」と判断するとき、あなたの脳は何をしているのでしょう。「ピクセルの輝度をすべて調べてからラベルを出力する」わけではないですよね。まず<strong>エッジを検出</strong>し、次にそのエッジが組み合わさった<strong>パーツ（目・耳・ひげ）</strong>を認識し、最後にそれらが統合されて「猫」という概念が浮かぶ ─ 情報は<strong>段階的に抽象化</strong>されていきます。<span class="term-tip" tabindex="0">多層パーセプトロン（MLP）<span class="tip">複数の線形変換＋非線形活性化を積み重ねたニューラルネットワーク</span></span>は、まさにこの「段階的な抽象化」を計算で再現しようとする試みです。</p>
+<div class="pull">深さとは「変換の回数」ではなく、「表現の抽象度が上がる段数」である。</div>
+<h2><span class="n">2</span>単層パーセプトロンの限界 ─ XOR 問題から考える</h2>
+<p>1969年、Minsky と Papert は著書 *Perceptrons* で衝撃的な事実を示しました。<strong>単層パーセプトロン（線形分類器）は XOR を学習できない</strong>、と。XOR の真理値表を2次元平面にプロットすると、出力が 1 になる点と 0 になる点を 1 本の直線で分けることが不可能だとわかります。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{XOR}(x_1, x_2) = \begin{cases} 1 &amp; (x_1, x_2) \in \{(0,1),(1,0)\} \\ 0 &amp; (x_1, x_2) \in \{(0,0),(1,1)\} \end{cases}"></div><div class="tx-cap">XOR は線形分離不可能な問題の最も単純な例</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">単層モデルの予測式</span><span class="katex-display-wrapper" data-tex="\hat{y} = \sigma(w_1 x_1 + w_2 x_2 + b)"></span></div><div class="tex-derive-row"><span class="tex-derive-label">線形境界の限界</span><span class="katex-display-wrapper" data-tex="\nexists\, w_1, w_2, b \text{ such that } w_1 x_1 + w_2 x_2 + b \text{ correctly separates XOR}"></span></div></div></div>
+<p>この限界を突破するには「中間表現」が必要です。1つ<span class="term-tip" tabindex="0">隠れ層<span class="tip">入力層と出力層の間にある層。生のデータを変換した「特徴」を保持する</span></span>を追加すると、入力空間を非線形に曲げることができ、XOR も正しく分類できるようになります。</p>
+<h2><span class="n">3</span>多層パーセプトロンの数学的定義</h2>
+<h3>順伝播（Forward Propagation）の定式化</h3>
+<p>$L$ 層の MLP は以下のように再帰的に定義されます。各層 $l$ は<strong>アフィン変換</strong>と<strong>非線形活性化</strong>の合成です。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\mathbf{h}^{(0)} = \mathbf{x} \in \mathbb{R}^{d_0}"></div><div class="tx-cap">入力ベクトル（第0層の表現）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">第 l 層のアフィン変換</span><span class="katex-display-wrapper" data-tex="\mathbf{z}^{(l)} = W^{(l)}\mathbf{h}^{(l-1)} + \mathbf{b}^{(l)}, \quad W^{(l)} \in \mathbb{R}^{d_l \times d_{l-1}}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">非線形活性化の適用</span><span class="katex-display-wrapper" data-tex="\mathbf{h}^{(l)} = \phi\!\left(\mathbf{z}^{(l)}\right), \quad \phi : \mathbb{R} \to \mathbb{R} \text{ (要素ごとに適用)}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">最終出力（回帰の場合）</span><span class="katex-display-wrapper" data-tex="\hat{y} = W^{(L)}\mathbf{h}^{(L-1)} + \mathbf{b}^{(L)}"></span></div></div></div>
+<p>パラメータ総数は $\sum_{l=1}^{L}(d_l \cdot d_{l-1} + d_l)$ です。ここで重要なのは、<strong>$\phi$ が非線形でなければ何層積んでも線形変換に還元される</strong>という点です。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="W^{(L)} \cdots W^{(1)} \mathbf{x} = W_{\text{eff}} \mathbf{x}"></div><div class="tx-cap">活性化なしで層を重ねても結局は1つの線形変換</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">つまり隠れ層の意味がなくなる</span><span class="katex-display-wrapper" data-tex="\Rightarrow \text{表現の階層性はゼロ。非線形活性化が「深さの価値」を生む}"></span></div></div></div>
+<h2><span class="n">4</span>万能近似定理 ─ 理論的に何が保証されるか</h2>
+<p><span class="term-tip" tabindex="0">万能近似定理（Universal Approximation Theorem）<span class="tip">適切なサイズの1隠れ層ネットワークが任意の連続関数を近似できるという理論</span></span>は、1989年に Cybenko（シグモイド活性化）、1991年に Hornik らによって一般化されました。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\forall \varepsilon &gt; 0,\; \forall f \in C([0,1]^n),\; \exists N \in \mathbb{N},\; \exists w_i, b_i, v_i :\\[6pt] \sup_{\mathbf{x} \in [0,1]^n} \left| f(\mathbf{x}) - \sum_{i=1}^{N} v_i\,\sigma(w_i^\top \mathbf{x} + b_i) \right| &lt; \varepsilon"></div><div class="tx-cap">Cybenko の万能近似定理（1989）─ 単一隠れ層でも原理上は任意の連続関数を近似できる</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">ただし N は指数的に大きくなりうる</span><span class="katex-display-wrapper" data-tex="N = O\!\left(2^d\right) \text{ のオーダーが必要になる場合がある（次元の呪い）"></span></div></div></div>
+<div class="pull">「1層で近似できる」は正しい。しかし「1層で効率的に近似できる」は間違い ─ それが深さを使う理由だ。</div>
+<h3>深さの効率性 ─ 表現の指数的優位</h3>
+<p>深いネットワークは、<strong>同じパラメータ数で浅いネットワークよりも指数的に多くの線形領域</strong>を作れます。ReLU ネットワークを例に取ると、深さ $L$・各層幅 $n$ のネットワークが作れる線形領域数は以下のように推定されます。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{(線形領域数)} = O\!\left(\left(\frac{n}{d}\right)^{d(L-1)} \cdot n^d\right)"></div><div class="tx-cap">ReLU ネットワークの線形領域数の上界（Montufar et al., 2014）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">浅いネットワーク（L=2）との比較</span><span class="katex-display-wrapper" data-tex="L=2 \text{ のとき } O(n^d) \text{ 領域}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">深いネットワーク（L 層）は指数的に増大</span><span class="katex-display-wrapper" data-tex="L \text{ を増やすと領域数が } L^{d} \text{ のオーダーで爆発的に増える}"></span></div></div></div>
+<p>直感的なたとえ話で言えば、折り紙に似ています。紙を1回折るより<strong>何度も折ったほうが複雑な形</strong>が作れますよね。ReLU の各層は「特徴空間を折る」操作に相当し、層を重ねるほど「折り目」が指数的に増えるのです。</p>
+<h2><span class="n">5</span>表現の階層性 ─ 各層は何を学ぶのか</h2>
+<h3>画像認識の例</h3>
+<div class="step"><span class="si">Layer 1</span><p>エッジ・コーナーなど低レベルな局所パターンを検出（Gabor フィルタに近い特徴）</p></div><div class="step"><span class="si">Layer 2</span><p>エッジを組み合わせたテクスチャや単純な形状（目の輪郭・縞模様など）</p></div><div class="step"><span class="si">Layer 3</span><p>パーツレベルの構造（耳・鼻・車のタイヤなど）</p></div><div class="step"><span class="si">Layer 4+</span><p>高レベルな概念的特徴（「猫らしさ」「車らしさ」）が凝縮された表現</p></div>
+<h3>自然言語処理の例</h3>
+<p>BERT などの<span class="term-tip" tabindex="0">Transformer<span class="tip">自己注意機構を中核とした大規模言語モデルの基盤アーキテクチャ</span></span>でも同様の階層性が観察されています。浅い層は品詞・スペルなどの表層的情報を、深い層は意味・文脈・談話構造を捉えていることが，プロービング実験で確認されています。</p>
+<div class="stats"><div class="stat"><div class="v">12〜96層</div><div class="k">現代の Transformer が持つ典型的な深さ</div></div><div class="stat"><div class="v">1989年</div><div class="k">Cybenko が万能近似定理を証明した年</div></div><div class="stat"><div class="v">指数倍</div><div class="k">深さを2倍にしたときの表現できる線形領域の増加量</div></div></div>
+<h2><span class="n">6</span>深さが増すことのトレードオフ</h2>
+<h3>勾配消失問題</h3>
+<p>バックプロパゲーションでは勾配は出力層から入力層へ<strong>連鎖律</strong>で伝わります。各層でシグモイドのような飽和する活性化を使うと、勾配が指数的に0へ近づく<span class="term-tip" tabindex="0">勾配消失問題<span class="tip">誤差信号が深い層ほど消えてしまい重みが更新されなくなる現象</span></span>が発生します。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\frac{\partial \mathcal{L}}{\partial W^{(1)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{h}^{(L)}} \cdot \prod_{l=2}^{L} \frac{\partial \mathbf{h}^{(l)}}{\partial \mathbf{h}^{(l-1)}} \cdot \frac{\partial \mathbf{h}^{(1)}}{\partial W^{(1)}}"></div><div class="tx-cap">連鎖律による勾配の計算 ─ 積の形になるため消失・爆発が起きやすい</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">シグモイドの勾配の最大値は 0.25</span><span class="katex-display-wrapper" data-tex="\max_{z} \sigma&#x27;(z) = 0.25 \Rightarrow L \text{ 層後に } (0.25)^L \to 0"></span></div><div class="tex-derive-row"><span class="tex-derive-label">ReLU ならアクティブ領域で勾配は 1</span><span class="katex-display-wrapper" data-tex="\text{ReLU}&#x27;(z) = \mathbf{1}[z &gt; 0] \Rightarrow \text{勾配が「素通り」できる}"></span></div></div></div>
+<h3>解決策の系譜</h3>
+<div class="step"><span class="si">STEP 1</span><p>ReLU 活性化関数の採用（2010年代〜）：勾配消失を大幅に緩和</p></div><div class="step"><span class="si">STEP 2</span><p>バッチ正規化（Batch Normalization, 2015）：各層の活性化分布を安定させる</p></div><div class="step"><span class="si">STEP 3</span><p>残差接続（ResNet, 2015）：層をスキップするショートカットで勾配を直接伝える</p></div><div class="step"><span class="si">STEP 4</span><p>重み初期化の工夫（He 初期化など）：学習開始時の勾配スケールを適切に設定</p></div>
+<h2><span class="n">7</span>実装：2層 MLP で XOR を解く</h2>
+<div class="code"><div class="ln"><span class="no">1</span><span class="ct">import numpy as np</span></div><div class="ln"><span class="no">2</span><span class="ct"></span></div><div class="ln"><span class="no">3</span><span class="ct">def relu(z):</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>return np.maximum(0, z)</span></div><div class="ln"><span class="no">5</span><span class="ct"></span></div><div class="ln"><span class="no">6</span><span class="ct">def sigmoid(z):</span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="ind"></span>return 1 / (1 + np.exp(-z))</span></div><div class="ln"><span class="no">8</span><span class="ct"></span></div><div class="ln"><span class="no">9</span><span class="ct"># XOR データ</span></div><div class="ln"><span class="no">10</span><span class="ct">X = np.array([[0,0],[0,1],[1,0],[1,1]])  # (4, 2)</span></div><div class="ln"><span class="no">11</span><span class="ct">y = np.array([[0],[1],[1],[0]])           # (4, 1)</span></div><div class="ln"><span class="no">12</span><span class="ct"></span></div><div class="ln"><span class="no">13</span><span class="ct"># 隠れ層（2ユニット）の手動設定（学習後の理想的な重み）</span></div><div class="ln"><span class="no">14</span><span class="ct">W1 = np.array([[1, 1], [1, 1]])   # (2, 2)</span></div><div class="ln"><span class="no">15</span><span class="ct">b1 = np.array([[-0.5, -1.5]])     # (1, 2)</span></div><div class="ln"><span class="no">16</span><span class="ct">W2 = np.array([[1], [-2]])        # (2, 1)</span></div><div class="ln"><span class="no">17</span><span class="ct">b2 = np.array([[-0.5]])           # (1, 1)</span></div><div class="ln"><span class="no">18</span><span class="ct"></span></div><div class="ln"><span class="no">19</span><span class="ct"># 順伝播</span></div><div class="ln"><span class="no">20</span><span class="ct">z1 = X @ W1 + b1                  # 隠れ層: アフィン変換</span></div><div class="ln"><span class="no">21</span><span class="ct">h1 = relu(z1)                     # 隠れ層: ReLU 活性化</span></div><div class="ln"><span class="no">22</span><span class="ct">z2 = h1 @ W2 + b2                 # 出力層: アフィン変換</span></div><div class="ln"><span class="no">23</span><span class="ct">y_hat = sigmoid(z2)               # 出力層: Sigmoid → [0,1]</span></div><div class="ln"><span class="no">24</span><span class="ct">print(np.round(y_hat, 2))         # [[0.38],[0.62],[0.62],[0.38]] ≈ XOR</span></div></div><div class="code-cap">NumPy だけで実装する 2 層 MLP の順伝播（ReLU + Sigmoid）</div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「何層にすべきか」に正解はありませんが、実務では <strong>まず小さなネットワークを試して過小適合を確認 → 徐々に深く・広くする</strong> のが王道です。深さを増やすよりも幅を増やすほうが最適化しやすいこともあります（Width vs Depth のトレードオフ）。</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>万能近似定理は「存在性」を保証するだけで「学習できる」とは言っていません。勾配降下法で実際に解にたどり着けるかは最適化の問題であり、深さ・幅・初期化・学習率などが絡む別の議論です。</div>
+<h2><span class="n">8</span>現代 AI 研究への接続</h2>
+<p>GPT や ViT に代表される現代の大規模モデルは、<strong>数十〜百層超の深さ</strong>を持ちます。表現の階層性の思想はそのまま生きており、Transformer の各層は「どの情報に注目するか（アテンション）」を段階的に洗練させています。<span class="term-tip" tabindex="0">残差接続（Residual Connection）<span class="tip">入力をそのまま出力に足し合わせるショートカット。勾配消失を防ぎ深いネットワークを安定して学習させる</span></span>はほぼすべての深層モデルに採用され、深さの恩恵を引き出す基盤技術になっています。</p>
+<p>また、<strong>Neural Scaling Laws</strong> の研究（Kaplan et al., 2020）によって、パラメータ数・データ量・計算量を増やすほどモデル性能が冪乗則に従って改善することが実証されました。「深さ（と幅）が増すほど表現力が増す」という理論が、実際のスケールアップ戦略の根拠になっています。</p>
+<h2><span class="n">9</span>まとめ ─ 深さの本質</h2>
+<div class="step"><span class="si">①</span><p>単層パーセプトロンは線形分離不可能な問題を解けない。XOR がその典型例。</p></div><div class="step"><span class="si">②</span><p>万能近似定理は「1層でも原理上は何でも近似できる」と言うが、必要なユニット数が指数的に爆発する。</p></div><div class="step"><span class="si">③</span><p>深さを増すと線形領域数が指数的に増加し、同じパラメータ数でより複雑な関数を効率的に表現できる。</p></div><div class="step"><span class="si">④</span><p>各層は低レベル→高レベルへと段階的に抽象化された表現を学習する（階層的特徴学習）。</p></div><div class="step"><span class="si">⑤</span><p>勾配消失という深さの代償は、ReLU・BatchNorm・残差接続によって克服されてきた。</p></div>
+<div class="pull">「なぜ深くするのか」─ それは、自然界の複雑さを階層的に分解し、有限のパラメータで指数的に豊かな表現を得るためである。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI 30日講座 — Week 1〜6 ・ generated by Claude
+  </div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Render explicit tex-block wrappers
+      document.querySelectorAll('.katex-display-wrapper').forEach(el => {
+        const tex = el.dataset.tex;
+        if (tex) {
+          try {
+            katex.render(tex, el, {displayMode: true, throwOnError: false});
+          } catch(e) {
+            el.textContent = tex;
+          }
+        }
+      });
+      // Auto-render inline $...$ and $$...$$ in text
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+</body>
+</html>
