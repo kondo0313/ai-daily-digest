@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-07-08</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-07-08</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #機械学習 #解釈可能性 #Transformer #新人研究者向け</div>
+    <h1 class="headline">アテンションの正体は「昔ながらのn-gram平滑化」だった —— Induction Headを数式で解剖する</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-07-08 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Induction Heads Interpolate N-Grams</div>
+      <div class="pc-row">
+        <span>Francesco D&#x27;Angelo, Oguz Kaan Yuksel, Swathi Shree Narashiman, Nicolas Flammarion</span>
+        <span>arXiv cs.LG ・ 2026年7月</span>
+        <a href="https://arxiv.org/abs/2607.02800">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>なぜTransformerは「初めて見る文脈」から学べるのか</h2>
+<p>大規模言語モデルに新しい単語のペアや珍しい言い回しを見せると、たった一度出てきただけなのに、次にそのパターンが出てきた瞬間にちゃんと使いこなしてくる——これが<span class="term-tip" tabindex="0">in-context learning<span class="tip">事前学習後に追加学習せず、入力文脈だけから新しいパターンを学習する能力</span></span>です。この能力を支える中心的な部品が<span class="term-tip" tabindex="0">induction head<span class="tip">「以前に同じトークンが出た直後に続いた単語」を今の予測にコピーしてくる注意機構</span></span>だと考えられてきました。</p>
+<p>ただし「コピーしてくる」というのはあくまで定性的な説明で、<strong>実際に何を計算しているのか</strong>は長らく曖昧なままでした。今日紹介する論文は、この曖昧さに正面から向き合い、induction headが実は昔ながらの統計的言語モデルの手法を再発明していたことを、数式付きで証明しています。</p>
+<h2><span class="n">2</span>背景: 「コピー」の中身は誰も測っていなかった</h2>
+<p>統計的言語モデルの世界では、大昔から<span class="term-tip" tabindex="0">n-gram<span class="tip">直前のn個の単語列から次の単語の出現確率を数える古典的な言語モデル</span></span>という手法があります。素朴に数えるだけだと、めったに出てこない長い文脈(高次のn-gram)では出現回数が少なすぎて確率推定が不安定になる、という弱点があり、それを補うために<span class="term-tip" tabindex="0">平滑化<span class="tip">データが少ない高次の推定を、データが多い低次の推定と混ぜて安定させる統計的テクニック</span></span>という工夫が積み重ねられてきました。</p>
+<p>著者らは「induction headが実質的にやっていることは、この平滑化なのではないか」という仮説を立てました。それを検証するために、複雑な自然言語ではなく、性質を完全にコントロールできる<span class="term-tip" tabindex="0">マルコフ連鎖<span class="tip">直前の状態(トークン)だけから次の状態が確率的に決まる、単純化された系列生成モデル</span></span>でTransformerを訓練し、学習された注意パターンを理論値と突き合わせるという、地に足のついたアプローチを取っています。</p>
+<h2><span class="n">3</span>手法: 2つの平滑化メカニズムを引っぺがす</h2>
+<p>分析の結果、induction headの中には<strong>性質の異なる2つの平滑化メカニズム</strong>が同居していることが分かりました。</p>
+<h3>① ソフトな文脈マッチング — Jelinek-Mercer平滑化</h3>
+<p>1つ目は、注意の重みが有限の強さで働く領域で起きる現象です。モデルは「今の文脈と完全一致する過去の位置」だけでなく、「一部だけ一致する位置」からも、一致度合いに応じて指数関数的に重み付けした情報を集めてきます。これはまさに<span class="term-tip" tabindex="0">Jelinek-Mercer平滑化<span class="tip">高次のn-gram推定と低次のn-gram推定を、データの信頼度に応じて連続的にブレンドする古典手法</span></span>と同じ形の補間になっている、というのが1つ目の発見です。</p>
+<h3>② BOSトークンの擬似カウント — ディリクレ平滑化</h3>
+<p>2つ目は、文の先頭を示す<span class="term-tip" tabindex="0">BOSトークン<span class="tip">Beginning of Sequence: 系列の先頭であることを示す特別なトークン</span></span>が果たす役割です。BOSトークンは一種の「なんでもいい保険」として働き、一致する文脈が見つからないときのために、あらかじめ一定量の<span class="term-tip" tabindex="0">擬似カウント<span class="tip">実際には観測していないが、確率がゼロにならないように仮想的に足しておく架空の出現回数</span></span>を足しておく効果を生みます。これは統計学における<span class="term-tip" tabindex="0">ディリクレ平滑化<span class="tip">事前に架空の出現回数を仮定しておくことで、未観測の事象にもゼロでない確率を与える平滑化手法</span></span>と数学的に対応します。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 現在の文脈(直近k個)と過去の各位置の文脈を比較する</span></div><div class="ln"><span class="no">1</span><span class="ct">score = <span class="fn">overlap_length</span>(current_context, past_position)</span></div><div class="ln"><span class="no">2</span><span class="ct">weight = <span class="fn">exp</span>(beta * score)<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># BOSトークンには常に一定の重みを与えておく(保険)</span></div><div class="ln"><span class="no">3</span><span class="ct">weight[BOS] = <span class="fn">pseudo_count</span>()<span class="badge">②</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># 全位置の重み付き投票から次のトークンを予測する</span></div><div class="ln"><span class="no">4</span><span class="ct">prediction = <span class="fn">weighted_vote</span>(all_weights, next_tokens)</span></div></div><div class="code-cap">induction headが暗黙に計算している推定量のイメージ(擬似コード)</div>
+<div class="pull">induction headは単に「過去を数えている」のではなく、データが少ないときにどう推定を安定させるかという、統計学が磨いてきた正則化を自力で学習していた。</div>
+<p>著者らはこの2つのメカニズムを明示的に組み込んだ「分解済みTransformer」を自作し、実際に学習されたTransformerの注意パターンが理論予測と一致することを確認しました。さらに、擬似カウントによる平滑化が最適になる設定や、低次の文脈が有効な手がかりになる設定など、複数の条件下で、学習されたTransformerは古典的なカウントベースの手法と同等か、それを上回る性能を示しています。</p>
+<h2><span class="n">4</span>なぜこれが重要なのか</h2>
+<p><span class="term-tip" tabindex="0">mechanistic interpretability<span class="tip">モデル内部の計算を回路レベルまで分解し、何を計算しているかを厳密に説明しようとする解釈可能性研究の一分野</span></span>の分野では、「この回路は大体こういう役割らしい」という定性的な説明で止まってしまう研究が多い中、本論文はinduction headという有名な回路について、<strong>入力から出力までを閉じた数式で再現できるレベル</strong>まで踏み込んでいます。これは解釈可能性研究において数少ない「回路を完全に解いた」事例のひとつです。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「モデルが賢く見える挙動」の正体を追いかけていくと、実は統計学や情報理論の古典的な道具に行き着くことがよくあります。新しい現象に出会ったら、まず「これは既知の理論の言い換えではないか」と疑ってみる姿勢は、解釈可能性研究に限らずR&amp;D全般で役立ちます。</div>
+<h2><span class="n">5</span>この研究の意義と限界</h2>
+<div class="step"><span class="si">STEP 1</span><p>分析の対象はマルコフ連鎖という単純化されたデータで訓練したTransformerであり、実際の自然言語で事前学習された大規模モデルのinduction headが完全に同じ挙動をするかは、追加の検証が必要です。</p></div><div class="step"><span class="si">STEP 2</span><p>扱われているのは比較的単純な2層程度の構成であり、多数の層・ヘッドが絡み合う実際のLLMでは、複数のメカニズムが混在してこのようにきれいに分解できるとは限りません。</p></div><div class="step"><span class="si">STEP 3</span><p>「平滑化」という説明はinduction headの計算内容を説明するものであって、なぜその計算が学習によって獲得されるのか(学習ダイナミクス)は本論文の主題ではありません。</p></div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>新人研究者のうちは「ブラックボックスを説明する」研究は地味に見えるかもしれませんが、モデルが何を計算しているかを正確に言い当てられて初めて、次の改良(効率化・安全性の担保・新しいアーキテクチャ設計)の土台ができます。この論文はその好例です。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
