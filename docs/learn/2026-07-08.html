@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 30日講座 — 非線形の魔法 ─ 活性化関数 ReLU・GELU・SiLU の数理</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+
+.course-card{background:linear-gradient(135deg,#1c6f8c15,#2cb69615);border:1.5px solid var(--accent);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.course-card .cc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--accent-ink);text-transform:uppercase;margin-bottom:6px;}
+.course-card .cc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;color:var(--ink);}
+.course-card .cc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:4px 16px;}
+.cc-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;border-radius:6px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;}
+.progress-bar{height:4px;background:var(--line);border-radius:2px;margin:10px 0 4px;}
+.progress-bar .bar{height:100%;background:var(--accent);border-radius:2px;transition:width .4s;}
+.progress-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-faint);text-align:right;}
+/* KaTeX blocks */
+.tex-block{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;overflow-x:auto;}
+.tex-block .katex-display{margin:0;}
+.tex-block .tx-cap{font-size:12.5px;color:var(--ink-faint);margin-top:10px;text-align:center;}
+.tex-derive{margin-top:12px;border-top:1px solid var(--line);padding-top:10px;}
+.tex-derive-row{display:flex;gap:10px;align-items:baseline;margin-top:6px;font-size:14px;}
+.tex-derive-label{font-size:12px;color:var(--ink-faint);flex-shrink:0;min-width:80px;}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">📚</span> AI 30日講座</div>
+      <div class="date-pill">2026-07-08</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI30日講座 #活性化関数 #ReLU #GELU #深層学習数理</div>
+    <h1 class="headline">非線形の魔法 ─ ReLU・GELU・SiLU が深層学習を可能にする理由</h1>
+
+    <div class="author">
+      <div class="avatar" style="background:linear-gradient(135deg,#1c6f8c,#2cb696);">📚</div>
+      <div class="author-meta">
+        <div class="name">AI 30日講座</div>
+        <div class="sub">2026-07-08 ・ DAY 7 ・ ニューラルネットワーク基礎 ─ 層を重ねる意味</div>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="cc-label">本日のカリキュラム</div>
+      <div class="cc-title">
+        <span class="cc-badge">DAY 7 / 30</span>
+        &nbsp;非線形の魔法 ─ 活性化関数 ReLU・GELU・SiLU の数理
+      </div>
+      <div class="progress-bar"><div class="bar" style="width:23%"></div></div>
+      <div class="progress-label">23% 完了</div>
+      <div class="cc-row">
+        <span>Week 2: ニューラルネットワーク基礎 ─ 層を重ねる意味</span>
+        <span>基礎〜中級</span>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>「線形だけ」では世界は表現できない</h2>
+<p>想像してください。あなたが猫と犬を見分けるとき、「耳の大きさ × 0.3 ＋ 鼻の形 × 0.7」のような<strong>単純な線形和</strong>だけで判断していますか？　実際は「耳が丸くて、かつ鼻がピンク色なら猫」という<strong>折れ曲がった複雑な境界</strong>が必要です。ニューラルネットワークも同じで、いくら層を深く重ねても、各層が線形変換だけなら全体は結局 1 枚の線形変換と等価になってしまいます。この「線形の呪い」を破るのが<span class="term-tip" tabindex="0">活性化関数<span class="tip">各ニューロンの出力に加える非線形変換</span></span>です。</p>
+<div class="pull">活性化関数は「ただの数学的装飾」ではなく、深層学習が機能するための根本的な仕組みである。</div>
+<p>今日は ReLU・GELU・SiLU という現代 AI で最も使われる 3 つの活性化関数を、<strong>数学的な定義から直感、そして LLM への応用</strong>まで一気に理解しましょう。DAY 6 で学んだ「層を重ねる意味」の答えがここに隠れています。</p>
+<h2><span class="n">2</span>線形変換だけでは深さが無意味になる ─ 数学的証明</h2>
+<p>まず「なぜ非線形が必要か」を数式で確認しましょう。$L$ 層のネットワークで各層が重み行列 $W^{(l)}$ とバイアス $b^{(l)}$ だけで構成されているとします。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="y = W^{(L)}(W^{(L-1)}(\cdots(W^{(1)}x + b^{(1)})\cdots) + b^{(L-1)}) + b^{(L)}"></div><div class="tx-cap">活性化関数なしの L 層ネットワーク</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">行列積をまとめる</span><span class="katex-display-wrapper" data-tex="y = \underbrace{W^{(L)} W^{(L-1)} \cdots W^{(1)}}_{\tilde{W}} x + \tilde{b}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">結論：どんなに深くても 1 枚の線形変換と等価</span><span class="katex-display-wrapper" data-tex="y = \tilde{W} x + \tilde{b} \quad \Longrightarrow \quad \text{表現能力は単層と同じ}"></span></div></div></div>
+<p>この証明が示すように、<span class="term-tip" tabindex="0">非線形性<span class="tip">線形では表せない曲線的・折れ曲がった関係を表現できる性質</span></span>を各層に挿入して初めて「深さ」が意味を持ちます。では具体的にどんな関数を使うのかを見ていきましょう。</p>
+<h2><span class="n">3</span>ReLU ─ シンプルさが生んだ革命</h2>
+<h3>定義と数式</h3>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{ReLU}(x) = \max(0,\, x) = \begin{cases} x &amp; (x &gt; 0) \\ 0 &amp; (x \leq 0) \end{cases}"></div><div class="tx-cap">Rectified Linear Unit の定義</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">微分（劣微分）</span><span class="katex-display-wrapper" data-tex="\frac{d}{dx}\text{ReLU}(x) = \begin{cases} 1 &amp; (x &gt; 0) \\ 0 &amp; (x &lt; 0) \\ \text{未定義 (慣例で 0)} &amp; (x = 0) \end{cases}"></span></div></div></div>
+<p>ReLU は 2010 年代前半に<span class="term-tip" tabindex="0">Dying ReLU 問題<span class="tip">負の入力で勾配が 0 になり、ニューロンが永久に不活性化する問題</span></span>を持ちながらも、それ以前の sigmoid・tanh を大幅に上回る学習速度を実現しました。理由は「正の領域で勾配が消えない」こと ─ <span class="term-tip" tabindex="0">勾配消失問題<span class="tip">深い層で誤差信号がほぼ 0 になり学習が止まる現象</span></span>を大きく緩和したのです。</p>
+<div class="stats"><div class="stat"><div class="v">max(0,x)</div><div class="k">ReLU の計算コスト（比較 1 回）</div></div><div class="stat"><div class="v">2011年</div><div class="k">Glorot らが ReLU の優位性を示した論文</div></div><div class="stat"><div class="v">6倍+</div><div class="k">sigmoid 比での学習速度改善（実験的報告）</div></div></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>ReLU は「折れ線近似器」として機能します。ReLU を使った深いネットワークは、任意の連続関数を区分線形関数で近似していると見なせます。各ニューロンが「ここから先は傾き 1、手前は 0」という折れ目を学習し、組み合わせて複雑な形を作ります。</div>
+<h2><span class="n">4</span>GELU ─ 確率論的な「滑らかなReLU」</h2>
+<h3>定義と導出の背景</h3>
+<p>GELU（Gaussian Error Linear Unit）は Hendrycks &amp; Gimpel（2016）が提案した関数です。<strong>「入力をそのまま通すか、ゼロにするかを確率的に決める」</strong>という発想から生まれました。具体的には、入力 $x$ が標準正規分布に従う確率変数を超える確率 $\Phi(x)$ で、$x$ をそのまま通す確率が決まります。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{GELU}(x) = x \cdot P(X \leq x) = x \cdot \Phi(x)"></div><div class="tx-cap">GELU の確率的定義（X ~ N(0,1)）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">Φ(x) の定義（標準正規分布の累積分布関数）</span><span class="katex-display-wrapper" data-tex="\Phi(x) = \frac{1}{2}\left[1 + \text{erf}\left(\frac{x}{\sqrt{2}}\right)\right]"></span></div><div class="tex-derive-row"><span class="tex-derive-label">実装上の近似式（tanh版）</span><span class="katex-display-wrapper" data-tex="\text{GELU}(x) \approx 0.5\, x \left(1 + \tanh\!\left(\sqrt{\frac{2}{\pi}}\left(x + 0.044715\, x^3\right)\right)\right)"></span></div></div></div>
+<h3>直感的なイメージ ─ 「確率ゲート」</h3>
+<p>ReLU が「$x &gt; 0$ なら通す、$x &lt; 0$ なら遮断する」という<strong>ハードな二択</strong>だとすれば、GELU は「$x$ が大きいほど高確率で通し、$x$ が小さいほど低確率で通す」という<strong>ソフトなゲート</strong>です。たとえ話で言うと、ReLU はガードマンが完全に扉を開け閉めする係、GELU は音量に応じてドアをじわじわ開けるオートドアのようなものです。</p>
+<p>この滑らかさが<span class="term-tip" tabindex="0">勾配の安定性<span class="tip">学習中に勾配が急激に変化しない性質</span></span>をもたらし、BERT・GPT-2 以降の Transformer 系モデルで標準採用されるようになりました。</p>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>GELU は x=0 付近でわずかに「負の値」を返すことがあります（x が少し負のとき Φ(x) が 0 より大きいため）。この微小な負値が表現力を高める一因とも言われています。ReLU と違い「完全な死（Dead Neuron）」が起きにくい性質もあります。</div>
+<h2><span class="n">5</span>SiLU（Swish）─ 自己ゲーティングの発想</h2>
+<h3>定義</h3>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{SiLU}(x) = x \cdot \sigma(x) = \frac{x}{1 + e^{-x}}"></div><div class="tx-cap">SiLU / Swish の定義（σ はシグモイド関数）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">微分（積の微分則を適用）</span><span class="katex-display-wrapper" data-tex="\frac{d}{dx}\text{SiLU}(x) = \sigma(x) + x\,\sigma(x)(1-\sigma(x))"></span></div><div class="tex-derive-row"><span class="tex-derive-label">整理</span><span class="katex-display-wrapper" data-tex="= \sigma(x)\bigl(1 + x(1-\sigma(x))\bigr) = \sigma(x) + x\,\sigma(x) - x\,\sigma(x)^2"></span></div></div></div>
+<h3>GELU との関係と使い分け</h3>
+<p>SiLU と GELU は形が非常に似ており、$\sigma(\sqrt{\pi/2}\,x) \approx \Phi(x)$ という近似関係があります。SiLU は<strong>シグモイド関数を自分自身のゲートとして使う「自己ゲーティング」</strong>の形をしており、計算コストが GELU より低いのが特徴です。<span class="term-tip" tabindex="0">SwiGLU<span class="tip">SiLU を拡張したゲート付き線形ユニットで、LLaMA・PaLM 等で採用</span></span>は SiLU をベースに構築されており、現代の大規模 LLM の FFN 層で主流になっています。</p>
+<div class="stats"><div class="stat"><div class="v">BERT/GPT</div><div class="k">GELU を採用したモデルの代表</div></div><div class="stat"><div class="v">LLaMA/PaLM</div><div class="k">SiLU (SwiGLU) を採用したモデル</div></div><div class="stat"><div class="v">ResNet 以前</div><div class="k">ReLU が標準だった時代</div></div></div>
+<h2><span class="n">6</span>3 関数の比較 ─ どこが違うのか一目でわかる</h2>
+<div class="step"><span class="si">ReLU</span><p>max(0,x)。最もシンプル。正領域で勾配=1、負領域で勾配=0。計算最速。Dying ReLU に注意。CNN・ResNet で広く使用。</p></div><div class="step"><span class="si">GELU</span><p>x・Φ(x)。滑らかで確率論的解釈あり。x=0 付近でわずかに負値を返す。勾配が連続。BERT・GPT 系 Transformer の標準。</p></div><div class="step"><span class="si">SiLU</span><p>x・σ(x)。自己ゲーティング構造。GELU より計算がシンプル。SwiGLU の基礎。LLaMA・Mistral 等の現代 LLM に採用。</p></div>
+<h2><span class="n">7</span>数学的性質の深掘り ─ 普遍近似定理との接続</h2>
+<p>なぜ非線形関数を挟んだ多層ネットワークが「任意の関数を近似できる」のでしょうか？　その理論的根拠が<span class="term-tip" tabindex="0">普遍近似定理<span class="tip">1 つの隠れ層と非線形活性化があれば任意の連続関数を任意精度で近似できるという定理</span></span>です。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="f(x) \approx \sum_{j=1}^{N} v_j\, \phi\!\left(w_j^\top x + b_j\right)"></div><div class="tx-cap">普遍近似定理の形式（φ は非線形活性化関数）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">近似誤差の上界（Cybenko 1989 の精神）</span><span class="katex-display-wrapper" data-tex="\sup_{x \in K} \left| f(x) - \hat{f}(x) \right| &lt; \varepsilon \quad \text{for } \forall \varepsilon &gt; 0, \text{ with large enough } N"></span></div></div></div>
+<p>重要なのは「<strong>どんな非線形関数でも良いわけではない</strong>」という点です。シグモイド型や ReLU 型のように「非定数で有界（または部分線形）な関数」が条件を満たします。ReLU・GELU・SiLU はいずれもこの条件を満たし、かつ<strong>勾配消失を避けながら効率よく学習できる</strong>性質が加わっています。</p>
+<h2><span class="n">8</span>LLM の FFN 層における活性化関数 ─ SwiGLU という進化</h2>
+<p>現代の LLM（GPT-4、LLaMA、Gemini など）では、Transformer の<span class="term-tip" tabindex="0">FFN層<span class="tip">各トークンに独立に適用される 2 層の全結合ネットワーク</span></span>が全パラメータの約 2/3 を占めます。この FFN の設計が性能を大きく左右します。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{FFN}_{\text{ReLU}}(x) = \max(0,\, xW_1 + b_1)W_2 + b_2"></div><div class="tx-cap">古典的な FFN（ReLU 版）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">SwiGLU による置き換え（Noam Shazeer 2020）</span><span class="katex-display-wrapper" data-tex="\text{FFN}_{\text{SwiGLU}}(x) = \bigl(\text{SiLU}(xW_1) \odot xV\bigr)W_2"></span></div><div class="tex-derive-row"><span class="tex-derive-label">⊙ はアダマール積（要素積）</span><span class="katex-display-wrapper" data-tex="\text{SiLU}(xW_1) \odot xV = \frac{xW_1}{1+e^{-xW_1}} \odot xV"></span></div></div></div>
+<p>SwiGLU は SiLU を使ったゲートと値の2系統の信号を要素積で合成します。これにより「どの情報を通すか」を学習可能なゲートが決める、より豊かな表現が可能です。実験的に ReLU 版 FFN より perplexity（言語モデルの評価指標）が大幅に改善することが報告されています。</p>
+<h2><span class="n">9</span>実装のヒント ─ PyTorch で確認する</h2>
+<div class="code"><div class="ln"><span class="no">1</span><span class="ct">import torch</span></div><div class="ln"><span class="no">2</span><span class="ct">import torch.nn as nn</span></div><div class="ln"><span class="no">3</span><span class="ct"></span></div><div class="ln"><span class="no">4</span><span class="ct">x = torch.linspace(-3, 3, steps=100)</span></div><div class="ln"><span class="no">5</span><span class="ct"></span></div><div class="ln"><span class="no">6</span><span class="ct"># 3種の活性化関数を適用</span></div><div class="ln"><span class="no">7</span><span class="ct">relu  = nn.ReLU()(x)</span></div><div class="ln"><span class="no">8</span><span class="ct">gelu  = nn.GELU()(x)</span></div><div class="ln"><span class="no">9</span><span class="ct">silu  = nn.SiLU()(x)   # Swish と同一</span></div><div class="ln"><span class="no">10</span><span class="ct"></span></div><div class="ln"><span class="no">11</span><span class="ct"># 手動実装で理解を確認</span></div><div class="ln"><span class="no">12</span><span class="ct">import torch.nn.functional as F</span></div><div class="ln"><span class="no">13</span><span class="ct">silu_manual = x * torch.sigmoid(x)</span></div><div class="ln"><span class="no">14</span><span class="ct">print(torch.allclose(silu, silu_manual, atol=1e-6))  # True</span></div><div class="ln"><span class="no">15</span><span class="ct"></span></div><div class="ln"><span class="no">16</span><span class="ct"># SwiGLU の最小実装</span></div><div class="ln"><span class="no">17</span><span class="ct">class SwiGLU(nn.Module):</span></div><div class="ln"><span class="no">18</span><span class="ct"><span class="ind"></span>def __init__(self, dim, hidden):</span></div><div class="ln"><span class="no">19</span><span class="ct"><span class="ind"></span><span class="ind"></span>super().__init__()</span></div><div class="ln"><span class="no">20</span><span class="ct"><span class="ind"></span><span class="ind"></span>self.W1 = nn.Linear(dim, hidden, bias=False)</span></div><div class="ln"><span class="no">21</span><span class="ct"><span class="ind"></span><span class="ind"></span>self.V  = nn.Linear(dim, hidden, bias=False)</span></div><div class="ln"><span class="no">22</span><span class="ct"><span class="ind"></span><span class="ind"></span>self.W2 = nn.Linear(hidden, dim, bias=False)</span></div><div class="ln"><span class="no">23</span><span class="ct"><span class="ind"></span>def forward(self, x):</span></div><div class="ln"><span class="no">24</span><span class="ct"><span class="ind"></span><span class="ind"></span>return self.W2(F.silu(self.W1(x)) * self.V(x))</span></div></div><div class="code-cap">PyTorch で ReLU・GELU・SiLU を比較する最小実装</div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>モデルを設計するとき「なぜこの活性化関数か」を説明できることが大切です。CNN 系には計算コストの低い ReLU（または Leaky ReLU）、Transformer 系には GELU または SwiGLU が現在のデファクト。新しいアーキテクチャを提案する際は、活性化関数の選択理由を ablation study で示すことが求められます。</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>Leaky ReLU（max(0.01x, x)）や ELU・Mish なども研究されています。「絶対にこれが最強」という答えはなく、タスク・アーキテクチャ・計算リソースのトレードオフで選ぶのが実務です。</div>
+<h2><span class="n">10</span>まとめ ─ 非線形性こそが「知性」の源泉</h2>
+<div class="step"><span class="si">① 非線形の必要性</span><p>線形変換だけでは深い層が無意味。活性化関数が「深さを意味あるもの」にする。</p></div><div class="step"><span class="si">② ReLU の革命</span><p>max(0,x) という単純さで勾配消失を緩和。CNN 時代の標準。折れ線近似器として機能。</p></div><div class="step"><span class="si">③ GELU の滑らかさ</span><p>確率論的ゲートで滑らかな非線形性を実現。Transformer（BERT・GPT）の標準活性化。</p></div><div class="step"><span class="si">④ SiLU と SwiGLU</span><p>自己ゲーティングで表現力を高め、LLaMA・PaLM などの大規模 LLM に採用される最先端 FFN 設計。</p></div><div class="step"><span class="si">⑤ 次につながる視点</span><p>DAY 8 では「損失関数と最適化」へ進みます。活性化関数が変わると勾配の形が変わり、最適化にも影響する ── その接続に注目してください。</p></div>
+<div class="pull">活性化関数を選ぶことは、ネットワークがどのように「世界の曲がりくねった構造」を学ぶかを決める、設計の核心である。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI 30日講座 — Week 1〜6 ・ generated by Claude
+  </div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Render explicit tex-block wrappers
+      document.querySelectorAll('.katex-display-wrapper').forEach(el => {
+        const tex = el.dataset.tex;
+        if (tex) {
+          try {
+            katex.render(tex, el, {displayMode: true, throwOnError: false});
+          } catch(e) {
+            el.textContent = tex;
+          }
+        }
+      });
+      // Auto-render inline $...$ and $$...$$ in text
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+</body>
+</html>

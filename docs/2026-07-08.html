@@ -120,8 +120,8 @@ h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
   </div>
 
   <div class="page">
-    <div class="tags">#AI #論文解説 #機械学習 #解釈可能性 #Transformer #新人研究者向け</div>
-    <h1 class="headline">アテンションの正体は「昔ながらのn-gram平滑化」だった —— Induction Headを数式で解剖する</h1>
+    <div class="tags">#AI #論文解説 #SSM #HiPPO #Mamba #状態空間モデル #新人研究者向け</div>
+    <h1 class="headline">「記憶の意味」を動かせる：HiPPOの多項式投影とSelective SSMを統合するSHiPPO</h1>
 
     <div class="author">
       <div class="avatar">AI</div>
@@ -133,36 +133,50 @@ h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
 
     <div class="paper-card">
       <div class="pc-label">本日の論文</div>
-      <div class="pc-title">Induction Heads Interpolate N-Grams</div>
+      <div class="pc-title">SHiPPO: Recurrent Memory with Transported Polynomial Projections</div>
       <div class="pc-row">
-        <span>Francesco D&#x27;Angelo, Oguz Kaan Yuksel, Swathi Shree Narashiman, Nicolas Flammarion</span>
-        <span>arXiv cs.LG ・ 2026年7月</span>
-        <a href="https://arxiv.org/abs/2607.02800">原文 →</a>
+        <span>著者情報は公開情報より確認が必要（arXiv 2607.03055）</span>
+        <span>arXiv cs.LG ・ 2025年</span>
+        <a href="https://arxiv.org/abs/2607.03055">原文 →</a>
       </div>
     </div>
 
     <div class="content">
-<h2><span class="n">1</span>なぜTransformerは「初めて見る文脈」から学べるのか</h2>
-<p>大規模言語モデルに新しい単語のペアや珍しい言い回しを見せると、たった一度出てきただけなのに、次にそのパターンが出てきた瞬間にちゃんと使いこなしてくる——これが<span class="term-tip" tabindex="0">in-context learning<span class="tip">事前学習後に追加学習せず、入力文脈だけから新しいパターンを学習する能力</span></span>です。この能力を支える中心的な部品が<span class="term-tip" tabindex="0">induction head<span class="tip">「以前に同じトークンが出た直後に続いた単語」を今の予測にコピーしてくる注意機構</span></span>だと考えられてきました。</p>
-<p>ただし「コピーしてくる」というのはあくまで定性的な説明で、<strong>実際に何を計算しているのか</strong>は長らく曖昧なままでした。今日紹介する論文は、この曖昧さに正面から向き合い、induction headが実は昔ながらの統計的言語モデルの手法を再発明していたことを、数式付きで証明しています。</p>
-<h2><span class="n">2</span>背景: 「コピー」の中身は誰も測っていなかった</h2>
-<p>統計的言語モデルの世界では、大昔から<span class="term-tip" tabindex="0">n-gram<span class="tip">直前のn個の単語列から次の単語の出現確率を数える古典的な言語モデル</span></span>という手法があります。素朴に数えるだけだと、めったに出てこない長い文脈(高次のn-gram)では出現回数が少なすぎて確率推定が不安定になる、という弱点があり、それを補うために<span class="term-tip" tabindex="0">平滑化<span class="tip">データが少ない高次の推定を、データが多い低次の推定と混ぜて安定させる統計的テクニック</span></span>という工夫が積み重ねられてきました。</p>
-<p>著者らは「induction headが実質的にやっていることは、この平滑化なのではないか」という仮説を立てました。それを検証するために、複雑な自然言語ではなく、性質を完全にコントロールできる<span class="term-tip" tabindex="0">マルコフ連鎖<span class="tip">直前の状態(トークン)だけから次の状態が確率的に決まる、単純化された系列生成モデル</span></span>でTransformerを訓練し、学習された注意パターンを理論値と突き合わせるという、地に足のついたアプローチを取っています。</p>
-<h2><span class="n">3</span>手法: 2つの平滑化メカニズムを引っぺがす</h2>
-<p>分析の結果、induction headの中には<strong>性質の異なる2つの平滑化メカニズム</strong>が同居していることが分かりました。</p>
-<h3>① ソフトな文脈マッチング — Jelinek-Mercer平滑化</h3>
-<p>1つ目は、注意の重みが有限の強さで働く領域で起きる現象です。モデルは「今の文脈と完全一致する過去の位置」だけでなく、「一部だけ一致する位置」からも、一致度合いに応じて指数関数的に重み付けした情報を集めてきます。これはまさに<span class="term-tip" tabindex="0">Jelinek-Mercer平滑化<span class="tip">高次のn-gram推定と低次のn-gram推定を、データの信頼度に応じて連続的にブレンドする古典手法</span></span>と同じ形の補間になっている、というのが1つ目の発見です。</p>
-<h3>② BOSトークンの擬似カウント — ディリクレ平滑化</h3>
-<p>2つ目は、文の先頭を示す<span class="term-tip" tabindex="0">BOSトークン<span class="tip">Beginning of Sequence: 系列の先頭であることを示す特別なトークン</span></span>が果たす役割です。BOSトークンは一種の「なんでもいい保険」として働き、一致する文脈が見つからないときのために、あらかじめ一定量の<span class="term-tip" tabindex="0">擬似カウント<span class="tip">実際には観測していないが、確率がゼロにならないように仮想的に足しておく架空の出現回数</span></span>を足しておく効果を生みます。これは統計学における<span class="term-tip" tabindex="0">ディリクレ平滑化<span class="tip">事前に架空の出現回数を仮定しておくことで、未観測の事象にもゼロでない確率を与える平滑化手法</span></span>と数学的に対応します。</p>
-<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 現在の文脈(直近k個)と過去の各位置の文脈を比較する</span></div><div class="ln"><span class="no">1</span><span class="ct">score = <span class="fn">overlap_length</span>(current_context, past_position)</span></div><div class="ln"><span class="no">2</span><span class="ct">weight = <span class="fn">exp</span>(beta * score)<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># BOSトークンには常に一定の重みを与えておく(保険)</span></div><div class="ln"><span class="no">3</span><span class="ct">weight[BOS] = <span class="fn">pseudo_count</span>()<span class="badge">②</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># 全位置の重み付き投票から次のトークンを予測する</span></div><div class="ln"><span class="no">4</span><span class="ct">prediction = <span class="fn">weighted_vote</span>(all_weights, next_tokens)</span></div></div><div class="code-cap">induction headが暗黙に計算している推定量のイメージ(擬似コード)</div>
-<div class="pull">induction headは単に「過去を数えている」のではなく、データが少ないときにどう推定を安定させるかという、統計学が磨いてきた正則化を自力で学習していた。</div>
-<p>著者らはこの2つのメカニズムを明示的に組み込んだ「分解済みTransformer」を自作し、実際に学習されたTransformerの注意パターンが理論予測と一致することを確認しました。さらに、擬似カウントによる平滑化が最適になる設定や、低次の文脈が有効な手がかりになる設定など、複数の条件下で、学習されたTransformerは古典的なカウントベースの手法と同等か、それを上回る性能を示しています。</p>
-<h2><span class="n">4</span>なぜこれが重要なのか</h2>
-<p><span class="term-tip" tabindex="0">mechanistic interpretability<span class="tip">モデル内部の計算を回路レベルまで分解し、何を計算しているかを厳密に説明しようとする解釈可能性研究の一分野</span></span>の分野では、「この回路は大体こういう役割らしい」という定性的な説明で止まってしまう研究が多い中、本論文はinduction headという有名な回路について、<strong>入力から出力までを閉じた数式で再現できるレベル</strong>まで踏み込んでいます。これは解釈可能性研究において数少ない「回路を完全に解いた」事例のひとつです。</p>
-<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「モデルが賢く見える挙動」の正体を追いかけていくと、実は統計学や情報理論の古典的な道具に行き着くことがよくあります。新しい現象に出会ったら、まず「これは既知の理論の言い換えではないか」と疑ってみる姿勢は、解釈可能性研究に限らずR&amp;D全般で役立ちます。</div>
-<h2><span class="n">5</span>この研究の意義と限界</h2>
-<div class="step"><span class="si">STEP 1</span><p>分析の対象はマルコフ連鎖という単純化されたデータで訓練したTransformerであり、実際の自然言語で事前学習された大規模モデルのinduction headが完全に同じ挙動をするかは、追加の検証が必要です。</p></div><div class="step"><span class="si">STEP 2</span><p>扱われているのは比較的単純な2層程度の構成であり、多数の層・ヘッドが絡み合う実際のLLMでは、複数のメカニズムが混在してこのようにきれいに分解できるとは限りません。</p></div><div class="step"><span class="si">STEP 3</span><p>「平滑化」という説明はinduction headの計算内容を説明するものであって、なぜその計算が学習によって獲得されるのか(学習ダイナミクス)は本論文の主題ではありません。</p></div>
-<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>新人研究者のうちは「ブラックボックスを説明する」研究は地味に見えるかもしれませんが、モデルが何を計算しているかを正確に言い当てられて初めて、次の改良(効率化・安全性の担保・新しいアーキテクチャ設計)の土台ができます。この論文はその好例です。</div>
+<h2><span class="n">1</span>なぜ「記憶の意味」が大事なのか</h2>
+<p>RNNやTransformerの代替として近年注目を集める<span class="term-tip" tabindex="0">SSM<span class="tip">状態空間モデル。入力系列を線形状態方程式で圧縮・再現する再帰モデルの総称</span></span>の世界では、「状態ベクトルに何を詰め込むか」という問いが設計の核心にあります。ただ「何かの圧縮」を格納するのではなく、<strong>数学的に意味のある方法</strong>で過去の情報を表現できれば、モデルの解釈性も能力も上がります。</p>
+<p>この問いに対して先行研究<span class="term-tip" tabindex="0">HiPPO<span class="tip">過去の入力を多項式の係数として最適近似するSSMの理論フレームワーク</span></span>は美しい答えを提示しました。「状態ベクトル＝入力系列を多項式で近似したときの係数」と見なすことで、状態に<strong>記憶としての意味（memory semantics）</strong>を与えたのです。しかしHiPPOには制約がありました。座標系が固定されているため、トークンごとに制御を変える現代的な手法と組み合わせにくかったのです。</p>
+<p>一方、<span class="term-tip" tabindex="0">Mamba<span class="tip">選択的な入力依存ゲーティングを持つ最新のSSMアーキテクチャ</span></span>に代表される<strong>Selective SSM</strong>は、トークンに応じてダイナミクスを変える柔軟性を武器に高い性能を示しています。しかしその柔軟性は理論的な「記憶の意味付け」を犠牲にする側面もありました。今回紹介する<strong>SHiPPO（Sylvester HiPPO）</strong>は、この二つを統合する試みです。</p>
+<div class="pull">「記憶の意味」を保ちながら、チャンネルの座標系ごとトークンに応じて動かす——それがSHiPPOの核心。</div>
+<h2><span class="n">2</span>背景：HiPPOとSelective SSMの何が問題か</h2>
+<h3>HiPPOの強みと弱み</h3>
+<p>HiPPOの仕組みを直感的に説明しましょう。長い系列が流れてくるとき、あなたはそれを「今まで見た信号を一番うまく近似する多項式の係数」として記憶します。これは「楽曲をフーリエ係数で記録する」のに似た発想で、状態ベクトルの各次元が多項式の各次数に対応します。この設計により、<strong>どの係数が何を表しているか</strong>が数学的に明確です。ただしこの係数は固定したチャンネル座標系（固定した基底）の中で計算されており、入力トークンによって座標系自体を変えることはできませんでした。</p>
+<h3>Selective SSMの強みと弱み</h3>
+<p>MambaなどのSelective SSMは、各トークンを見て「今この入力をどれだけ状態に書き込むか・どれだけ忘れるか」を動的に決めます。さらに<strong>チャンネル間の相互作用</strong>（異なる特徴次元をミックスする操作）も取り入れることで高い表現力を実現しています。しかしその動的な変化は「状態が何を意味するか」という解釈を難しくします。書き込み係数が変わるたびに、多項式近似としての意味が崩れてしまうのです。</p>
+<div class="tip-box"><div class="tb-label">💡 たとえ話：固定スタジオ vs 移動撮影</div>HiPPOは「固定カメラで撮影した映像を最適な角度で圧縮する」スタジオカメラ。Selective SSMは「被写体を追いかけて動き回るカメラ」。SHiPPOは「カメラが動いても被写体との相対関係（多項式近似の意味）を保ち続けるジンバル付き追跡カメラ」のようなものです。</div>
+<h2><span class="n">3</span>SHiPPOの全体像：輸送と射影の統合</h2>
+<p>SHiPPOのキーアイデアは<strong>「チャンネルの座標系（フレーム）自体をトークンに応じて動かす」</strong>ことです。論文ではこの操作を「右輸送（right-transport）」と呼びます。左側の操作（HiPPOのオンライン多項式近似）はそのまま保ちながら、右側からチャンネルの座標変換を加える、という二段構えです。</p>
+<p>数式で書くと、状態更新はざっくり「新状態 ＝ HiPPO行列 × 旧状態 × 輸送の逆変換 ＋ 入力の寄与」という形になります。ここで<strong><span class="term-tip" tabindex="0">Sylvester方程式<span class="tip">AX + XB = Cという形の行列方程式。両側から行列が作用する構造</span></span></strong>が自然に現れるため、「Sylvester HiPPO＝SHiPPO」という名前がついています。左から作用するのが記憶オペレータ（HiPPO）、右から作用するのが座標変換（輸送）です。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 入力トークン x_t を受け取って状態 H_t を更新する</span></div><div class="ln"><span class="no">1</span><span class="ct"><span class="kw">def</span><span class="fn"> shippo_step</span>(H_prev, x_t, A_hippo, R_t, b_t):</span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># ① 右輸送行列 R_t をトークン x_t から生成</span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="ind"></span>R_t = <span class="fn">compute_transport</span>(x_t)<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># ② 移動フレームに合わせて旧状態を座標変換</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="ind"></span>H_transported = H_prev @ <span class="fn">inv</span>(R_t)<span class="badge">②</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># ③ 移動フレーム内で通常の HiPPO 更新（多項式近似）</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>H_hippo = A_hippo @ H_transported + b_t @ x_t<span class="badge">③</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># ④ 新しい移動フレームで状態を返す</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span>H_t = H_hippo @ R_t<span class="badge">④</span></span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span><span class="kw">return</span> H_t</span></div></div><div class="code-cap">SHiPPO の状態更新の擬似コード（直感的な表現）</div>
+<h3>① 右輸送行列の生成</h3>
+<p>トークン x_t を入力として、チャンネルの座標系を変える変換行列 R_t を生成します。Selective SSMの「入力依存ゲーティング」に相当する部分です。この R_t の選び方がアーキテクチャの肝で、論文では<strong>グループローカルな実現（group-local realization）</strong>という制約付きの形を提案しています。これは「全チャンネルを一度に変換するのではなく、小さなグループ単位で変換する」ことで計算を現実的にする工夫です。</p>
+<h3>②③ 移動フレームでのHiPPO更新</h3>
+<p>旧状態を新しい座標系に変換してから、通常のHiPPO更新（多項式係数の更新）を行います。論文の重要な主張は「<strong>この移動フレームの中では、状態は普通のHiPPOとして振る舞う</strong>」という点です。つまり記憶の意味（多項式近似としての解釈）が保たれています。また効率的な実行のために、<strong>ブロックアファインスキャン（block-affine scan）</strong>と呼ばれる<span class="term-tip" tabindex="0">並列スキャン<span class="tip">再帰的な状態更新を並列計算可能な形に変換する手法</span></span>を使った高速計算も導出されています。</p>
+<h3>輸送が「崩壊」するケースの理論的整理</h3>
+<p>論文は<strong>同時可約性（simultaneous reducibility）</strong>という判定基準も提示します。これは「右輸送が実質的に意味をなさない（静的な混合＋独立なスカラー/ブロック更新に退化する）」条件を代数的に特定するもので、「SHiPPOが本当に新しい構造をもたらすのはいつか？」という問いへの誠実な答えです。</p>
+<h2><span class="n">4</span>実験：どんな診断テストで検証したか</h2>
+<p>この論文は「広範な系列モデリングで最強」を主張するのではなく、<strong>記憶メカニズムそのものを標的にした診断的実験</strong>に絞っています。これは誠実なアプローチで、新人研究者が見習うべきスタンスです。</p>
+<div class="step"><span class="si">診断 1</span><p>制御された予測誤差テスト：「現在トークンへの書き込みランク（write rank）を大きくすれば通常の予測誤差は改善する。しかし、すでに書き込まれた記憶の順序依存的な変更は回復できない」ことを確認。輸送あり変種はこのシグナルを回復できる。</p></div><div class="step"><span class="si">診断 2</span><p>輸送経路除去実験：輸送の経路を取り除くと上記のシグナルが消えることを確認。因果関係の証拠として重要。</p></div><div class="step"><span class="si">診断 3</span><p>有限体連想想起（finite-field associative recall）：バインディング・演算・クエリが交互に挟まる系列で、自己回帰的な連想想起能力を検証。輸送の有効性を別角度から補強する証拠を提供。</p></div>
+<div class="note-box"><div class="nb-label">⚙️ 論文の誠実な留保</div>アブストラクトに「preferred right-action realization open（最適な右作用の実現形式は未確定）」とあります。どのR_tの構造が最も良いかは実験でも開かれた問いのまま。また診断 3 の有限体テストは「補完的な証拠」と位置付けられており、大規模ベンチマークでの優位性は本論文の主張範囲外です。</div>
+<h2><span class="n">5</span>新規性：なぜこれは重要な一歩か</h2>
+<div class="pull">HiPPOの「解釈できる記憶」とSelective SSMの「動的制御」を、理論的に整合する形で初めて統合した枠組み——それがSHiPPOの核心的貢献。</div>
+<p>既存のSSM研究は「性能を上げる」か「理論を深める」かのどちらかに偏る傾向がありました。SHiPPOは両者を結ぶ<strong>橋渡し的なフレームワーク</strong>として機能します。具体的には、(1) HiPPOの多項式近似による記憶の意味付けを保持しながら、(2) トークン依存の制御とチャンネル相互作用を数学的に整合する形で追加し、(3) 効率的な並列計算まで導出しています。また「輸送が退化するケース」の理論的整理（同時可約性）は、将来の研究者が「自分の手法はSHiPPOの特殊ケースか否か」を判断する基準にもなります。</p>
+<h2><span class="n">6</span>意義と限界</h2>
+<div class="step"><span class="si">意義 1</span><p>記憶の解釈性：状態ベクトルを「多項式係数」として解釈できる性質を、動的な座標変換の下でも保持。ブラックボックス化しやすいSSMに解釈の窓を開ける。</p></div><div class="step"><span class="si">意義 2</span><p>理論的統一性：HiPPOとSelective SSMという二つの潮流を、Sylvester方程式という数学的構造の下に統一。今後の理論研究の基盤になりうる。</p></div><div class="step"><span class="si">限界 1</span><p>大規模ベンチマーク不在：論文自身が認めるように、実験は「記憶メカニズムの診断」に絞られており、言語モデリングや時系列予測などの大規模タスクでの優位性は未検証。</p></div><div class="step"><span class="si">限界 2</span><p>最適な輸送実現の未確定：右作用（right-action）の最も良い実現形式がまだ開かれた問いであり、実用的な実装の指針が今後必要。</p></div><div class="step"><span class="si">限界 3</span><p>計算コストの詳細：グループローカルな実現でどこまでコストを抑えられるか、現実的な系列長・チャンネル数でのスケーリングの詳細は今後の検証が必要。</p></div>
+<h2><span class="n">7</span>新人研究者へ：この論文から何を学ぶか</h2>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方：「先行研究の制約を構造的に外す」</div>SHiPPOのアプローチは「HiPPOが固定座標系という制約を持つ → その制約を外す数学的な操作（輸送）を設計する」という流れです。これは優れたR&amp;Dの典型例。既存手法の「強みが生まれている構造的理由」を理解し、「その制約だけを外す最小限の拡張」を考える——このサイクルを意識するだけで研究の質が上がります。</div>
+<p>もう一つ学べるのは「<strong>主張の範囲を正直に絞る</strong>」姿勢です。論文は「SHiPPOは全ての系列モデリングで最強」とは言いません。「記憶メカニズムという特定の観点で、証拠が集まっている」と言います。これは誠実さの表れであり、査読でも信頼されやすいスタンスです。新人研究者が自分の論文を書くとき、「貢献の範囲を正確に書く」ことは非常に重要なスキルです。</p>
+<p>SSMの理論的基盤に興味があれば、まず<span class="term-tip" tabindex="0">HiPPO論文<span class="tip">Gu et al. 2020, NeurIPS: 多項式射影による記憶の理論化の原点</span></span>と<span class="term-tip" tabindex="0">S4論文<span class="tip">Gu et al. 2022, ICLR: HiPPOを使った高速SSMの実装</span></span>を読んでから本論文に進むと、「何がどう拡張されたか」がより鮮明に見えるでしょう。</p>
+<div class="note-box"><div class="nb-label">⚙️ まとめひとこと</div>SHiPPOは「記憶の意味を保ちながら動的制御を加える」という、理論とエンジニアリングの橋渡し研究。大規模実験よりも理論的厳密性と診断実験に重きを置いており、SSMの設計哲学を深く理解したい研究者に刺さる一本です。</div>
     </div>
   </div>
 
