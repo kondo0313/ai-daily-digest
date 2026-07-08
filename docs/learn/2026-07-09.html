@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 30日講座 — 損失関数の設計思想 ─ クロスエントロピーはなぜ使われるのか</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+
+.course-card{background:linear-gradient(135deg,#1c6f8c15,#2cb69615);border:1.5px solid var(--accent);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.course-card .cc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--accent-ink);text-transform:uppercase;margin-bottom:6px;}
+.course-card .cc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;color:var(--ink);}
+.course-card .cc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:4px 16px;}
+.cc-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;border-radius:6px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;}
+.progress-bar{height:4px;background:var(--line);border-radius:2px;margin:10px 0 4px;}
+.progress-bar .bar{height:100%;background:var(--accent);border-radius:2px;transition:width .4s;}
+.progress-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-faint);text-align:right;}
+/* KaTeX blocks */
+.tex-block{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;overflow-x:auto;}
+.tex-block .katex-display{margin:0;}
+.tex-block .tx-cap{font-size:12.5px;color:var(--ink-faint);margin-top:10px;text-align:center;}
+.tex-derive{margin-top:12px;border-top:1px solid var(--line);padding-top:10px;}
+.tex-derive-row{display:flex;gap:10px;align-items:baseline;margin-top:6px;font-size:14px;}
+.tex-derive-label{font-size:12px;color:var(--ink-faint);flex-shrink:0;min-width:80px;}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">📚</span> AI 30日講座</div>
+      <div class="date-pill">2026-07-09</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI30日講座 #損失関数 #クロスエントロピー #最尤推定 #ニューラルネットワーク</div>
+    <h1 class="headline">損失関数の設計思想 ─ クロスエントロピーはなぜ最良の選択なのか</h1>
+
+    <div class="author">
+      <div class="avatar" style="background:linear-gradient(135deg,#1c6f8c,#2cb696);">📚</div>
+      <div class="author-meta">
+        <div class="name">AI 30日講座</div>
+        <div class="sub">2026-07-09 ・ DAY 8 ・ ニューラルネットワーク基礎</div>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="cc-label">本日のカリキュラム</div>
+      <div class="cc-title">
+        <span class="cc-badge">DAY 8 / 30</span>
+        &nbsp;損失関数の設計思想 ─ クロスエントロピーはなぜ使われるのか
+      </div>
+      <div class="progress-bar"><div class="bar" style="width:26%"></div></div>
+      <div class="progress-label">26% 完了</div>
+      <div class="cc-row">
+        <span>Week 2: ニューラルネットワーク基礎 ─ 層を重ねる意味</span>
+        <span>基礎〜中級</span>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>「なぜ二乗誤差ではダメなのか」から始める問い</h2>
+<p>ニューラルネットワークを学び始めると、分類問題では「<span class="term-tip" tabindex="0">クロスエントロピー損失<span class="tip">モデルの出力確率と正解ラベルのズレを情報理論的に測る損失関数</span></span>」を使うよう言われます。しかし、なぜ回帰問題でよく使う二乗誤差（MSE）ではダメなのでしょうか？損失関数は「ただのスコア」ではなく、モデルが世界をどう解釈するかを規定する設計思想です。今日はその根拠を、情報理論・最尤推定・勾配の性質という三つの角度から徹底解剖します。</p>
+<div class="pull">損失関数を選ぶことは、モデルが「何を最適化する生き物か」を決めることである。</div>
+<h2><span class="n">2</span>損失関数とは何か ─ 数学的な定義</h2>
+<p>損失関数 L は、モデルの予測 ŷ と真のラベル y のペアを受け取り、非負のスカラーを返す関数です。学習とはパラメータ θ を動かして L を最小化する過程そのものです。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\theta^* = \arg\min_{\theta} \frac{1}{N} \sum_{i=1}^{N} L\!\left(y^{(i)},\, f_\theta(x^{(i)})\right)"></div><div class="tx-cap">経験損失の最小化：N サンプル平均の損失を最小にするパラメータ θ* を求める</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">f_θ(x) はモデル出力</span><span class="katex-display-wrapper" data-tex="f_\theta : \mathcal{X} \to \mathcal{Y} \quad (\text{パラメータ } \theta \text{ を持つ関数})"></span></div><div class="tex-derive-row"><span class="tex-derive-label">損失は非負・予測が正解に一致するとき 0</span><span class="katex-display-wrapper" data-tex="L(y, \hat{y}) \geq 0, \quad L(y, y) = 0"></span></div></div></div>
+<h2><span class="n">3</span>情報理論からクロスエントロピーを導く</h2>
+<h3>エントロピーとは「驚き」の平均</h3>
+<p>ある事象が起きたときの「驚き（情報量）」は −log p で定義されます。確率が低いほど驚きは大きい、という直感と一致します。<span class="term-tip" tabindex="0">エントロピー<span class="tip">確率分布が持つ不確実性・情報量の期待値</span></span> H(p) はその期待値です。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="H(p) = -\sum_{k=1}^{K} p_k \log p_k"></div><div class="tx-cap">シャノンエントロピー：分布 p の不確実性を表すスカラー</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">自己情報量（驚き）の定義</span><span class="katex-display-wrapper" data-tex="I(k) = -\log p_k"></span></div><div class="tex-derive-row"><span class="tex-derive-label">エントロピーは驚きの期待値</span><span class="katex-display-wrapper" data-tex="H(p) = \mathbb{E}_{k \sim p}[I(k)] = -\sum_k p_k \log p_k"></span></div></div></div>
+<h3>クロスエントロピー ─ 「ズレた分布で符号化したコスト」</h3>
+<p>真の分布 p に対して、モデルの予測分布 q を使って符号化したとき、余計にかかる平均コストが<span class="term-tip" tabindex="0">クロスエントロピー<span class="tip">真の分布 p とモデル分布 q の間の情報的距離を測る量</span></span>です。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="H(p, q) = -\sum_{k=1}^{K} p_k \log q_k"></div><div class="tx-cap">クロスエントロピー：p が真の分布、q がモデルの予測分布</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">KL ダイバージェンスとの関係</span><span class="katex-display-wrapper" data-tex="H(p, q) = H(p) + D_{\mathrm{KL}}(p \| q)"></span></div><div class="tex-derive-row"><span class="tex-derive-label">H(p) は定数なので最小化すると同値</span><span class="katex-display-wrapper" data-tex="\arg\min_q H(p, q) = \arg\min_q D_{\mathrm{KL}}(p \| q)"></span></div><div class="tex-derive-row"><span class="tex-derive-label">分類での p は one-hot → 1 項だけ残る</span><span class="katex-display-wrapper" data-tex="H(p, q) = -\log q_{y} \quad (y \text{ が正解クラス})"></span></div></div></div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>クロスエントロピーを最小化することは KL ダイバージェンスを最小化することと等価です。KL ダイバージェンスは非負（ギブスの不等式）なので、モデルが真の分布に近づくほど損失はゼロに近づきます。</div>
+<h2><span class="n">4</span>最尤推定 ─ 確率論からの別ルートで同じ答えに至る</h2>
+<p>情報理論とは独立した立場、統計の<span class="term-tip" tabindex="0">最尤推定<span class="tip">観測データを最も「もっともらしく」説明するパラメータを求める手法</span></span>（MLE）からもクロスエントロピーが導けます。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\theta^* = \arg\max_{\theta} \prod_{i=1}^{N} p_\theta\!\left(y^{(i)} \mid x^{(i)}\right)"></div><div class="tx-cap">尤度最大化：全サンプルに対する条件付き確率の積を最大にするθを探す</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">対数を取って積→和に（単調増加なので等価）</span><span class="katex-display-wrapper" data-tex="= \arg\max_{\theta} \sum_{i=1}^{N} \log p_\theta\!\left(y^{(i)} \mid x^{(i)}\right)"></span></div><div class="tex-derive-row"><span class="tex-derive-label">最大化を最小化に反転（符号反転）</span><span class="katex-display-wrapper" data-tex="= \arg\min_{\theta} \left[ -\frac{1}{N}\sum_{i=1}^{N} \log p_\theta\!\left(y^{(i)} \mid x^{(i)}\right) \right]"></span></div><div class="tex-derive-row"><span class="tex-derive-label">ソフトマックス出力 q = softmax(logits) を代入</span><span class="katex-display-wrapper" data-tex="= \arg\min_{\theta} \left[ -\frac{1}{N}\sum_{i=1}^{N} \log q^{(i)}_{y^{(i)}} \right] = \arg\min_{\theta}\, \overline{H}(p, q)"></span></div></div></div>
+<p>こうして「尤度を最大化する」という統計的動機と「KL ダイバージェンスを最小化する」という情報理論的動機が、全く同じ損失関数 ─ <strong>クロスエントロピー</strong> ─ に収束します。二つの理論が独立に同じ答えを指す事実は、この損失関数の正当性を強く支持します。</p>
+<div class="stats"><div class="stat"><div class="v">2つ</div><div class="k">情報理論・最尤推定という独立した理論がCEを導く</div></div><div class="stat"><div class="v">O(1)</div><div class="k">one-hotラベル時の計算：正解クラスの対数確率1項のみ</div></div><div class="stat"><div class="v">KL≥0</div><div class="k">ギブスの不等式が保証する損失の下界</div></div></div>
+<h2><span class="n">5</span>勾配の振る舞い ─ 二乗誤差が分類に向かない理由</h2>
+<h3>ソフトマックス + MSE の「勾配消失問題」</h3>
+<p>分類モデルの最終層は <span class="term-tip" tabindex="0">ソフトマックス<span class="tip">ロジットを確率分布に変換する活性化関数 σ(z)_k = e^{z_k}/Σe^{z_j}</span></span> を使います。MSE と組み合わせると逆伝播の勾配に σ′(z) = σ(1−σ) の項が掛かり、予測が確信的（0 か 1 に近い）なほど勾配が消えます。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\frac{\partial L_{\mathrm{MSE}}}{\partial z_k} = (\hat{y}_k - y_k)\cdot \hat{y}_k(1-\hat{y}_k)"></div><div class="tx-cap">MSE + sigmoid の勾配：予測が 0 か 1 に近いとき ŷ(1-ŷ)→0 で消える</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">CE + sigmoid の勾配（キャンセルして綺麗）</span><span class="katex-display-wrapper" data-tex="\frac{\partial L_{\mathrm{CE}}}{\partial z_k} = \hat{y}_k - y_k"></span></div><div class="tex-derive-row"><span class="tex-derive-label">CE では σ′ の項が消え、誤差そのものが勾配になる</span><span class="katex-display-wrapper" data-tex="\nabla_z L_{\mathrm{CE}} = \hat{\mathbf{y}} - \mathbf{y} \quad (\text{極めてシンプル})"></span></div></div></div>
+<p>クロスエントロピーとソフトマックスを組み合わせると、勾配は <strong>ŷ − y</strong>（予測と正解の差）という直感的な形に整理されます。予測が大きく外れていれば勾配も大きく、学習が速い ─ これが実務上の最大のメリットです。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「損失関数 × 最終活性化関数」はセットで設計します。CE ↔ Softmax/Sigmoid、MSE ↔ 線形出力 ─ この組み合わせにはそれぞれ数学的必然性があります。論文でアーキテクチャを読む際は、この組み合わせが崩れていないか常にチェックしましょう。</div>
+<h2><span class="n">6</span>損失関数のバリエーション ─ 現代 AI 研究での展開</h2>
+<h3>二値分類：バイナリクロスエントロピー（BCE）</h3>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="L_{\mathrm{BCE}} = -\frac{1}{N}\sum_{i=1}^{N}\left[y^{(i)}\log \hat{y}^{(i)} + (1-y^{(i)})\log(1-\hat{y}^{(i)})\right]"></div><div class="tx-cap">BCE：正例・負例それぞれの対数確率を加算する二値版クロスエントロピー</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">K=2 の多値 CE と完全に等価</span><span class="katex-display-wrapper" data-tex="L_{\mathrm{BCE}} = H(p, q)\big|_{K=2}"></span></div></div></div>
+<h3>LLM のトークン予測：トークンレベル CE の平均</h3>
+<p>大規模言語モデル（GPT 系など）の学習損失は、各トークン位置での<span class="term-tip" tabindex="0">クロスエントロピー損失<span class="tip">モデルが次トークンを正しく予測できるかを測る損失</span></span> の系列平均です。これはパープレキシティの対数と直結します。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="L_{\mathrm{LM}} = -\frac{1}{T}\sum_{t=1}^{T} \log p_\theta\!\left(x_t \mid x_1, \ldots, x_{t-1}\right)"></div><div class="tx-cap">言語モデルの訓練損失：各ステップで次トークンを予測するCEの平均</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">パープレキシティとの関係</span><span class="katex-display-wrapper" data-tex="\mathrm{PPL} = \exp(L_{\mathrm{LM}})"></span></div></div></div>
+<h3>クラス不均衡への対処：Focal Loss</h3>
+<p>物体検出など、正例が極端に少ないタスクでは標準 CE だと負例の大量サンプルに勾配が支配されます。<span class="term-tip" tabindex="0">Focal Loss<span class="tip">簡単なサンプルの損失を小さくして難しいサンプルに集中させるCEの拡張</span></span> はこれを解決します。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="L_{\mathrm{FL}} = -(1 - \hat{y}_y)^\gamma \log \hat{y}_y \quad (\gamma &gt; 0)"></div><div class="tx-cap">Focal Loss：γ&gt;0 により確信度の高いサンプルの損失を指数的に減衰させる</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">γ=0 のとき通常の CE と一致</span><span class="katex-display-wrapper" data-tex="L_{\mathrm{FL}}\big|_{\gamma=0} = -\log \hat{y}_y = L_{\mathrm{CE}}"></span></div></div></div>
+<h2><span class="n">7</span>実装のポイント ─ 数値安定性とよくある落とし穴</h2>
+<div class="code"><div class="ln"><span class="no">1</span><span class="ct">def cross_entropy(logits, y_true):</span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="ind"></span># Step1: log-sum-exp トリックで数値安定なソフトマックス</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="ind"></span>c = max(logits)                    # オーバーフロー防止の定数</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>log_sum_exp = log(sum(exp(logits - c))) + c</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span># Step2: 正解クラスのログ確率だけ抜き出す</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span>log_prob = logits[y_true] - log_sum_exp</span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="ind"></span># Step3: 符号反転して損失に</span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="ind"></span>return -log_prob</span></div><div class="ln"><span class="no">9</span><span class="ct"></span></div><div class="ln"><span class="no">10</span><span class="ct"># 注意：softmax → log → CE より log_softmax → nll_loss の方が安定</span></div></div><div class="code-cap">数値安定なクロスエントロピーの実装（NumPy 風擬似コード）</div>
+<div class="step"><span class="si">STEP 1</span><p>Softmax を先に計算してから log を取るのは危険。確率が 0 に丸められると log(0) = -∞ になる。log_softmax を一体で計算するライブラリ関数（PyTorch: F.log_softmax + F.nll_loss = F.cross_entropy）を使うこと。</p></div><div class="step"><span class="si">STEP 2</span><p>ラベルスムージング（label smoothing）を加えると過信を防ぎ汎化性能が上がることがある。y を one-hot ではなく (1−ε)・one-hot + ε/K の分布として扱う手法で、Transformer 論文でも採用。</p></div><div class="step"><span class="si">STEP 3</span><p>クラス不均衡があるときは weight 引数でクラスごとの損失重みを調整する。重みは「1 / クラス頻度」に比例させるのが基本戦略。</p></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>PyTorch の nn.CrossEntropyLoss は内部で log_softmax + NLL を合算しており、入力はロジット（softmax 前）を期待します。うっかり softmax 済みの出力を渡すと「softmax を二重適用」するバグになります。新しいモデルを実装したら必ずロジットか確率かを確認しましょう。</div>
+<h2><span class="n">8</span>まとめ ─ 設計思想を一本の糸でつなぐ</h2>
+<p>今日のポイントを整理します。クロスエントロピーは ①情報理論的に「予測分布と真の分布のズレ（KLダイバージェンス）」を最小化し、②確率論的に「尤度最大化（MLE）」と等価であり、③勾配計算では「ŷ − y」という美しい形に整理されます。この三つの一致が、分類問題でクロスエントロピーが選ばれ続ける数学的根拠です。</p>
+<p>損失関数の選択は「実装の都合」ではなく「<strong>モデルに何を学ばせるかの哲学</strong>」です。明日以降、バックプロパゲーションと最適化アルゴリズムを学ぶとき、この損失の定義がすべての起点になることを思い出してください。</p>
+<div class="note-box"><div class="nb-label">⚙️ 次回予告</div>DAY 9 では「バックプロパゲーション ─ 勾配はどうやって逆向きに流れるのか」を扱います。今日学んだ CE の勾配 ŷ − y が連鎖律でどう各層に伝わっていくか、計算グラフとともに追いかけます。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI 30日講座 — Week 1〜6 ・ generated by Claude
+  </div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Render explicit tex-block wrappers
+      document.querySelectorAll('.katex-display-wrapper').forEach(el => {
+        const tex = el.dataset.tex;
+        if (tex) {
+          try {
+            katex.render(tex, el, {displayMode: true, throwOnError: false});
+          } catch(e) {
+            el.textContent = tex;
+          }
+        }
+      });
+      // Auto-render inline $...$ and $$...$$ in text
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+</body>
+</html>

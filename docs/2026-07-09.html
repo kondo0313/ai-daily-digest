@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-07-09</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-07-09</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #ロボット工学 #VLA #マニピュレーション #新人研究者向け</div>
+    <h1 class="headline">VLAロボットが「失敗しても立ち直れる」ようになった——FailSafeが開く自律回復の扉</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-07-09 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">FailSafe: Reasoning and Recovery from Failures in Vision-Language-Action Models</div>
+      <div class="pc-row">
+        <span>詳細著者情報は論文ページを参照</span>
+        <span>arXiv cs.RO ・ 2025年</span>
+        <a href="https://arxiv.org/abs/2510.01642">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>「失敗したら止まる」では困る——問いの提示</h2>
+<p>ロボットが物を掴んだり運んだりする「マニピュレーション」タスクで、<span class="term-tip" tabindex="0">VLAモデル<span class="tip">Vision-Language-Action: 視覚と言語の理解からロボットの行動を直接出力するモデル</span></span>は目覚ましい進歩を遂げています。しかし、どんなに優秀なモデルでも現実の世界では必ず「失敗」します。物が滑った、カメラが遮られた、予想外の位置にあった——こんなとき、今のVLAはほぼ為す術なく止まってしまいます。</p>
+<p>人間なら「あ、落とした。拾い直そう」と自然にリカバリーできます。でもロボットにそれをさせるには「失敗を検知する能力」と「何をすれば回復できるかを判断する能力」の両方が必要です。この2つを同時に与えるのが、今回紹介する<strong>FailSafe</strong>です。</p>
+<div class="pull">失敗データがなければ、ロボットは失敗から学べない。FailSafeはその「失敗データ不足」という根本問題を、自動生成で解決する。</div>
+<h2><span class="n">2</span>背景——なぜ「失敗からの回復」が難しいのか</h2>
+<p>既存のロボット操作データセットは、ほぼすべてが「うまくいったときの軌跡（グラウンドトゥルース）」だけを収録しています。これはレシピ本に「成功したときの手順」しか書いていないようなもので、「途中でフライパンを落としたらどうする？」という情報が一切ありません。</p>
+<p>失敗検知を扱う数少ないデータセットも、テキストによる説明（「物体が滑りました」など）にとどまり、<strong>実際に何の動作を取ればいいか（実行可能な回復アクション）</strong>が対になっていません。<span class="term-tip" tabindex="0">VLMベースのVLA<span class="tip">VLMをバックボーンに持つVLA。言語推論能力を行動生成に活かす</span></span>にとってテキスト説明は入力にはなっても、それだけでは「次の動き」を生成できないのです。</p>
+<h2><span class="n">3</span>FailSafeの全体像——失敗を自動で作り、回復を対にする</h2>
+<p>FailSafeは大きく「失敗生成」と「回復アクション生成」の2フェーズからなるシステムです。シミュレーター内で<span class="term-tip" tabindex="0">モーションプランニング<span class="tip">障害物を避けながら目標位置まで動く経路を計算する技術</span></span>のサポートを利用しながら、多様な失敗ケースとその回復動作を自動的にペアで生成します。このデータを使って<span class="term-tip" tabindex="0">LLaVA-OV-7B<span class="tip">LLaVA-OneVision-7B。画像と言語を扱う7BパラメータのオープンソースVLM</span></span>をファインチューニングし、「FailSafe-VLM」を構築します。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># フェーズ1: 失敗ケースの自動生成</span></div><div class="ln"><span class="no">1</span><span class="ct"><span class="kw">for</span> task <span class="kw">in</span> manipulation_tasks:</span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="ind"></span>traj = <span class="fn">run_nominal_trajectory</span>(task)<span class="badge">①</span></span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="ind"></span>failure_states = <span class="fn">inject_diverse_failures</span>(traj)<span class="badge">②</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># フェーズ2: 回復アクションの生成</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span><span class="kw">for</span> f_state <span class="kw">in</span> failure_states:</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span><span class="ind"></span>recovery = <span class="fn">motion_planner_recovery</span>(f_state, task)<span class="badge">③</span></span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span><span class="ind"></span>dataset.<span class="fn">add</span>(f_state, recovery)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># フェーズ3: VLMのファインチューニング</span></div><div class="ln"><span class="no">7</span><span class="ct">failsafe_vlm = <span class="fn">finetune</span>(LLaVA_OV_7B, dataset)<span class="badge">④</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># 推論: VLAの実行中に監視・介入</span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="kw">while</span> vla_is_running:</span></div><div class="ln"><span class="no">9</span><span class="ct"><span class="ind"></span>obs = <span class="fn">get_observation</span>()</span></div><div class="ln"><span class="no">10</span><span class="ct"><span class="ind"></span>result = failsafe_vlm.<span class="fn">detect_and_reason</span>(obs)<span class="badge">⑤</span></span></div><div class="ln"><span class="no">11</span><span class="ct"><span class="ind"></span><span class="kw">if</span> result.failure_detected:</span></div><div class="ln"><span class="no">12</span><span class="ct"><span class="ind"></span><span class="ind"></span><span class="fn">execute_recovery</span>(result.recovery_action)</span></div></div><div class="code-cap">FailSafeのデータ生成と推論パイプライン（擬似コード）</div>
+<h3>①② 多様な失敗ケースの注入</h3>
+<p>まず「うまくいく軌跡」を実行し（①）、その途中で意図的に失敗を引き起こします（②）。物体を落とす・グリッパーがずれる・障害物に引っかかるなど、さまざまなパターンを自動で生成することで、「どんな失敗も見たことがある」状態を作ります。</p>
+<h3>③ モーションプランニングで回復動作を自動生成</h3>
+<p>失敗状態から元のタスク完了に向かう回復経路を、シミュレーター内のモーションプランナーが自動計算します（③）。人間が手作業で「こういう失敗にはこう動け」とアノテーションする必要がなく、<strong>スケーラブルなデータ生成</strong>が実現します。これが本論文の核心的な工夫のひとつです。</p>
+<h3>④ FailSafe-VLMのファインチューニング</h3>
+<p>生成された「失敗状態→回復アクション」ペアのデータでLLaVA-OV-7Bをファインチューニングします（④）。モデルは視覚情報から「今失敗が起きているか」を判断し、起きていれば「どう動くべきか」を推論する能力を獲得します。</p>
+<h3>⑤ 既存VLAへの非侵入的な組み込み</h3>
+<p>FailSafe-VLMはVLAの「外側」に置かれる監視モジュールとして機能します（⑤）。既存のVLAモデルの内部を改造する必要がなく、Pi-0-FAST・OpenVLA・OpenVLA-OFTなど複数のVLAにそのまま適用できます。「取り付け型のセーフティネット」とイメージしてください。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「高性能なメインモデル + 失敗検知の補助モジュール」という分離設計は、実用システムでよく使われるパターンです。メインを変えずに安全性だけ後付けできるため、デプロイコストが大幅に下がります。FailSafeはまさにこの思想を採用しています。</div>
+<h2><span class="n">4</span>実験結果——最大22.6%の性能向上</h2>
+<p><span class="term-tip" tabindex="0">ManiSkill<span class="tip">Maniskillシミュレーター。ロボット操作タスクを多数収録したベンチマーク環境</span></span>上で複数のタスクを使い、3つの最新VLAモデルにFailSafe-VLMを組み合わせて評価しました。結果は非常に明確でした。</p>
+<div class="stats"><div class="stat"><div class="v">+22.6%</div><div class="k">3つのVLAモデルのタスク平均成功率の最大向上幅</div></div><div class="stat"><div class="v">3モデル</div><div class="k">Pi-0-FAST / OpenVLA / OpenVLA-OFTすべてで効果を確認</div></div><div class="stat"><div class="v">7B</div><div class="k">FailSafe-VLMのベースモデル(LLaVA-OV-7B)のパラメータ数</div></div></div>
+<p>さらに、FailSafe-VLMは異なる空間配置・カメラ視点・物体の種類・ロボット機体（<span class="term-tip" tabindex="0">ロボットエンボディメント<span class="tip">ロボットの身体的形状や構造の違い。関節数や機体サイズなど</span></span>)をまたいで汎化できることも示されています。これは、特定の状況にオーバーフィットした解決策ではないことの証明です。</p>
+<h2><span class="n">5</span>何が新しいのか——3つの貢献</h2>
+<div class="step"><span class="si">新規性 1</span><p>「失敗検知」と「実行可能な回復アクション」をペアで自動生成するパイプライン。既存研究はテキスト説明止まりだったが、FailSafeは直接実行できる動作まで生成する。</p></div><div class="step"><span class="si">新規性 2</span><p>シミュレーターのモーションプランニングを活用したスケーラブルなデータ作成。人手アノテーションなしで多様な失敗ケースを量産できる。</p></div><div class="step"><span class="si">新規性 3</span><p>既存VLAに非侵入的に組み合わせられる設計。Pi-0-FAST・OpenVLA・OpenVLA-OFTと異なるアーキテクチャのVLAすべてで有効性を確認。</p></div>
+<div class="pull">「失敗データがない」という構造的欠如を、シミュレーターと自動化で埋める——これがFailSafeの根本的な発想転換だ。</div>
+<h2><span class="n">6</span>限界と今後の課題</h2>
+<div class="step"><span class="si">限界 1</span><p>現時点ではシミュレーター（ManiSkill）上での評価が中心。現実世界のロボットへの直接適用に関しては、実環境でのさらなる検証が必要。</p></div><div class="step"><span class="si">限界 2</span><p>モーションプランニングのサポートが必要なため、プランニングが難しい複雑な環境や接触の多いタスクでのデータ生成には課題が残る可能性がある。</p></div><div class="step"><span class="si">限界 3</span><p>失敗生成はシミュレーターの物理エンジンに依存するため、現実とのギャップ（Sim-to-Realギャップ）が回復精度に影響しうる。</p></div><div class="step"><span class="si">限界 4</span><p>FailSafe-VLMが「失敗を検知できない」または「誤検知する」ケースについて、詳細な誤り分析は今後の重要な研究課題として残る。</p></div>
+<h2><span class="n">7</span>新人研究者へのひとこと</h2>
+<p>ロボット学習の文脈では「うまくいったデータだけを集める」ことへの依存がずっと批判されてきました。FailSafeはその問題に「データ自動生成」という実用的なアプローチで真正面から答えた論文です。「問題が分かっているなら、解決に必要なデータを自分で作ればいい」というエンジニアリング的発想と、VLMの推論能力を組み合わせた点が見事です。</p>
+<div class="note-box"><div class="nb-label">⚙️ 大きな文脈</div>VLAの社会実装を進めるうえで、「失敗に対するロバスト性」は避けて通れないテーマです。FailSafeが示したような「失敗を積極的にデータ化してモデルに教える」アプローチは、今後の安全なロボット展開において重要な研究方向のひとつになるでしょう。自分の研究でロボット学習データを設計する際、「失敗ケースはどう扱うか」を最初から考える習慣をつけておくと、後で大きな差になります。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
