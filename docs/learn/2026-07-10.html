@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 30日講座 — 過学習と戦う ─ L1/L2 正則化・ドロップアウトの数学</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+
+.course-card{background:linear-gradient(135deg,#1c6f8c15,#2cb69615);border:1.5px solid var(--accent);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.course-card .cc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--accent-ink);text-transform:uppercase;margin-bottom:6px;}
+.course-card .cc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;color:var(--ink);}
+.course-card .cc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:4px 16px;}
+.cc-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;border-radius:6px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;}
+.progress-bar{height:4px;background:var(--line);border-radius:2px;margin:10px 0 4px;}
+.progress-bar .bar{height:100%;background:var(--accent);border-radius:2px;transition:width .4s;}
+.progress-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-faint);text-align:right;}
+/* KaTeX blocks */
+.tex-block{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;overflow-x:auto;}
+.tex-block .katex-display{margin:0;}
+.tex-block .tx-cap{font-size:12.5px;color:var(--ink-faint);margin-top:10px;text-align:center;}
+.tex-derive{margin-top:12px;border-top:1px solid var(--line);padding-top:10px;}
+.tex-derive-row{display:flex;gap:10px;align-items:baseline;margin-top:6px;font-size:14px;}
+.tex-derive-label{font-size:12px;color:var(--ink-faint);flex-shrink:0;min-width:80px;}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">📚</span> AI 30日講座</div>
+      <div class="date-pill">2026-07-10</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI30日講座 #過学習 #正則化 #ドロップアウト #ニューラルネットワーク</div>
+    <h1 class="headline">過学習と戦う ─ L1/L2正則化・ドロップアウトの数学と直感</h1>
+
+    <div class="author">
+      <div class="avatar" style="background:linear-gradient(135deg,#1c6f8c,#2cb696);">📚</div>
+      <div class="author-meta">
+        <div class="name">AI 30日講座</div>
+        <div class="sub">2026-07-10 ・ DAY 9 ・ ニューラルネットワーク基礎 ─ 層を重ねる意味</div>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="cc-label">本日のカリキュラム</div>
+      <div class="cc-title">
+        <span class="cc-badge">DAY 9 / 30</span>
+        &nbsp;過学習と戦う ─ L1/L2 正則化・ドロップアウトの数学
+      </div>
+      <div class="progress-bar"><div class="bar" style="width:30%"></div></div>
+      <div class="progress-label">30% 完了</div>
+      <div class="cc-row">
+        <span>Week 2: ニューラルネットワーク基礎 ─ 層を重ねる意味</span>
+        <span>基礎〜中級</span>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>「丸暗記」するネットワーク ─ 過学習という病</h2>
+<p>試験前日に問題集の答えをすべて丸暗記した学生を想像してください。翌日、まったく同じ問題なら満点が取れます。しかし少し形式が変わった途端、まったく歯が立たない。ニューラルネットワークでも同じことが起きます。これが <strong><span class="term-tip" tabindex="0">過学習<span class="tip">訓練データには適合するが未知データには汎化しない現象</span></span></strong>（overfitting）です。</p>
+<p>パラメータ数が数百万を超える深層モデルは表現力が非常に高く、少量の訓練データのノイズや偶然のパターンまで記憶しようとします。その結果、訓練損失は下がり続けるのに<span class="term-tip" tabindex="0">汎化誤差<span class="tip">未知データに対する予測誤差</span></span>は逆に増大するという逆転現象が生じます。今日は、この問題に立ち向かう三つの武器 ─ <strong>L2正則化・L1正則化・ドロップアウト</strong> ─ を数学から丁寧に解説します。</p>
+<div class="pull">モデルが「記憶」ではなく「学習」するよう仕向けること ─ それが正則化の本質である。</div>
+<h2><span class="n">2</span>損失関数の復習と正則化項の登場</h2>
+<p>通常の学習では、予測と正解のズレを測る損失関数 $L(\theta)$ を最小化します。たとえば二乗誤差なら $L(\theta) = \frac{1}{N}\sum_{i=1}^{N}(y_i - \hat{y}_i)^2$ です。正則化は、この損失関数に <strong>パラメータ $\theta$ の大きさにペナルティを課す項</strong> を加算するアイデアです。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\tilde{L}(\theta) = L(\theta) + \lambda \, \Omega(\theta)"></div><div class="tx-cap">正則化付き損失関数の一般形</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">$L(\theta)$: 元の損失</span><span class="katex-display-wrapper" data-tex="L(\theta) = \frac{1}{N}\sum_{i=1}^{N}\ell(y_i,\, \hat{y}_i(\theta))"></span></div><div class="tex-derive-row"><span class="tex-derive-label">$\Omega(\theta)$: 正則化項（L1またはL2）</span><span class="katex-display-wrapper" data-tex="\Omega(\theta) = \begin{cases} \|\theta\|_2^2 = \sum_j \theta_j^2 &amp; (\text{L2}) \\ \|\theta\|_1 = \sum_j |\theta_j| &amp; (\text{L1}) \end{cases}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">$\lambda &gt; 0$: 正則化の強さを決めるハイパーパラメータ</span><span class="katex-display-wrapper" data-tex="\lambda \in \mathbb{R}_{&gt;0} \quad (\text{ハイパーパラメータとして手動設定})"></span></div></div></div>
+<p>直感的には「損失を小さくしたいが、パラメータが大きくなりすぎるのも嫌だ」という <strong>二つの目標のトレードオフ</strong> を $\lambda$ で調整しています。$\lambda$ が大きいほど正則化が強く、モデルは単純な解を選びやすくなります。</p>
+<h2><span class="n">3</span>L2正則化（Weight Decay）の数学</h2>
+<h3>勾配降下法への影響</h3>
+<p>L2正則化（<strong><span class="term-tip" tabindex="0">Ridge正則化<span class="tip">パラメータの二乗和をペナルティとして加える手法。重みの大きさを全体的に抑制する</span></span></strong>）では $\Omega(\theta) = \|\theta\|_2^2$ です。勾配を計算してみましょう。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\nabla_\theta \tilde{L} = \nabla_\theta L + 2\lambda\,\theta"></div><div class="tx-cap">L2正則化付き損失の勾配</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">更新則（勾配降下法）</span><span class="katex-display-wrapper" data-tex="\theta \leftarrow \theta - \eta\,(\nabla_\theta L + 2\lambda\,\theta)"></span></div><div class="tex-derive-row"><span class="tex-derive-label">整理すると「重みが毎ステップ少し縮む」ことがわかる</span><span class="katex-display-wrapper" data-tex="\theta \leftarrow (1 - 2\eta\lambda)\,\theta - \eta\,\nabla_\theta L"></span></div></div></div>
+<p>$(1 - 2\eta\lambda)$ の係数が $1$ より小さいため、勾配がゼロでも毎ステップ重みが少しずつ <strong>縮小（decay）</strong> されます。これが「Weight Decay」と呼ばれる理由です。L2正則化はパラメータをゼロに近づけますが、<strong>完全にゼロにはしません</strong>。大きな重みを全体的に均等に抑制する効果があります。</p>
+<h3>ベイズ的解釈：ガウス事前分布</h3>
+<p>L2正則化はMAP推定（<span class="term-tip" tabindex="0">最大事後確率推定<span class="tip">事前分布と尤度の積を最大化するパラメータ推定法</span></span>）の観点からも理解できます。パラメータに対して $\theta_j \sim \mathcal{N}(0, \sigma^2)$ というガウス事前分布を仮定すると、対数事後確率を最大化することが、L2正則化付き損失の最小化と等価になります。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\log p(\theta \mid \mathcal{D}) = \log p(\mathcal{D}\mid\theta) + \log p(\theta) + \text{const}"></div><div class="tx-cap">MAP推定とL2正則化の対応</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">ガウス事前分布を代入</span><span class="katex-display-wrapper" data-tex="\log p(\theta) = -\frac{1}{2\sigma^2}\sum_j \theta_j^2 + \text{const}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">$\lambda = \frac{1}{2\sigma^2}$ と対応し、分散が小さいほど正則化が強い</span><span class="katex-display-wrapper" data-tex="\Rightarrow \quad \tilde{L} = L(\theta) + \lambda\|\theta\|_2^2"></span></div></div></div>
+<h2><span class="n">4</span>L1正則化（Lasso）の数学 ─ スパースになる理由</h2>
+<p>L1正則化（<strong><span class="term-tip" tabindex="0">Lasso正則化<span class="tip">パラメータの絶対値の和をペナルティとする手法。一部の重みをちょうどゼロにするスパース解を生む</span></span></strong>）では $\Omega(\theta) = \|\theta\|_1$ です。絶対値は $\theta_j = 0$ で微分不可能なため、<strong>劣微分（subgradient）</strong> を用います。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\frac{\partial}{\partial \theta_j}|\theta_j| = \text{sign}(\theta_j) = \begin{cases} +1 &amp; \theta_j &gt; 0 \\ -1 &amp; \theta_j &lt; 0 \\ [-1,+1] &amp; \theta_j = 0 \end{cases}"></div><div class="tx-cap">絶対値関数の劣微分（subgradient）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">ソフトしきい値演算子（proximal演算子）による解析解</span><span class="katex-display-wrapper" data-tex="\theta_j^* = \text{sign}(\theta_j)\cdot\max\!\left(|\theta_j| - \lambda,\, 0\right)"></span></div><div class="tex-derive-row"><span class="tex-derive-label">結果：$|\theta_j| \leq \lambda$ の重みはちょうど0になる（スパース性）</span><span class="katex-display-wrapper" data-tex="\text{If } |\theta_j| \leq \lambda \Rightarrow \theta_j^* = 0"></span></div></div></div>
+<p>L1正則化の最大の特徴は、小さな重みを <strong>ちょうどゼロ</strong> に落とすことです。これを <strong>スパース性</strong> と呼びます。多数の特徴量から重要なものだけを自動的に選択する、特徴選択の効果を持ちます。L2が「全員を平等に少し削る」とすれば、L1は「弱いものはバッサリ切り捨てる」イメージです。</p>
+<div class="stats"><div class="stat"><div class="v">L2</div><div class="k">全重みを均等に縮小・スパースにならない</div></div><div class="stat"><div class="v">L1</div><div class="k">小さい重みをゼロに・自動的に特徴選択</div></div><div class="stat"><div class="v">Elastic Net</div><div class="k">L1+L2の組み合わせ・両方の利点を享受</div></div></div>
+<h2><span class="n">5</span>幾何学的直感 ─ 制約領域で見る正則化</h2>
+<p>正則化は「制約付き最適化」としても解釈できます。L2正則化は $\|\theta\|_2^2 \leq c$ という <strong>球（ハイパースフィア）</strong> の中で損失を最小化すること、L1正則化は $\|\theta\|_1 \leq c$ という <strong>ダイヤモンド形（超八面体）</strong> の中で最小化することに対応します。</p>
+<p>L1の制約領域はダイヤモンドの<strong>角（頂点）</strong>を持ちます。損失関数の等高線がこの角にぶつかる確率が高く、角は座標軸上にあるため、必然的に $\theta_j = 0$ の成分が生まれます。一方、L2の球には角がないため、最適解はゼロになりにくいのです。この幾何学的構造が<span class="term-tip" tabindex="0">スパース解<span class="tip">多くの成分がゼロのパラメータベクトル</span></span>を生む根本的な理由です。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>LLMの微調整（ファインチューニング）では、ほぼ必ずWeight Decay（L2）が使われます。AdamWオプティマイザの「W」はWeight Decayの意味で、勾配への適用ではなくパラメータへの直接的な減衰を行います。AdamとWeight Decayを正しく分離した点がAdamWの革新でした。</div>
+<h2><span class="n">6</span>ドロップアウト ─ ランダムに神経を「切る」技術</h2>
+<h3>アルゴリズムの定義</h3>
+<p>2014年にSrivastavaらが提案した <strong><span class="term-tip" tabindex="0">ドロップアウト<span class="tip">訓練時にニューロンをランダムに無効化することで過学習を防ぐ正則化手法</span></span></strong> は、シンプルながら強力です。確率 $p$（ドロップ率）で各ニューロンをゼロに置き換えます。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\tilde{h}_j = \frac{r_j \cdot h_j}{1-p}, \quad r_j \sim \text{Bernoulli}(1-p)"></div><div class="tx-cap">Inverted Dropoutの計算式（現代の標準実装）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">$r_j$: ベルヌーイ確率変数（1-pの確率で1、pの確率で0）</span><span class="katex-display-wrapper" data-tex="r_j = \begin{cases} 0 &amp; \text{(確率 } p \text{：ニューロンをゼロに)} \\ 1 &amp; \text{(確率 } 1-p \text{：ニューロンを保持)} \end{cases}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">$1/(1-p)$ でスケーリング：期待値を訓練・推論で一致させる</span><span class="katex-display-wrapper" data-tex="\mathbb{E}[\tilde{h}_j] = \frac{1}{1-p}\cdot(1-p)\cdot h_j = h_j"></span></div></div></div>
+<p>$(1-p)$ による除算（スケーリング）が重要です。これにより、ドロップアウトを <strong>訓練時のみ</strong> 適用し、<strong>推論時はそのまま全ニューロンを使う</strong> ことができます。これを「Inverted Dropout」と呼び、現代のほぼすべての実装で使われています。</p>
+<h3>なぜ汎化するのか ─ アンサンブルの視点</h3>
+<p>ドロップアウトの深い理由は <strong>暗黙的なアンサンブル学習</strong> にあります。$n$ 個のニューロンがある層では、$2^n$ 通りのサブネットワークが考えられます。ドロップアウトは毎回ランダムに異なるサブネットワークを訓練することで、指数的に多くのモデルを共有パラメータで同時に学習しているとみなせます。</p>
+<p>推論時は全ニューロンを使うことで、この膨大な数のサブネットワークの <strong>幾何平均</strong> に近い予測を行います。<span class="term-tip" tabindex="0">アンサンブル学習<span class="tip">複数のモデルの予測を組み合わせてロバストな結果を得る手法</span></span>は汎化性能が高いことが知られており、ドロップアウトはその恩恵を単一モデルで得られます。</p>
+<h3>共適応の防止</h3>
+<p>ドロップアウトのもう一つの効果は、ニューロン間の <strong>共適応（co-adaptation）</strong> を防ぐことです。もし特定のニューロンAの出力に常に依存するニューロンBがあれば、AとBはセットで過学習パターンを覚えてしまいます。ドロップアウトにより「隣が消えても自分で機能する」ような <strong>冗長で独立性の高い特徴表現</strong> が育まれます。</p>
+<div class="stats"><div class="stat"><div class="v">p=0.5</div><div class="k">全結合層の典型的なドロップ率</div></div><div class="stat"><div class="v">p=0.1〜0.2</div><div class="k">Transformerでよく使われる低いドロップ率</div></div><div class="stat"><div class="v">2^n通り</div><div class="k">nニューロンで訓練される暗黙のサブネット数</div></div></div>
+<h2><span class="n">7</span>実装のヒント ─ PyTorchで三種を使う</h2>
+<div class="code"><div class="ln"><span class="no">1</span><span class="ct">import torch, torch.nn as nn</span></div><div class="ln"><span class="no">2</span><span class="ct"></span></div><div class="ln"><span class="no">3</span><span class="ct"># --- L2正則化: optimizerのweight_decayで設定 ---</span></div><div class="ln"><span class="no">4</span><span class="ct">optimizer = torch.optim.AdamW(model.parameters(),</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span><span class="ind"></span>lr=1e-3, weight_decay=1e-4)  # λ = 1e-4</span></div><div class="ln"><span class="no">6</span><span class="ct"></span></div><div class="ln"><span class="no">7</span><span class="ct"># --- L1正則化: 損失に手動で加算 ---</span></div><div class="ln"><span class="no">8</span><span class="ct">lambda_l1 = 1e-4</span></div><div class="ln"><span class="no">9</span><span class="ct">l1_penalty = sum(p.abs().sum() for p in model.parameters())</span></div><div class="ln"><span class="no">10</span><span class="ct">loss = criterion(output, target) + lambda_l1 * l1_penalty</span></div><div class="ln"><span class="no">11</span><span class="ct"></span></div><div class="ln"><span class="no">12</span><span class="ct"># --- ドロップアウト: nn.Dropoutをモデルに組み込む ---</span></div><div class="ln"><span class="no">13</span><span class="ct">class MyNet(nn.Module):</span></div><div class="ln"><span class="no">14</span><span class="ct"><span class="ind"></span>def __init__(self):</span></div><div class="ln"><span class="no">15</span><span class="ct"><span class="ind"></span><span class="ind"></span>super().__init__()</span></div><div class="ln"><span class="no">16</span><span class="ct"><span class="ind"></span><span class="ind"></span>self.fc1 = nn.Linear(512, 256)</span></div><div class="ln"><span class="no">17</span><span class="ct"><span class="ind"></span><span class="ind"></span>self.drop = nn.Dropout(p=0.5)  # 50%ドロップ</span></div><div class="ln"><span class="no">18</span><span class="ct"><span class="ind"></span><span class="ind"></span>self.fc2 = nn.Linear(256, 10)</span></div><div class="ln"><span class="no">19</span><span class="ct"><span class="ind"></span>def forward(self, x):</span></div><div class="ln"><span class="no">20</span><span class="ct"><span class="ind"></span><span class="ind"></span>x = torch.relu(self.fc1(x))</span></div><div class="ln"><span class="no">21</span><span class="ct"><span class="ind"></span><span class="ind"></span>x = self.drop(x)   # 訓練時のみ有効, 推論時は自動でスキップ</span></div><div class="ln"><span class="no">22</span><span class="ct"><span class="ind"></span><span class="ind"></span>return self.fc2(x)</span></div></div><div class="code-cap">L2正則化・L1正則化・ドロップアウトの実装例（PyTorch）</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>model.train() で呼び出すとDropoutが有効になり、model.eval() で無効（推論モード）になります。評価・テスト時に model.eval() を忘れると再現性のない結果になるので要注意です。</div>
+<h2><span class="n">8</span>LLM・現代AI研究への接続</h2>
+<p>大規模言語モデルの時代でも、これらの技術は現役です。GPT・BERTなどのTransformerは <strong>Attention層とFFN層の両方にドロップアウト</strong> を使います（ただし超大規模モデルでは $p$ を小さく設定する傾向があります）。また、ほぼすべてのファインチューニングレシピに <strong>AdamW（Weight Decay）</strong> が含まれており、L2正則化はデフォルトの慣習です。</p>
+<p>近年では <strong><span class="term-tip" tabindex="0">LoRA<span class="tip">大規模モデルの一部のみを低ランク行列で微調整する効率的なファインチューニング手法</span></span></strong> などのパラメータ効率的手法においても、L2正則化が重要な役割を果たします。モデルが小さな部分空間しか更新しない分、正則化によるバイアスが汎化に強く効くためです。</p>
+<div class="step"><span class="si">STEP 1</span><p>まず検証損失と訓練損失のギャップを観察し、過学習の有無を確認する</p></div><div class="step"><span class="si">STEP 2</span><p>軽い正則化から始める：AdamWのweight_decay=1e-4を設定</p></div><div class="step"><span class="si">STEP 3</span><p>全結合層にDropout(p=0.1〜0.5)を追加し、バリデーション精度を比較</p></div><div class="step"><span class="si">STEP 4</span><p>特徴の重要度を知りたい場合はL1正則化を試す</p></div><div class="step"><span class="si">STEP 5</span><p>λやpはハイパーパラメータ探索（グリッドサーチ・Optuna等）で最適化する</p></div>
+<h2><span class="n">9</span>まとめ ─ 三つの武器の使い分け</h2>
+<p><strong>L2正則化</strong> はすべての重みを均等に縮小し、滑らかで安定した解を与えます。実装が最も簡単でWeight Decayとして広く使われます。<strong>L1正則化</strong> は不要な重みをゼロにするスパース性を持ち、特徴選択が必要な場面や解釈可能性が求められるときに有効です。<strong>ドロップアウト</strong> はランダム性を使った暗黙のアンサンブルで、特に全結合層の過学習を強力に防ぎます。</p>
+<p>これら三つは排他的ではなく、組み合わせて使うのが実践的です。正則化は「制約」ではなく、モデルが「丸暗記から真の理解へ」脱却するための <strong>インセンティブ設計</strong> です。明日はいよいよバッチ正規化とLayerNormへ進み、「データの流れを安定させる」もう一つの重要技術を学びます。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「正則化が強すぎる」場合も問題です（underfitting）。λや p を大きくしすぎると、モデルが十分な表現力を発揮できません。過学習（high variance）と未学習（high bias）のバランスを見ながら調整することが、実験設計の核心です。これをバイアス・バリアンストレードオフと呼びます。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI 30日講座 — Week 1〜6 ・ generated by Claude
+  </div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Render explicit tex-block wrappers
+      document.querySelectorAll('.katex-display-wrapper').forEach(el => {
+        const tex = el.dataset.tex;
+        if (tex) {
+          try {
+            katex.render(tex, el, {displayMode: true, throwOnError: false});
+          } catch(e) {
+            el.textContent = tex;
+          }
+        }
+      });
+      // Auto-render inline $...$ and $$...$$ in text
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+</body>
+</html>

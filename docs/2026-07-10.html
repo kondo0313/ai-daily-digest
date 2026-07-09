@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-07-10</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-07-10</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #LinearRNN #StateSpaceModel #長文脈 #新人研究者向け</div>
+    <h1 class="headline">固定サイズの壁をスパース性で突破：Linear RNNの記憶容量を桁違いに増やす「Sparse Delta Memory」</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-07-10 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Sparse Delta Memory: Scaling the State of Linear RNNs through Sparsity</div>
+      <div class="pc-row">
+        <span>著者情報は本文未掲載（arXiv投稿）</span>
+        <span>arXiv cs.LG ・ 2025年</span>
+        <a href="https://arxiv.org/abs/2607.07386">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>はじめに：「記憶の壁」という根本的な問題</h2>
+<p>大規模言語モデルの世界では長らく<span class="term-tip" tabindex="0">Transformer<span class="tip">自己注意機構を使った大規模言語モデルの基本アーキテクチャ</span></span>が主流です。しかしTransformerには致命的な弱点があります。入力が長くなるほど計算量と<span class="term-tip" tabindex="0">KVキャッシュ<span class="tip">過去トークンのKey・Valueを保存するメモリ。長文では膨大になる</span></span>のサイズが二乗的に膨れ上がるのです。</p>
+<p>そこで注目されてきたのが<span class="term-tip" tabindex="0">Linear RNN<span class="tip">各ステップの計算量が固定で、状態サイズも一定のRNN系アーキテクチャ</span></span>です。1トークンあたりの計算量が一定で、状態サイズも固定——これは非常に魅力的な性質です。しかし、この「固定サイズ」という美点が同時に最大の弱点でもありました。状態が小さいと、長い文脈の中の情報を十分に覚えていられないのです。</p>
+<div class="pull">Linear RNNの固定状態サイズは効率性の源であると同時に、長文脈リコールを阻む「記憶の壁」でもある。</div>
+<h2><span class="n">2</span>背景：DeltaNetと状態サイズのトレードオフ</h2>
+<p>本論文が拡張のベースとするのは<span class="term-tip" tabindex="0">Gated DeltaNet<span class="tip">デルタ則を使った更新とゲーティングを組み合わせたLinear Attention系モデル</span></span>です。DeltaNetは「新しい情報を書き込む際、既存の内容を差し引いてから書く」というデルタ則的な更新を採用しており、Linear Attentionの中では比較的高性能なモデルです。</p>
+<p>DeltaNetの内部状態は「Key × Value の<span class="term-tip" tabindex="0">外積<span class="tip">2つのベクトルを掛け合わせて行列を作る演算。KVストアの核</span></span>」で表現される密な行列です。状態サイズを大きくすれば長文脈の記憶は改善しますが、計算量（FLOPs）がそのまま増えてしまいます。「性能を上げたければ計算も増える」という、よくあるトレードオフです。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「isoFLOP比較」とは、同じ計算量・同じパラメータ数という条件で複数の手法を比べること。公平な比較の基準として研究で頻繁に使われます。この論文もisoFLOP制約下で評価しています。</div>
+<h2><span class="n">3</span>提案手法：Sparse Delta Memory（SDM）の全体像</h2>
+<p>SDMのアイデアは一言でいうと「大きな外部メモリを用意して、必要な場所だけ読み書きする」です。密な行列全体を更新する代わりに、スパース（疎）なアドレッシングで巨大なメモリのごく一部だけを操作します。冷蔵庫の例で言えば、従来は小さな冷蔵庫に全部詰め込んでいたのが、SDMでは大きな倉庫を持ちつつ「今使うものだけ取り出す・しまう」というイメージです。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 入力トークンごとに実行されるSDMの更新処理</span></div><div class="ln"><span class="no">1</span><span class="ct">q, k, v, gate = <span class="fn">project</span>(x)<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># スパースアドレッシング：大きなメモリの一部を選択</span></div><div class="ln"><span class="no">2</span><span class="ct">top_indices = <span class="fn">sparse_select</span>(k, memory)<span class="badge">②</span></span></div><div class="ln"><span class="no">3</span><span class="ct">mem_slice = memory[top_indices]</span></div><div class="ln comment"><span class="no"></span><span class="ct"># デルタ則的な書き込み（既存内容を差し引いてから更新）</span></div><div class="ln"><span class="no">4</span><span class="ct">delta_v = v - <span class="fn">read</span>(mem_slice, k)<span class="badge">③</span></span></div><div class="ln"><span class="no">5</span><span class="ct">mem_slice = mem_slice + <span class="fn">outer</span>(k, delta_v)</span></div><div class="ln"><span class="no">6</span><span class="ct">memory[top_indices] = <span class="fn">gate_update</span>(mem_slice, gate)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># 読み出し：必要な情報だけ取り出して次の処理へ</span></div><div class="ln"><span class="no">7</span><span class="ct">output = <span class="fn">read</span>(memory[top_indices], q)<span class="badge">④</span></span></div></div><div class="code-cap">SDMの処理フロー（擬似コード）</div>
+<h3>① 入力の射影</h3>
+<p>通常のTransformerと同じくクエリ(q)・キー(k)・バリュー(v)に線形変換します。加えてSDMはゲート信号も生成します。</p>
+<h3>② スパースアドレッシング</h3>
+<p>キーベクトルkを使って、巨大なメモリの中から「関係のある」行だけをトップk個選びます。全体を触らないのでFLOPsが少なくて済みます。これが効率性の核心です。</p>
+<h3>③ デルタ則的な書き込み</h3>
+<p>選んだスライスに書き込む際、まず「今そこに何が書いてあるか」を読んでから差分（デルタ）だけ足します。これがDeltaNetゆずりのデルタ則更新です。「上書き」ではなく「修正」なので既存の情報を保ちながら更新できます。</p>
+<h3>④ 読み出し</h3>
+<p>クエリqを使って必要な情報をメモリから取り出し、次の層へ渡します。膨大なメモリを持ちながら、読み書きはスパースなので計算量は抑えられます。</p>
+<h2><span class="n">4</span>ボーナス機能：パラメトリック記憶としての初期状態学習</h2>
+<p>SDMには面白い追加機能があります。メモリの<strong>初期状態を学習可能なパラメータとして扱う</strong>という仕掛けです。通常、RNNの初期状態はゼロベクトルで固定されますが、SDMでは「学習によって良い初期値を見つける」ことができます。</p>
+<p>これはいわば「ウォームアップした記憶」を最初から持ち込む感覚です。一般常識や推論に必要な知識をモデルの初期メモリに焼き付けておくことができ、<span class="term-tip" tabindex="0">パラメトリックメモリ<span class="tip">モデルのパラメータ自体が知識を記憶している仕組み</span></span>として機能します。論文ではこれにより「一般常識や推論タスクでもさらなる改善が見られた」と述べています。</p>
+<h2><span class="n">5</span>実験結果：isoFLOP制約下での評価</h2>
+<p>論文は「同じFLOPs・同じパラメータ数」というフェアな条件で比較実験を行っています。以下に結果のポイントをまとめます。</p>
+<div class="stats"><div class="stat"><div class="v">桁違い</div><div class="k">SDMが達成する状態容量の増加倍率（従来Dense比）</div></div><div class="stat"><div class="v">isoFLOP</div><div class="k">比較条件：同計算量・同パラメータ数での評価</div></div><div class="stat"><div class="v">2領域改善</div><div class="k">長文脈リコール ＋ 一般知識・推論の両方で向上</div></div></div>
+<p>特に<span class="term-tip" tabindex="0">in-context learning<span class="tip">推論時に例を見せるだけでタスクを解く能力。ファインチューニング不要</span></span>と長文脈リトリーバルタスクにおいて顕著な改善が見られました。また、初期状態を学習させるパラメトリックメモリとして活用すると、一般知識・推論タスクでも広く改善されると報告されています。</p>
+<div class="pull">isoFLOP制約下でも、スパース性を活かした大容量状態はLinear RNNの長文脈リコール能力をTransformerに近づける。</div>
+<h2><span class="n">6</span>なぜ重要か：何が新しいのか</h2>
+<div class="step"><span class="si">新規性 1</span><p>Dense（密）な状態更新をSparse（疎）なアドレッシングに置き換えることで、計算量を増やさずに状態容量を「桁違い」に拡大。FLOPs vs 容量のトレードオフを実質的に打破した。</p></div><div class="step"><span class="si">新規性 2</span><p>Gated DeltaNetの更新則をスパースメモリに自然に拡張。デルタ則の「差分書き込み」をそのまま大きなメモリスライスへ適用するという、シンプルかつエレガントな設計。</p></div><div class="step"><span class="si">新規性 3</span><p>メモリ初期状態の学習という「パラメトリック記憶」のアイデアを導入。長文脈リコールだけでなく、知識・推論タスクまで恩恵が波及する汎用性の高い設計。</p></div><div class="step"><span class="si">新規性 4</span><p>Linear RNNとTransformerの中間的な存在を作ることで、「効率的だが記憶が弱い」というLinear RNNの根本的な欠点に対して理論的・実験的な解答を示した。</p></div>
+<h2><span class="n">7</span>意義と限界：正直に見ておこう</h2>
+<div class="step"><span class="si">限界 1</span><p>スパースアドレッシングは「どこを読み書きするか」の選択が重要で、その選択の質が性能を左右する。選択メカニズムの設計次第で結果が大きく変わりうる。</p></div><div class="step"><span class="si">限界 2</span><p>メモリが巨大になるとメモリ帯域（データの転送速度）がボトルネックになる可能性がある。FLOPsは抑えられてもハードウェア実装の難しさは残る。</p></div><div class="step"><span class="si">限界 3</span><p>スパース操作はGPUで密行列演算ほど効率的に実装しにくい場合がある。実際のスループット（処理速度）はFLOPs計算だけでは測れない側面がある。</p></div><div class="step"><span class="si">限界 4</span><p>アブストラクトの範囲では具体的なベンチマーク数値の詳細は確認できず、改善幅の定量的評価は本文を精読する必要がある。</p></div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>「スパース性で容量を増やす」というアイデアは、実は脳のニューラル回路にも見られます。ニューロンのほとんどは常に発火しておらず、必要なものだけが活性化する——この疎な活動パターンが脳の効率性の源とも言われています。SDMはそのバイオインスパイアードな視点からも理解できる手法です。</div>
+<h2><span class="n">8</span>新人研究者へのひとこと：大きな文脈で捉えよう</h2>
+<p>LinearRNN・<span class="term-tip" tabindex="0">SSM<span class="tip">State Space Model: 線形状態方程式でシーケンスを扱うモデルの総称</span></span>の研究は今、非常に活発な領域です。Mamba、RWKV、RetNetなど様々な手法が提案されていますが、共通の課題は「いかに効率よく長文脈を記憶するか」です。SDMはその課題に対して「スパースな外部メモリ」という一つの鮮やかな答えを示しています。</p>
+<p>新人研究者として特に注目してほしいのは、<strong>既存手法（DeltaNet）をベースに最小限の変更で大きな効果を得ている</strong>点です。ゼロから作るより、優れた先行研究を丁寧に拡張する——これはR&amp;Dにおける実践的なアプローチとして非常に参考になります。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「スパース性」は記憶だけでなく、勾配・アテンション・MoE（Mixture of Experts）など様々な場所で活用されています。「全部やる」より「必要なところだけやる」という発想は、効率的なシステム設計の基本原理です。SDMを理解すると、他の分野のスパース活用事例も一気に腑に落ちるでしょう。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
