@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-07-11</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-07-11</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #ロボティクス #VLA #新人研究者向け</div>
+    <h1 class="headline">動画生成AIをロボットに繋ぐと「賢さ」が消える謎——Temporal Ratioという体温計</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-07-11 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Understanding and Mitigating the Video-Action Generalization Gap via Temporal Ratio</div>
+      <div class="pc-row">
+        <span>Utkarsh A. Mishra, Yongxin Chen, Danfei Xu, Yang Liu, Xi Chen, Jiayuan Mao</span>
+        <span>arXiv cs.CV (cs.RO cross-list) ・ 2026年7月</span>
+        <a href="https://arxiv.org/abs/2607.08127">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>「動画がわかるAI」はロボットの手になれるか</h2>
+<p>大量の映像で学習した動画生成モデルは、見たことのない組み合わせの状況でも、もっともらしい続きの映像を作り出せます。例えば「赤いコップを持ち上げる」映像と「青い箱を開ける」映像を見ていれば、見たことのない「青いコップを開ける」動作も違和感なく想像できる、という具合です。この力を<span class="term-tip" tabindex="0">compositional prior<span class="tip">訓練で見た要素を自由に組み合わせて新しい状況にも対応できる、あらかじめモデルに備わった性質</span></span>と呼びます。</p>
+<p>この賢さをロボットの手にも持たせよう、というのが最近の大きな潮流です。動画生成モデルをベースに、映像だけでなく行動そのものも出力できるようにした<span class="term-tip" tabindex="0">video-action model (VAM)<span class="tip">映像生成モデルを土台にして、ロボットの行動指令まで一緒に出力できるようにしたモデル</span></span>や、行動に加えて「その後どう世界が変化するか」まで予測する<span class="term-tip" tabindex="0">world-action model (WAM)<span class="tip">ロボットの行動と、その結果として周囲の映像がどう変わるかを同時に予測するモデル</span></span>が次々と提案されています。</p>
+<div class="pull">ところが、ロボットのデータで追加学習させた途端、あれほど賢かった「組み合わせる力」がなぜか失われてしまう——これが今日の論文が向き合う謎です。</div>
+<h2><span class="n">2</span>背景：翻訳のとちゅうで消える賢さ</h2>
+<p>この現象を著者らは「video-action generalization gap（動画から行動への汎化ギャップ）」と呼んでいます。動画生成モデルは元々<span class="term-tip" tabindex="0">compositional generalization<span class="tip">訓練で見た要素の組み合わせを、まだ見ていない新しい組み合わせにも応用できる能力</span></span>に優れているのに、ロボットの動作データで<span class="term-tip" tabindex="0">ファインチューニング<span class="tip">事前に学習済みのモデルを、特定の目的のデータで追加学習すること</span></span>すると、そのしなやかさが失われてしまうのです。</p>
+<h3>「なぜ」がわからなかった</h3>
+<p>面白いのは、著者らがまず「よくある設計上の工夫」を総当たりで試したことです。モデルの大きさを変える、学習データの混ぜ方を変える、アーキテクチャの細部を変える——しかし、どの工夫が汎化ギャップを解消するかについて、はっきりした規則性（「これをやれば必ず良くなる」というパターン）は見つかりませんでした。原因が分からないまま闇雲に試行錯誤するのではなく、「そもそも何が起きているのか」を理解することから始めよう、というのがこの研究の出発点です。</p>
+<h2><span class="n">3</span>手法の全体像：Temporal Ratioという体温計</h2>
+<p>そこで提案されたのが Temporal Ratio（TR）という指標です。これは、ロボットの行動を出力する部分（action head）が、<span class="term-tip" tabindex="0">アテンション<span class="tip">Transformerが入力のどの部分に注目しているかを表す重みの値</span></span>の中で「未来の予測フレーム」と「今この瞬間のフレーム」のどちらをどれくらい重視しているかを比で表したものです。体温計が体の異常を数値ひとつで教えてくれるように、TRはモデルの内部状態を一つの数字として可視化します。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 行動を出す瞬間、モデルはどこに注目しているか？</span></div><div class="ln"><span class="no">1</span><span class="ct">attn = <span class="fn">get_attention</span>(action_head)</span></div><div class="ln"><span class="no">2</span><span class="ct">TR = attn[future_latents] / attn[current_frame]</span></div><div class="ln comment"><span class="no"></span><span class="ct"># TRが高い = 「先を思い描く」ことに頼っている場面</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="kw">if</span> TR &gt; threshold:<span class="badge">①</span></span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span>video_signal = <span class="fn">amplify</span>(video_signal)<span class="badge">②</span></span></div><div class="ln"><span class="no">6</span><span class="ct">action = <span class="fn">policy</span>(video_signal, current_frame)</span></div></div><div class="code-cap">Temporal Ratio に基づく推論時ガイダンスの考え方(論文の記述をもとにした模式図)</div>
+<h3>TRからわかった2つのこと</h3>
+<p>1つ目は、①TRの高さがそのモデルの組み合わせ汎化能力を予測できる、ということです。つまり「未来のフレームをどれだけ頼りにしているか」を測るだけで、そのモデルが見たことのない状況にどれくらい強いかが見えてくるのです。</p>
+<p>2つ目は、②TRはタスクの進み具合に応じて自然に揺れ動く、ということです。「次に何をすべきか」を計画している場面では未来のフレームへの注目が強まり、実際に「正確に掴む・押す」といった精密な操作の場面では今この瞬間への注目に切り替わっていました。人が段取りを考えるときは先の展開を思い描き、手を動かす瞬間は目の前に集中するのに似ています。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>性能が落ちた原因をアーキテクチャの変更だけで探るのではなく、「モデルの内部で何に注目しているか」を測る指標を自作して現象を説明する——これは<span class="term-tip" tabindex="0">解釈可能性(interpretability)<span class="tip">AIモデルの内部で何が起きているかを人間にわかる形で説明しようとする研究分野</span></span>の研究でよく使われる王道の進め方です。まず現象を測れる形にしてから、対策を考えます。</div>
+<h2><span class="n">4</span>発見を「効かせる」：推論時だけのガイダンス</h2>
+<p>TRの発見を踏まえ、著者らは追加学習をやり直すのではなく、推論の最中（モデルを使っている瞬間）にだけ効く軽量な工夫を提案しました。TRが高くなった、つまりモデルが「未来の展開に頼っている」場面を検知したら、動画としての条件付け信号（どんな展開になりそうかという手がかり）を一時的に強めてやる、というものです。モデルの重みを作り直す必要がないため、既存のモデルに後付けで適用しやすいのが利点です。</p>
+<p>この手法は、ロボット操作の標準的な評価環境である<span class="term-tip" tabindex="0">LIBERO<span class="tip">ロボットの様々な操作タスクを統一的に評価するための、研究でよく使われるシミュレーションベンチマーク</span></span>と、実機を使ったロボットタスクの両方で検証されており、訓練時に見た組み合わせ（ID）と見ていない組み合わせ（OOD）の性能差を縮める方向に効果があったと報告されています。</p>
+<div class="pull">モデルが「未来を思い描く」瞬間と「今を正確に動かす」瞬間を自然に切り替えていた——その切り替わりを数値にしただけで、原因の説明と対策の両方に手が届いた。</div>
+<h2><span class="n">5</span>なぜこの研究が面白いのか</h2>
+<p>近年のロボット学習研究は、モデルを大きくする・データを増やす、といった「力技」の改善が目立ちます。この論文が新鮮なのは、性能を上げる前に「なぜ性能が落ちるのか」という現象そのものを、既存モデルの中にすでにある注目パターンから説明しようとした点です。しかもその説明が、そのまま推論時だけで効く軽い対策につながったところに、理解と実用の距離の近さを感じます。</p>
+<div class="step"><span class="si">限界1</span><p>この手法は既存モデルの弱さを軽くする「緩和策」であり、汎化ギャップそのものを根本からなくす仕組みではありません。</p></div><div class="step"><span class="si">限界2</span><p>検証はLIBEROというシミュレーション環境と一部の実機タスクが中心で、あらゆるロボットや環境で同じ傾向が成り立つかはまだ分かりません。</p></div><div class="step"><span class="si">限界3</span><p>TRはアテンションの構造に基づく指標のため、アテンションを使わないタイプのモデルにはそのままでは適用しにくいと考えられます。</p></div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>「WAM」「VAM」といった略語はこの分野ではまだ定義が固まりきっておらず、論文ごとに少しずつ意味が異なることがあります。新人のうちは略語を覚えるより先に、「動画の力をロボットにどう橋渡しするか」という問い自体を掴んでおくと、色々な論文が読みやすくなります。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
