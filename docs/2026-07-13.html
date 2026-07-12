@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-07-13</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-07-13</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #ロボット学習 #テスト時訓練 #基盤モデル #新人研究者向け</div>
+    <h1 class="headline">人間の動画を観るだけでロボットが賢くなる！「テスト時訓練」で基盤モデルを操舵する新手法</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-07-13 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">WAM-TTT: Steering World-Action Models by Watching Human Play at Test Time</div>
+      <div class="pc-row">
+        <span>詳細不明（arXiv 論文より）</span>
+        <span>arXiv cs.RO ・ 2025年</span>
+        <a href="http://arxiv.org/abs/2607.06988v1">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>「ロボットに新しいタスクを教えたい、でもロボットデモは集めたくない」という悩み</h2>
+<p>ロボットに新しい作業を学ばせようとするとき、通常は「ロボットが実際に動いている動画・データ」がたくさん必要です。ところが、ロボットデータの収集はとても大変です。専用のセットアップが要り、時間もお金もかかります。一方、人間が作業している動画ならYouTubeにも山ほどあります。「人間の動画を観るだけでロボットが動けるようになれば最高なのに」——そんな夢を叶えようとするのが今回の論文 <strong>WAM-TTT</strong> です。</p>
+<p>この研究が面白いのは、<span class="term-tip" tabindex="0">テスト時訓練（TTT）<span class="tip">推論時（実際に使う場面）にモデルを少しだけ適応させる技術</span></span>という考え方を、<span class="term-tip" tabindex="0">ロボット基盤モデル（RFM）<span class="tip">大規模データで事前学習した汎用ロボット制御モデル</span></span>に組み合わせた点です。モデルのパラメータ本体は凍結したまま、「人間の動画」だけで軽量なメモリを更新し、ロボットの行動を望ましい方向に「操舵（ステアリング）」します。</p>
+<div class="pull">ロボットデモも、アノテーションも、ファインチューニングも不要。人間の動画を観るだけで、凍結したロボット基盤モデルを操舵できる。</div>
+<h2><span class="n">2</span>背景：既存アプローチの限界</h2>
+<p><span class="term-tip" tabindex="0">WAM（World Action Model）<span class="tip">世界の状態を予測しながら行動を生成するロボット向け大規模モデル</span></span>のような基盤モデルは、多様なタスクへの汎化能力を持っています。しかし新しいタスクや、ユーザーが好む特定の振る舞いに合わせようとすると、主に3つの方法が使われます。①追加のロボットデモを集める、②タスク固有のファインチューニングをする、③長いコンテキストに動画を流し込む <span class="term-tip" tabindex="0">インコンテキスト学習<span class="tip">例を入力に並べるだけでモデルを適応させる技術</span></span>——いずれも課題があります。①②はデータ収集・計算コストが高く、③は汎化能力を損なったり、長文脈による推論コストが膨らんだりします。</p>
+<h2><span class="n">3</span>WAM-TTT の全体像：3つのステージ</h2>
+<p>WAM-TTT は大きく「事前学習済みWAM」「メタ訓練ステージ」「テスト時適応ステージ」の3層構造で成り立っています。料理のたとえで言えば、WAM は優秀なシェフ（凍結）、メタ訓練は「人間の料理動画を見てコツをメモする練習」、テスト時適応は「本番の人間動画を見てメモを更新し、シェフに渡す」イメージです。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># ─── 前準備：事前学習済みWAMは触らない ───</span></div><div class="ln"><span class="no">1</span><span class="ct">wam = <span class="fn">load_pretrained_WAM</span>()  # 凍結・変更なし</span></div><div class="ln"><span class="no">2</span><span class="ct">memory = <span class="fn">init_lightweight_memory</span>()  # KVメモリを初期化</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ─── ① メタ訓練：ペアデータで人間↔ロボットを整合 ───</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="kw">for</span> (human_demo, robot_demo) <span class="kw">in</span> paired_dataset:<span class="badge">①</span></span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>memory = <span class="fn">update_memory_from_video</span>(memory, human_demo)</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span>loss = <span class="fn">kv_reconstruction_loss</span>(memory, robot_demo)</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span><span class="fn">backprop_memory_only</span>(loss)  # WAM本体は更新しない</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ─── ② テスト時：ラベルなし人間動画だけで適応 ───</span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="kw">for</span> human_video <span class="kw">in</span> test_human_videos:<span class="badge">②</span></span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="ind"></span>memory = <span class="fn">self_supervised_video_predict</span>(memory, human_video)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ─── ③ 制御：適応済みメモリをWAMに渡して行動生成 ───</span></div><div class="ln"><span class="no">9</span><span class="ct">action = wam.<span class="fn">generate_action</span>(obs, memory)<span class="badge">③</span></span></div></div><div class="code-cap">WAM-TTT の処理フロー（擬似コード）</div>
+<h2><span class="n">4</span>各要素技術を深掘り</h2>
+<h3>① メタ訓練：人間とロボットの「橋渡し」を学ぶ</h3>
+<p>人間の動画とロボットの動画がペアになっているデータを使って、「人間の動き動画 → メモリ → ロボット行動の再構成」という流れを学びます。ここで使うのが <span class="term-tip" tabindex="0">KVメモリ再構成目標<span class="tip">Key-Value形式のメモリを用いて、ロボット動作を再構築できるか評価する学習目標</span></span>です。メタ訓練が終わると、「人間動画から作ったメモリがロボット行動の文脈として役立つ」という対応づけが、メモリの更新ルールに埋め込まれます。WAM本体のパラメータはこの段階でも変わりません。</p>
+<h3>② テスト時自己教師あり適応：ラベルなし動画だけで更新</h3>
+<p>テスト環境では、ロボットデモも正解ラベルもありません。あるのは「人間が作業している生動画」だけ。WAM-TTT はこの動画を使い、<span class="term-tip" tabindex="0">自己教師あり映像予測<span class="tip">正解を人間が付けずに、次フレームを予測させることで学習する手法</span></span>でメモリを更新します。「次のフレームを予測できるか」という問題を解くだけで、ロボット制御に必要な情報がメモリに蓄積されるのです。</p>
+<div class="tip-box"><div class="tb-label">💡 TTT（テスト時訓練）ってどんな考え方？</div>TTT は「本番テスト時に少しだけモデルを適応させる」という手法です。学習データに含まれなかった分布に対応するために、推論時に自己教師あり損失でモデルを微調整します。NLP では LLM の長文処理や新ドメイン適応に使われてきた考え方で、WAM-TTT はそれをロボット制御に持ち込んでいます。</div>
+<h3>③ 凍結WAMへの軽量メモリ注入：汎化能力を守る</h3>
+<p>従来のファインチューニングはモデル全体のパラメータを書き換えるため、元の汎化能力が失われる（<span class="term-tip" tabindex="0">破滅的忘却<span class="tip">新しいタスクを学ぶと過去の能力が上書きされる現象</span></span>）リスクがあります。WAM-TTT では WAM のパラメータは一切触らず、外付けの軽量なKVメモリだけを更新します。これにより、ロボットの基盤能力を温存しつつ、特定タスクへの適応が可能になります。メモリはタスクごとに「使い回し」もできる設計です。</p>
+<h2><span class="n">5</span>実験結果：インコンテキスト手法を広範なタスクで凌駕</h2>
+<p>論文ではさまざまなマニピュレーション（物体操作）タスクと汎化設定で大規模な実験が行われました。比較相手は「人間の動画をそのままコンテキストとして流し込む」インコンテキストベースラインです。WAM-TTT はこれを<strong>一貫して上回る</strong>結果を示しました。具体的な数値はアブストラクト段階では公開されていませんが、論文中の「consistently outperforms」という表現から、単一タスクだけでなく複数の汎化設定すべてで優位性が確認されています。</p>
+<div class="note-box"><div class="nb-label">⚙️ 数値について正直なところ</div>アブストラクトには具体的なスコアが記載されていないため、本記事では数値の創作を避けています。詳細な定量結果は論文本文の実験セクションをご確認ください。</div>
+<h2><span class="n">6</span>何が新しいのか：3つの同時解決</h2>
+<div class="step"><span class="si">新規点 1</span><p>「人間動画を模倣する軌跡として扱う」のではなく、「自己教師あり映像予測でメモリに吸収する」という発想の転換。アノテーションなしで済む。</p></div><div class="step"><span class="si">新規点 2</span><p>メタ訓練によるペアデータ活用で「人間↔ロボット」の意味的ギャップを埋める。TTT と基盤モデルを組み合わせたロボット分野での先駆的な試み。</p></div><div class="step"><span class="si">新規点 3</span><p>WAM本体を凍結したまま軽量メモリだけを差し替えるため、汎化能力を維持しつつ効率的・再利用可能な適応が実現できる。</p></div>
+<div class="pull">人間の動画を「模倣すべき軌跡」ではなく「記憶に吸収すべき情報源」として扱う——この発想の転換が、ロボット学習のデータ効率を根本から変えうる。</div>
+<h2><span class="n">7</span>意義と限界：正直に評価する</h2>
+<div class="step"><span class="si">限界 1</span><p>メタ訓練にはペアの人間・ロボットデータが必要。このデータ収集コストは依然として存在する。完全にロボットデータ不要というわけではない。</p></div><div class="step"><span class="si">限界 2</span><p>テスト時の自己教師あり更新が、非常に多様な人間動画に対してどこまでスケールするかは不明。論文が対象とするマニピュレーションタスクに限定されている。</p></div><div class="step"><span class="si">限界 3</span><p>アブストラクト段階では実世界（リアルロボット）での詳細な検証結果が明示されていない。Sim-to-Real のギャップへの対処度は論文本文の精読が必要。</p></div><div class="step"><span class="si">限界 4</span><p>軽量メモリの容量や構造設計の選択が性能に影響すると考えられるが、その感度分析の詳細はアブストラクトからは不明。</p></div>
+<h2><span class="n">8</span>新人研究者へのひとこと：「どこを凍らせ、どこを動かすか」が設計の核心</h2>
+<p>この論文から学べる最も重要な設計思想は、「<strong>大きなモデルを全部動かす必要はない</strong>」という点です。基盤モデルの汎化能力は大切に守りながら、「適応すべき小さな部品」だけを差し替える——この分離の考え方は、今後の AI R&amp;D でますます重要になります。<span class="term-tip" tabindex="0">LoRA<span class="tip">大規模モデルを少数のパラメータだけ追加して効率的にファインチューニングする手法</span></span>や<span class="term-tip" tabindex="0">アダプター<span class="tip">元モデルを凍結し、小さな追加モジュールだけ学習するファインチューニング技術</span></span>といった既存手法とも思想的につながっており、ロボット以外の分野にも応用可能な汎用的な考え方です。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;D で活かせる大きな文脈</div>「ロボットのデータ収集は高コスト」という問題は、自動運転・医療ロボット・家庭用ロボットすべてに共通です。WAM-TTT のように「人間の動画という豊富なデータを活用し、ロボットデータを節約する」アプローチは、実用展開を見据えたときに非常に重要な研究方向です。テスト時訓練・軽量メモリ・自己教師あり学習の3つのキーワードは、今後の論文調査でも必ず出てくるので押さえておきましょう。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>

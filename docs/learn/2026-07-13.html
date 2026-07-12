@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 30日講座 — 学習を安定させる ─ バッチ正規化・Layer Norm の仕組み</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+
+.course-card{background:linear-gradient(135deg,#1c6f8c15,#2cb69615);border:1.5px solid var(--accent);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.course-card .cc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--accent-ink);text-transform:uppercase;margin-bottom:6px;}
+.course-card .cc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;color:var(--ink);}
+.course-card .cc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:4px 16px;}
+.cc-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;border-radius:6px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;}
+.progress-bar{height:4px;background:var(--line);border-radius:2px;margin:10px 0 4px;}
+.progress-bar .bar{height:100%;background:var(--accent);border-radius:2px;transition:width .4s;}
+.progress-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-faint);text-align:right;}
+/* KaTeX blocks */
+.tex-block{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;overflow-x:auto;}
+.tex-block .katex-display{margin:0;}
+.tex-block .tx-cap{font-size:12.5px;color:var(--ink-faint);margin-top:10px;text-align:center;}
+.tex-derive{margin-top:12px;border-top:1px solid var(--line);padding-top:10px;}
+.tex-derive-row{display:flex;gap:10px;align-items:baseline;margin-top:6px;font-size:14px;}
+.tex-derive-label{font-size:12px;color:var(--ink-faint);flex-shrink:0;min-width:80px;}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">📚</span> AI 30日講座</div>
+      <div class="date-pill">2026-07-13</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI30日講座 #BatchNorm #LayerNorm #正規化 #ディープラーニング</div>
+    <h1 class="headline">学習を安定させる魔法の正規化 ─ Batch Norm と Layer Norm の仕組みを徹底解剖</h1>
+
+    <div class="author">
+      <div class="avatar" style="background:linear-gradient(135deg,#1c6f8c,#2cb696);">📚</div>
+      <div class="author-meta">
+        <div class="name">AI 30日講座</div>
+        <div class="sub">2026-07-13 ・ DAY 10 ・ ニューラルネットワーク基礎 ─ 層を重ねる意味</div>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="cc-label">本日のカリキュラム</div>
+      <div class="cc-title">
+        <span class="cc-badge">DAY 10 / 30</span>
+        &nbsp;学習を安定させる ─ バッチ正規化・Layer Norm の仕組み
+      </div>
+      <div class="progress-bar"><div class="bar" style="width:33%"></div></div>
+      <div class="progress-label">33% 完了</div>
+      <div class="cc-row">
+        <span>Week 2: ニューラルネットワーク基礎 ─ 層を重ねる意味</span>
+        <span>基礎〜中級</span>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>なぜ「正規化」が必要なのか？ ─ 深いネットの悩み</h2>
+<p>料理に例えてみましょう。塩加減が毎回バラバラなシェフのレシピを覚えようとすると、「今日は塩辛い」「明日は薄い」と脳が混乱しますよね。ニューラルネットワークも同じです。層を重ねるほど、各層への「入力の分布」が学習中にどんどん変化してしまい、後続の層は「動くターゲットを追いかける」ような状況に陥ります。</p>
+<p>この現象を<span class="term-tip" tabindex="0">内部共変量シフト<span class="tip">学習中に各層への入力分布が変化し続ける問題。後段の層の学習を不安定にする</span></span>と呼びます。2015年にGoogleのIoffe と Szegedy が提案した<strong>Batch Normalization（バッチ正規化）</strong>は、この問題を正面から解決し、深いネットワークの学習を劇的に安定・高速化しました。</p>
+<div class="stats"><div class="stat"><div class="v">2015</div><div class="k">Batch Norm 論文発表年 (Ioffe &amp; Szegedy)</div></div><div class="stat"><div class="v">10〜14倍</div><div class="k">同等精度への学習ステップ削減率 (論文報告)</div></div><div class="stat"><div class="v">2016</div><div class="k">Layer Norm 提案年 (Ba et al.)</div></div></div>
+<h2><span class="n">2</span>Batch Normalization の数学的な核心</h2>
+<p>Batch Norm のアイデアはシンプルです。「ミニバッチ内で各特徴量を平均0・分散1に揃えてから次の層に渡す」こと。ただし、後でネットワーク自身が「どの程度スケールやシフトを復元するか」を学習します。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\mu_B = \frac{1}{m}\sum_{i=1}^{m} x_i"></div><div class="tx-cap">Step 1: ミニバッチの平均を計算 (m はバッチサイズ)</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">バッチ内の分散</span><span class="katex-display-wrapper" data-tex="\sigma_B^2 = \frac{1}{m}\sum_{i=1}^{m}(x_i - \mu_B)^2"></span></div><div class="tex-derive-row"><span class="tex-derive-label">正規化（ゼロ平均・単位分散）</span><span class="katex-display-wrapper" data-tex="\hat{x}_i = \frac{x_i - \mu_B}{\sqrt{\sigma_B^2 + \varepsilon}}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">スケール・シフト（学習可能パラメータ γ, β）</span><span class="katex-display-wrapper" data-tex="y_i = \gamma\,\hat{x}_i + \beta"></span></div></div></div>
+<p>ここで <strong>ε（イプシロン）</strong> は分母がゼロになるのを防ぐ小さな定数（例: 1e-5）です。<strong>γ（ガンマ）とβ（ベータ）</strong> はバックプロパゲーションで学習される<span class="term-tip" tabindex="0">アフィン変換パラメータ<span class="tip">スケールとシフトを担う学習可能な係数。正規化の「やりすぎ」をネット自身が補正できる</span></span>です。</p>
+<div class="pull">「正規化で情報を壊す → γ・β で必要な表現力を取り戻す」この二段構えが Batch Norm の本質。</div>
+<h3>推論時はどうなる？ ─ 移動平均の活用</h3>
+<p>学習時はミニバッチの統計量を使いますが、推論時には「バッチ」という概念がありません。そこで学習中に<span class="term-tip" tabindex="0">指数移動平均<span class="tip">過去の統計量を指数的に減衰させながら蓄積した平均・分散の推定値</span></span>を記録しておき、推論時はその固定した値を使います。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\mu_{\text{running}} \leftarrow (1-\alpha)\,\mu_{\text{running}} + \alpha\,\mu_B"></div><div class="tx-cap">指数移動平均で推論用の統計量を蓄積 (α は momentum、典型値 0.1)</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">推論時の正規化 (固定統計量を使用)</span><span class="katex-display-wrapper" data-tex="\hat{x} = \frac{x - \mu_{\text{running}}}{\sqrt{\sigma^2_{\text{running}} + \varepsilon}}"></span></div></div></div>
+<h2><span class="n">3</span>直感で掴む ─ 「全員で足並みを揃える」 vs 「自分の中で揃える」</h2>
+<p>Batch Norm を学校のクラス（バッチ）に例えると、「クラス全員のテスト点数を平均・分散で正規化する」イメージです。クラス全体を見渡すので、<strong>バッチサイズが大きいほど安定</strong>します。逆にバッチが小さいと統計量の推定がブレ、学習が不安定になります。</p>
+<p>一方、2016年に Ba らが提案した <strong>Layer Normalization（レイヤー正規化）</strong> は「一人の生徒の全科目の点数を正規化する」イメージです。<span class="term-tip" tabindex="0">Layer Norm<span class="tip">バッチ方向ではなく特徴量（チャネル）方向で正規化する手法。バッチサイズに依存しない</span></span>は、バッチサイズが1でも機能するため、<strong>RNN・Transformer では標準的な選択肢</strong>になっています。</p>
+<h2><span class="n">4</span>Layer Normalization の数式</h2>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\mu^{(i)} = \frac{1}{H}\sum_{j=1}^{H} x_j^{(i)}"></div><div class="tx-cap">Layer Norm: サンプル i の H 個の特徴量にわたって平均を計算</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">特徴量方向の分散</span><span class="katex-display-wrapper" data-tex="\sigma^{(i)^2} = \frac{1}{H}\sum_{j=1}^{H}\left(x_j^{(i)} - \mu^{(i)}\right)^2"></span></div><div class="tex-derive-row"><span class="tex-derive-label">正規化</span><span class="katex-display-wrapper" data-tex="\hat{x}_j^{(i)} = \frac{x_j^{(i)} - \mu^{(i)}}{\sqrt{\sigma^{(i)^2} + \varepsilon}}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">スケール・シフト (γ, β は特徴量ごとに学習)</span><span class="katex-display-wrapper" data-tex="y_j^{(i)} = \gamma_j\,\hat{x}_j^{(i)} + \beta_j"></span></div></div></div>
+<p>Batch Norm と構造的には酷似していますが、<strong>どの軸で平均・分散を取るか</strong>が決定的な違いです。Batch Norm はバッチ方向（サンプル間）、Layer Norm は特徴量方向（一サンプル内）で統計を計算します。</p>
+<h2><span class="n">5</span>各手法の正規化軸を図解で比較</h2>
+<div class="step"><span class="si">Batch Norm</span><p>軸: バッチ × 空間。各チャネル（特徴マップ）ごとに、バッチ内の全サンプルをまとめて正規化。CNN に強い。バッチサイズが小さいと不安定。</p></div><div class="step"><span class="si">Layer Norm</span><p>軸: 特徴量方向。1サンプルの全特徴量を正規化。バッチサイズ非依存。RNN・Transformer（GPT, BERT）で標準採用。</p></div><div class="step"><span class="si">Instance Norm</span><p>軸: 空間方向のみ（サンプル・チャネルごと）。スタイル転送などの画像生成モデルで使用。</p></div><div class="step"><span class="si">Group Norm</span><p>軸: チャネルをグループ分けして正規化。Batch Norm と Layer Norm の中間。小バッチでも安定した物体検出モデル（Mask R-CNN等）で活用。</p></div>
+<h2><span class="n">6</span>深掘り ─ なぜ学習が速くなるのか</h2>
+<h3>勾配消失・爆発を抑える効果</h3>
+<p><span class="term-tip" tabindex="0">勾配消失<span class="tip">深い層ほど勾配が指数的に小さくなり、重みがほぼ更新されなくなる問題</span></span>や勾配爆発は、活性化の分布が偏ることで悪化します。正規化によって各層の出力が適切なスケールに保たれると、誤差逆伝播での勾配も安定した大きさを保ちやすくなります。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\frac{\partial \ell}{\partial x_i} = \frac{\gamma}{\sqrt{\sigma_B^2+\varepsilon}} \left(\frac{\partial \ell}{\partial y_i} - \frac{1}{m}\sum_{k}\frac{\partial \ell}{\partial y_k} - \hat{x}_i \cdot \frac{1}{m}\sum_{k}\frac{\partial \ell}{\partial y_k}\hat{x}_k\right)"></div><div class="tx-cap">Batch Norm の逆伝播における入力への勾配 (論文 Ioffe &amp; Szegedy 2015 より)</div></div>
+<p>この式が示す重要な点は、勾配が <strong>σ_B の逆数でスケールされる</strong>ことです。分散が大きい（活性化がバラバラ）なら勾配は小さく、分散が小さい（活性化が集中）なら勾配は大きくなり、自然な自己調整機能が生まれます。</p>
+<h3>学習率を大きくできる ─ 損失面の平滑化</h3>
+<p>MIT の Santurkar らの2018年の研究では、Batch Norm の真の効果は内部共変量シフトの解消よりも「<strong>損失景観（Loss Landscape）の平滑化</strong>」にあると示しました。正規化によって損失曲面が滑らかになり、大きな学習率でも安全にパラメータ空間を移動できるようになります。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>Batch Norm の導入後は学習率を通常より5〜10倍大きく設定できる場合があります。ハイパーパラメータ探索のときは正規化の有無で学習率のスケールを分けて考えましょう。また、Batch Norm の直前に Bias を持つ層（Linear, Conv）がある場合、そのバイアスは正規化で打ち消されるため、bias=False にするのが実装上の定石です。</div>
+<h2><span class="n">7</span>LLM・現代 AI との接続 ─ Transformer は Layer Norm 一択？</h2>
+<p>GPT-2 以降の大規模言語モデルでは、Batch Norm ではなく <strong>Layer Norm</strong> が使われています。理由は明確です。言語モデルの学習では系列長が可変で、バッチサイズも小さいことが多く、バッチ方向の統計量が不安定になりやすいためです。さらに重要なのが <strong>Pre-LN と Post-LN の違い</strong>です。</p>
+<div class="step"><span class="si">Post-LN（元の Transformer）</span><p>残差接続の後に Layer Norm を適用。x → Attention → x + Attention(x) → LayerNorm。深いモデルでは勾配消失が起きやすい。</p></div><div class="step"><span class="si">Pre-LN（GPT-2, GPT-3, LLaMA）</span><p>各サブ層の前に Layer Norm を適用。x → LayerNorm → Attention → x + Attention(LayerNorm(x))。学習が安定し、warm-up なしでも学習できる場合がある。現代の LLM の主流。</p></div>
+<p>また、最近では<span class="term-tip" tabindex="0">RMSNorm<span class="tip">二乗平均平方根で正規化する Layer Norm の簡略版。平均を引く処理を省略し計算効率を高める</span></span>（Root Mean Square Layer Norm）が LLaMA や Gemma シリーズで採用されています。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{RMSNorm}(x) = \frac{x}{\text{RMS}(x)} \cdot \gamma, \quad \text{RMS}(x) = \sqrt{\frac{1}{H}\sum_{j=1}^{H} x_j^2}"></div><div class="tx-cap">RMSNorm: 平均を引かず二乗平均平方根で割るシンプルな正規化</div></div>
+<h2><span class="n">8</span>実装のヒント ─ PyTorch で書いてみる</h2>
+<div class="code"><div class="ln"><span class="no">1</span><span class="ct">import torch.nn as nn</span></div><div class="ln"><span class="no">2</span><span class="ct"></span></div><div class="ln"><span class="no">3</span><span class="ct"># --- Batch Normalization ---</span></div><div class="ln"><span class="no">4</span><span class="ct"># num_features = チャネル数（CNNの場合）</span></div><div class="ln"><span class="no">5</span><span class="ct">bn = nn.BatchNorm1d(num_features=256)</span></div><div class="ln"><span class="no">6</span><span class="ct"># バッチ方向で正規化: input shape (batch, 256)</span></div><div class="ln"><span class="no">7</span><span class="ct"></span></div><div class="ln"><span class="no">8</span><span class="ct"># --- Layer Normalization ---</span></div><div class="ln"><span class="no">9</span><span class="ct"># normalized_shape = 正規化する軸の形状</span></div><div class="ln"><span class="no">10</span><span class="ct">ln = nn.LayerNorm(normalized_shape=256)</span></div><div class="ln"><span class="no">11</span><span class="ct"># 特徴量方向で正規化: input shape (batch, seq, 256)</span></div><div class="ln"><span class="no">12</span><span class="ct"></span></div><div class="ln"><span class="no">13</span><span class="ct"># --- Transformer ブロックの Pre-LN 実装例 ---</span></div><div class="ln"><span class="no">14</span><span class="ct">class PreLNBlock(nn.Module):</span></div><div class="ln"><span class="no">15</span><span class="ct"><span class="ind"></span>def __init__(self, d_model, nhead):</span></div><div class="ln"><span class="no">16</span><span class="ct"><span class="ind"></span><span class="ind"></span>super().__init__()</span></div><div class="ln"><span class="no">17</span><span class="ct"><span class="ind"></span><span class="ind"></span>self.norm = nn.LayerNorm(d_model)</span></div><div class="ln"><span class="no">18</span><span class="ct"><span class="ind"></span><span class="ind"></span>self.attn = nn.MultiheadAttention(d_model, nhead)</span></div><div class="ln"><span class="no">19</span><span class="ct"></span></div><div class="ln"><span class="no">20</span><span class="ct"><span class="ind"></span>def forward(self, x):</span></div><div class="ln"><span class="no">21</span><span class="ct"><span class="ind"></span><span class="ind"></span># Pre-LN: 正規化 → Attention → 残差加算</span></div><div class="ln"><span class="no">22</span><span class="ct"><span class="ind"></span><span class="ind"></span>normed = self.norm(x)</span></div><div class="ln"><span class="no">23</span><span class="ct"><span class="ind"></span><span class="ind"></span>attn_out, _ = self.attn(normed, normed, normed)</span></div><div class="ln"><span class="no">24</span><span class="ct"><span class="ind"></span><span class="ind"></span>return x + attn_out  # 残差接続</span></div></div><div class="code-cap">Batch Norm と Layer Norm の PyTorch 実装比較</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>PyTorch の BatchNorm には training フラグがあり、model.eval() にすると自動的に running_mean / running_var（移動平均の統計量）を使うよう切り替わります。model.train() / model.eval() の切り替えを忘れると、推論精度が大きくブレる原因になるので注意。これは面接でも頻出の「あるある落とし穴」です。</div>
+<h2><span class="n">9</span>各正規化手法の使い分けまとめ</h2>
+<div class="step"><span class="si">CNN 画像分類</span><p>Batch Norm が第一選択。バッチサイズ ≥ 32 を確保できるなら安定して高性能。物体検出など小バッチなら Group Norm を検討。</p></div><div class="step"><span class="si">RNN / LSTM</span><p>Layer Norm 一択。系列ステップごとに統計量が変わるため Batch Norm の適用が困難。</p></div><div class="step"><span class="si">Transformer / LLM</span><p>Layer Norm（Pre-LN 配置）が標準。高速化・軽量化が重要なら RMSNorm も有力な選択肢。</p></div><div class="step"><span class="si">拡散モデル / 画像生成</span><p>Group Norm または AdaLayerNorm（条件付き正規化）が多用される。</p></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>正規化手法の選択はアーキテクチャと密結合しています。「なぜこの論文はこの正規化を選んだか」を読み解くクセをつけましょう。バッチサイズ・系列長・分散学習環境の制約が選択理由に直結することがほとんどです。特に Data Parallelism でバッチをGPU間で分割する場合、Batch Norm の統計量をどう同期するかが性能のボトルネックになることがあります（Synchronized BN）。</div>
+<h2><span class="n">10</span>まとめ ─ 正規化は「土台を整える」技術</h2>
+<p>今日の核心を振り返りましょう。<strong>Batch Norm</strong> はバッチ内の統計量でミニバッチ全体の足並みを揃え、CNN の学習を劇的に安定・高速化しました。<strong>Layer Norm</strong> は一サンプル内の特徴量を正規化することでバッチサイズへの依存をなくし、Transformer という現代 AI の基盤技術を支えています。どちらも「正規化してから γ・β で表現力を取り戻す」という同じ思想に基づいています。</p>
+<p>これらの正規化がなければ、GPT や BERT といった巨大モデルの学習は現実的に成立しなかったかもしれません。<strong>深く積み上げた層を「安定した土台」の上で動かす</strong> ─ それが正規化の果たす本質的な役割です。明日は残差接続（Residual Connection）と組み合わせた「深いネットワークがなぜ学習できるか」の謎に迫ります。</p>
+<div class="pull">正規化は「制約」ではなく「自由」を与える技術 ─ 学習率を上げ、深さを増し、モデルの可能性を広げる。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI 30日講座 — Week 1〜6 ・ generated by Claude
+  </div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Render explicit tex-block wrappers
+      document.querySelectorAll('.katex-display-wrapper').forEach(el => {
+        const tex = el.dataset.tex;
+        if (tex) {
+          try {
+            katex.render(tex, el, {displayMode: true, throwOnError: false});
+          } catch(e) {
+            el.textContent = tex;
+          }
+        }
+      });
+      // Auto-render inline $...$ and $$...$$ in text
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+</body>
+</html>
