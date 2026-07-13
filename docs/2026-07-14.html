@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-07-14</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-07-14</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #スケーリング則 #LLM #新人研究者向け</div>
+    <h1 class="headline">スケーリング則の「なめらかな曲線」の裏に隠れたトークンごとの階段状学習</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-07-14 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Smooth Scaling Laws Hide Stepwise Token Learning</div>
+      <div class="pc-row">
+        <span>著者情報は公開情報より確認要</span>
+        <span>arXiv cs.CL ・ 2025年</span>
+        <a href="https://arxiv.org/abs/2606.29858">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>なぜ損失はきれいなべき乗則に乗るのか？</h2>
+<p>大規模言語モデルを学習するとき、検証損失（validation loss）はモデルサイズやデータ量に対して<strong>驚くほど規則正しい<span class="term-tip" tabindex="0">スケーリング則<span class="tip">モデル・データ規模と性能の間に成り立つべき乗則の経験的法則</span></span></strong>に従うことが知られています。グラフにプロットすると、どこまでも滑らかな曲線が続きます。でも少し立ち止まって考えてみてください。なぜ何千億ものトークンを学習した総合的な損失が、そんなにきれいなべき乗則に乗るのでしょうか？</p>
+<p>これまでの説明は主に「自然言語のパターンには難易度の<span class="term-tip" tabindex="0">ヘビーテール分布<span class="tip">平均から非常に遠い値が高頻度で現れる分布。極端な値が多く、正規分布では説明しきれない</span></span>がある」という仮説に頼っていました。しかし、この仮説は大規模な実データ学習でトークン単位の細かさで検証されたことはありませんでした。本論文はその空白に直接切り込みます。</p>
+<div class="pull">滑らかなスケーリング則の曲線は、無数のトークンが「ある瞬間にパッと学習される」段階的なイベントの積み重なりだった。</div>
+<h2><span class="n">2</span>トークンレベルで損失を「分解」するフレームワーク</h2>
+<p>この論文の核心的なアイデアは「<strong>損失をトークンごとに分解して観察する</strong>」という発想です。全体の損失がどう変化するかを眺めるのではなく、個々のトークン（文脈化されたトークン）の損失がどう変化するかを一つひとつ追いかけます。</p>
+<p>著者たちが発見したのは、ほとんどのトークンの学習曲線が<span class="term-tip" tabindex="0">シグモイド関数<span class="tip">S字型の曲線。入力が大きくなると出力が0から1に滑らかに遷移する関数</span></span>でうまく近似できるということです。つまり「最初はなかなか学習されない→ある時点で急に習得される→それ以降は安定する」というS字の階段状のパターンを示すのです。</p>
+<div class="tip-box"><div class="tb-label">💡 シグモイドでトークン学習を近似するとは？</div>たとえば「東京」という単語（トークン）の損失が、学習ステップ5,000あたりまではほぼ横ばいで、5,000〜6,000の間にガクンと下がり、その後は低いまま安定する——こういうS字の変化を、シグモイド関数 L(t) ≈ a / (1 + exp(-(t - t₀) / s)) のような式で捉えます。t₀ がそのトークンの「学習時刻」です。</div>
+<h3>「学習時刻スペクトル」とは何か</h3>
+<p>シグモイドフィッティングによって各トークンの<strong>学習時刻（learning time）</strong>が得られます。すべてのトークンについてこの学習時刻を集めると、「何ステップ目にどのくらいのトークンが学習されるか」という分布——これを著者たちは<strong>学習時刻スペクトル</strong>と呼びます。この分布の形が、スケーリング則の形を支配しているというのが本論文の主張です。</p>
+<p>直感的に言えば、「簡単なトークン（たとえば単純な助詞）は学習開始直後にすぐ習得され、難しいトークン（たとえば専門的な固有名詞）は学習がかなり進まないと習得されない」という当然の話が、数値として測定できるようになったわけです。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># ステップ1: 各トークンの損失軌跡を収集する</span></div><div class="ln"><span class="no">1</span><span class="ct">token_losses = <span class="fn">collect_loss_trajectories</span>(model, dataset)<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># ステップ2: トークンごとにシグモイドをフィッティング</span></div><div class="ln"><span class="no">2</span><span class="ct">learning_times = []</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="kw">for</span> token_id, loss_curve <span class="kw">in</span> token_losses.items():</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>t0, s = <span class="fn">fit_sigmoid</span>(loss_curve)<span class="badge">②</span></span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span>learning_times.<span class="fn">append</span>(t0)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ステップ3: 学習時刻スペクトルを構築（ヒストグラム）</span></div><div class="ln"><span class="no">6</span><span class="ct">spectrum = <span class="fn">build_histogram</span>(learning_times)<span class="badge">③</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># ステップ4: スペクトルからスケーリング則の微分を再構成して検証</span></div><div class="ln"><span class="no">7</span><span class="ct">predicted_derivative = <span class="fn">reconstruct_scaling_law_derivative</span>(spectrum)<span class="badge">④</span></span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="fn">compare</span>(predicted_derivative, measured_derivative)</span></div></div><div class="code-cap">トークンレベルの学習曲線をシグモイドでフィッティングし、学習時刻スペクトルを構築する手続き（擬似コード）</div>
+<h3>① 損失軌跡の収集：大規模実験で丁寧に</h3>
+<p>著者たちは100以上の事前学習ランを実施しています。パラメータ数は最大60億（6B）、学習トークン数は最大3000億（300B）という大規模なスケールで、多様な実言語コーパスを使っています。「小さな実験での発見を大きなモデルで確かめた」という地に足のついたアプローチです。</p>
+<h3>② シグモイドフィッティング：各トークンの「習得瞬間」を特定</h3>
+<p>各トークンの損失曲線にシグモイドをフィッティングすることで、学習時刻 t₀（S字の中心、つまり損失が最も急激に下がるステップ）と遷移の急峻さ s が得られます。これにより「このトークンはステップ何番目頃に習得された」という情報が定量化されます。</p>
+<h3>③④ スペクトル構築と検証：再現できるか？</h3>
+<p>すべてのトークンの学習時刻を集めてヒストグラムにしたものが学習時刻スペクトルです。このスペクトルから、学習ステップ T・データ量 D・モデルサイズ M のそれぞれの軸に沿ったスケーリング則の<strong>微分形（損失変化率）</strong>を定量的に再現できることを示しています。つまり「滑らかな曲線の形が、トークンの学習時刻分布から説明できる」という直接的な証拠になっています。</p>
+<h2><span class="n">3</span>実験結果：スペクトルはスケーリング則を説明し、さらに改善にも使える</h2>
+<div class="stats"><div class="stat"><div class="v">100以上</div><div class="k">事前学習ランの数（異なるスケール・設定）</div></div><div class="stat"><div class="v">6B / 300B</div><div class="k">最大モデルパラメータ数 / 最大学習トークン数</div></div><div class="stat"><div class="v">11%</div><div class="k">学習時刻スペクトルに基づくデータ分布調整による検証損失削減の高速化</div></div></div>
+<p>特に注目すべきは最後の数値です。学習時刻スペクトルを「観察するだけ」でなく「行動に活かす」実験として、著者たちはトークンが学習可能になるタイミングに合わせて学習データの分布を動的に調整しました。その結果、検証損失の減少が<strong>11%高速化</strong>されたというのです。</p>
+<p>これは単なる理論的分析に留まらず、この知見が<span class="term-tip" tabindex="0">カリキュラム学習<span class="tip">簡単なサンプルから難しいサンプルへと段階的に学習する訓練戦略</span></span>の改善に直接応用できることを示しています。「なぜスケーリング則が成り立つか」という純粋な問いへの答えが、より効率的な学習方法の開発にもつながるという好例です。</p>
+<h2><span class="n">4</span>この研究の新規性：何が「新しい」のか</h2>
+<div class="pull">スケーリング則を「集合的な統計量」から「トークンごとの局所的な学習イベントの積み重ね」として見直した点が最大の貢献。</div>
+<p>既存研究はスケーリング則を<strong>マクロな視点</strong>で眺めていました。「全体の損失がどう変化するか」「難易度分布がどんな形をしているか」という仮説を立て、マクロな曲線の形から間接的に推測する方法です。本論文はそれを<strong>トークン単位のミクロな観測</strong>で直接検証したという点で新しいです。</p>
+<p>さらに「学習時刻スペクトルが T・D・M の3つの軸すべてでスケーリング則の微分を定量的に再現できる」という包括的な検証も重要です。単に「そういう傾向がある」と言うのではなく、数値として再現できることを示している点が説得力を高めています。</p>
+<h2><span class="n">5</span>意義と限界：誠実に評価する</h2>
+<div class="step"><span class="si">意義 ①</span><p>スケーリング則の「なぜ」に対する直接的な経験的証拠を提供。これまで仮説止まりだったヘビーテール説を、トークンレベルのデータで具体的に裏付けた。</p></div><div class="step"><span class="si">意義 ②</span><p>理論的フレームワークが実用的な改善（11%高速化）につながることを示した。基礎研究と応用の橋渡し事例として価値が高い。</p></div><div class="step"><span class="si">限界 ①</span><p>シグモイドによる近似はあくまでモデル。実際のトークン損失曲線がどれほどきれいにシグモイドに従うかは、トークンの種類や文脈によってばらつく可能性がある。</p></div><div class="step"><span class="si">限界 ②</span><p>データ分布の調整（11%高速化）は「学習時刻に応じて分布を変える」という枠組みを示したが、どう変えるかの最適な方法論はまだ探索の余地がある。</p></div><div class="step"><span class="si">限界 ③</span><p>6Bパラメータ・300Bトークンまでの検証であり、より大きなスケール（数十〜数百B規模）への外挿が成り立つかどうかは今後の検証が必要。</p></div>
+<h2><span class="n">6</span>新人研究者へ：この論文から学べること</h2>
+<div class="tip-box"><div class="tb-label">💡 「集合的な現象をミクロに分解して見る」アプローチの価値</div>AI研究でよく出てくる考え方として、「全体の挙動をコンポーネント（要素）レベルに分解して理解する」というものがあります。本論文はまさにその手本です。スケーリング則という「マクロな法則」を、トークンという「ミクロな学習イベント」に分解することで、原因が明らかになりました。あなたが研究で何かうまく説明できない現象に出会ったとき、「もっと細かい粒度で見たらどうなるか？」という問いかけが突破口になることがあります。</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ：スケーリング則研究の文脈で</div>スケーリング則は「大きくすれば良くなる」という実践知として使われてきましたが、「なぜ成立するのか」という理論的理解は遅れていました。本論文のようなフレームワークが確立されると、「どんな条件でスケーリング則が崩れるか」「どうすればより効率よくスケールできるか」という次の問いに答えやすくなります。LLMの学習コストが依然として莫大な現在、こういった基礎的な理解は長期的に大きな意味を持ちます。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>

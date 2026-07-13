@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 30日講座 — すべての注意を向ける ─ Scaled Dot-Product Attention の数学</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+
+.course-card{background:linear-gradient(135deg,#1c6f8c15,#2cb69615);border:1.5px solid var(--accent);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.course-card .cc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--accent-ink);text-transform:uppercase;margin-bottom:6px;}
+.course-card .cc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;color:var(--ink);}
+.course-card .cc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:4px 16px;}
+.cc-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;border-radius:6px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;}
+.progress-bar{height:4px;background:var(--line);border-radius:2px;margin:10px 0 4px;}
+.progress-bar .bar{height:100%;background:var(--accent);border-radius:2px;transition:width .4s;}
+.progress-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-faint);text-align:right;}
+/* KaTeX blocks */
+.tex-block{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;overflow-x:auto;}
+.tex-block .katex-display{margin:0;}
+.tex-block .tx-cap{font-size:12.5px;color:var(--ink-faint);margin-top:10px;text-align:center;}
+.tex-derive{margin-top:12px;border-top:1px solid var(--line);padding-top:10px;}
+.tex-derive-row{display:flex;gap:10px;align-items:baseline;margin-top:6px;font-size:14px;}
+.tex-derive-label{font-size:12px;color:var(--ink-faint);flex-shrink:0;min-width:80px;}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">📚</span> AI 30日講座</div>
+      <div class="date-pill">2026-07-14</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI30日講座 #Transformer #Attention #LLM #自然言語処理</div>
+    <h1 class="headline">すべての注意を向ける ─ Scaled Dot-Product Attention の数学を完全理解する</h1>
+
+    <div class="author">
+      <div class="avatar" style="background:linear-gradient(135deg,#1c6f8c,#2cb696);">📚</div>
+      <div class="author-meta">
+        <div class="name">AI 30日講座</div>
+        <div class="sub">2026-07-14 ・ DAY 11 ・ Transformer ─ 現代 LLM の心臓部</div>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="cc-label">本日のカリキュラム</div>
+      <div class="cc-title">
+        <span class="cc-badge">DAY 11 / 30</span>
+        &nbsp;すべての注意を向ける ─ Scaled Dot-Product Attention の数学
+      </div>
+      <div class="progress-bar"><div class="bar" style="width:36%"></div></div>
+      <div class="progress-label">36% 完了</div>
+      <div class="cc-row">
+        <span>Week 3: Transformer ─ 現代 LLM の心臓部</span>
+        <span>基礎〜中級</span>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>「どこを見るか」を学習する仕組み</h2>
+<p>人間が文章を読むとき、すべての単語に同じ力を注ぐわけではありません。「彼女はケーキを食べた。<strong>彼女</strong>は満足そうだった」という文を読むとき、2 文目の「彼女」が誰かを理解するために、自然と 1 文目の「彼女は」に目が引き寄せられます。これが「<span class="term-tip" tabindex="0">注意機構<span class="tip">Attention。重要な箇所に自動的に重みを置いて情報を集める仕組み</span></span>」の直感です。</p>
+<p>2017 年に Google Brain が発表した論文「<span class="term-tip" tabindex="0">Attention Is All You Need<span class="tip">Transformer アーキテクチャを提案した画期的な論文。著者 Vaswani ら</span></span>」は、この「注意」だけでシーケンスを処理できると示しました。その核心が <strong>Scaled Dot-Product Attention</strong> です。今日はその数学を一行ずつ丁寧に分解しましょう。</p>
+<div class="pull">Attention とは「どの情報をどれだけ参照するか」を数値として学習する仕組みである。</div>
+<h2><span class="n">2</span>図書館の比喩 ─ Query・Key・Value の正体</h2>
+<p>Scaled Dot-Product Attention には 3 つの入力行列があります。<strong>Q（Query）・K（Key）・V（Value）</strong> です。これを図書館で考えてみましょう。あなたが司書に「機械学習の本はありますか？」と尋ねる検索ワードが Q。各本の背表紙に書かれたキーワードが K。実際に本を開いたときの内容が V です。</p>
+<div class="step"><span class="si">STEP 1</span><p>Query（Q）: 「今、自分が何を知りたいか」を表すベクトル。各トークンが持つ問い。</p></div><div class="step"><span class="si">STEP 2</span><p>Key（K）: 「自分はどんな情報を持っているか」を表すベクトル。各トークンが持つ看板。</p></div><div class="step"><span class="si">STEP 3</span><p>Value（V）: 「実際に取り出す情報」を表すベクトル。Key に対応する本当の内容。</p></div><div class="step"><span class="si">STEP 4</span><p>Q と K の類似度を計算し、その重みで V を加重平均する。これが Attention の全体像。</p></div>
+<h2><span class="n">3</span>Scaled Dot-Product Attention の数式展開</h2>
+<p>では核心の数式を見ていきましょう。入力は Q ∈ ℝ^{n×d_k}、K ∈ ℝ^{m×d_k}、V ∈ ℝ^{m×d_v} です。n はクエリの数、m はキー/バリューの数、<span class="term-tip" tabindex="0">d_k<span class="tip">Query と Key のベクトル次元数。スケーリングの分母に使われる</span></span> はキーの次元、d_v はバリューの次元です。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V"></div><div class="tx-cap">Scaled Dot-Product Attention の定義式</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">① 類似度行列の計算</span><span class="katex-display-wrapper" data-tex="S = QK^\top \in \mathbb{R}^{n \times m}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">② スケーリング（次元の爆発を防ぐ）</span><span class="katex-display-wrapper" data-tex="\hat{S} = \frac{S}{\sqrt{d_k}} = \frac{QK^\top}{\sqrt{d_k}}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">③ Softmax で確率分布へ変換（各行が確率）</span><span class="katex-display-wrapper" data-tex="A = \text{softmax}(\hat{S}),\quad A_{ij} = \frac{\exp(\hat{S}_{ij})}{\sum_{k=1}^{m}\exp(\hat{S}_{ik})}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">④ Value の加重平均で出力を得る</span><span class="katex-display-wrapper" data-tex="\text{Output} = AV \in \mathbb{R}^{n \times d_v}"></span></div></div></div>
+<h3>なぜ √d_k で割るのか？ ─ スケーリングの数学的根拠</h3>
+<p>d_k が大きくなると内積 QK^⊤ の値も大きくなります。なぜでしょう？ q と k がそれぞれ平均 0・分散 1 の独立な要素を持つとき、内積 q · k は d_k 個の項の和なので<span class="term-tip" tabindex="0">分散加法性<span class="tip">独立な確率変数の和の分散は各変数の分散の和に等しい性質</span></span> から分散が d_k になります。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{Var}\!\left(\sum_{i=1}^{d_k} q_i k_i\right) = \sum_{i=1}^{d_k} \text{Var}(q_i k_i) = d_k"></div><div class="tx-cap">内積の分散が d_k になることの確認（各要素が独立・平均0・分散1の場合）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">標準偏差は √d_k → √d_k で割れば分散が1に正規化される</span><span class="katex-display-wrapper" data-tex="\text{Var}\!\left(\frac{q \cdot k}{\sqrt{d_k}}\right) = \frac{d_k}{d_k} = 1"></span></div></div></div>
+<p>スケーリングなしで d_k が大きいと、内積値が非常に大きくなり Softmax が <strong>極端に尖った分布</strong>（ほぼ 0 か 1）になります。すると勾配がほぼゼロになり、学習が止まってしまいます。√d_k で割ることで勾配消失を防ぐのです。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;D でよく出る考え方</div>Softmax の「温度（temperature）」という概念があります。Softmax(S/T) の T を大きくすると分布が均一に、小さくすると鋭くなります。Scaled Dot-Product の √d_k はまさにこの温度調整と同じ役割を果たしています。論文を読む際は temperature scaling として一般化して捉えると理解が深まります。</div>
+<h3>Softmax 関数の復習 ─ なぜ確率分布を作るのか</h3>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{softmax}(\mathbf{z})_i = \frac{e^{z_i}}{\sum_{j=1}^{m} e^{z_j}}, \quad \sum_{i=1}^{m} \text{softmax}(\mathbf{z})_i = 1"></div><div class="tx-cap">Softmax 関数の定義。出力はすべて正かつ合計が 1（確率分布）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">数値安定化のため最大値を引く（実装上の工夫）</span><span class="katex-display-wrapper" data-tex="\text{softmax}(\mathbf{z})_i = \frac{e^{z_i - \max_j z_j}}{\sum_{j} e^{z_j - \max_j z_j}}"></span></div></div></div>
+<p>Softmax を使う理由は「どのトークンにどれだけ注目するか」を<strong>確率として解釈</strong>できるからです。出力 A_{ij} は「i 番目のクエリが j 番目のキーに注意を向ける割合」を表します。この値は 0〜1 の範囲で、行の合計が 1 になるため、Value の<strong>重み付き平均</strong>として自然に解釈できます。</p>
+<h3>Masked Attention ─ 未来を見ないための工夫</h3>
+<p>GPT のような自己回帰モデルでは、トークン i を予測するときに i より後ろのトークンを参照してはいけません（答えを見ながら予測することになる）。これを防ぐために<strong>マスク</strong>を使います。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{MaskedAttention}(Q,K,V) = \text{softmax}\!\left(\frac{QK^\top + M}{\sqrt{d_k}}\right)V"></div><div class="tx-cap">Causal Mask を加えた Masked Attention</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">M は上三角部分が -∞、下三角部分が 0 の行列</span><span class="katex-display-wrapper" data-tex="M_{ij} = \begin{cases} 0 &amp; (j \le i) \\ -\infty &amp; (j &gt; i) \end{cases}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">-∞ を加えると Softmax の出力がほぼ 0 になり未来を無視できる</span><span class="katex-display-wrapper" data-tex="\lim_{x \to -\infty} \frac{e^x}{\sum_k e^{z_k}} = 0"></span></div></div></div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>実装では -∞ の代わりに float(&#x27;-inf&#x27;) や -1e9 などの大きな負数を使います。-∞ をそのまま扱うと NaN が発生する場合があるため、実用上は -1e4 〜 -1e9 程度の値を使うことが多いです。PyTorch の torch.nn.functional.scaled_dot_product_attention にはこの処理が内包されています。</div>
+<h2><span class="n">4</span>Self-Attention と Cross-Attention ─ Q・K・V の由来</h2>
+<p>Q・K・V がどこから来るかによって Attention の種類が変わります。<strong>Self-Attention（自己注意）</strong> では Q・K・V がすべて同じ入力 X から生成されます。各トークンが系列内の他のすべてのトークンとの関係を計算できるため、文脈の把握が可能になります。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="Q = XW^Q, \quad K = XW^K, \quad V = XW^V"></div><div class="tx-cap">Self-Attention における Q・K・V の生成（X: 入力、W: 学習可能な重み行列）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">W^Q, W^K ∈ ℝ^{d_model × d_k}、W^V ∈ ℝ^{d_model × d_v} が学習される</span><span class="katex-display-wrapper" data-tex="W^Q, W^K \in \mathbb{R}^{d_{\text{model}} \times d_k}, \quad W^V \in \mathbb{R}^{d_{\text{model}} \times d_v}"></span></div></div></div>
+<p>一方、<strong>Cross-Attention（交差注意）</strong> は Q をデコーダの状態から、K・V をエンコーダの出力から生成します。翻訳タスクでいえば「翻訳先の文が翻訳元のどこに注目すべきか」を計算するのがこれです。<span class="term-tip" tabindex="0">Encoder-Decoder<span class="tip">入力を圧縮表現にするエンコーダと、それを展開して出力するデコーダの組み合わせ構造</span></span> 型モデルでは両者が組み合わさります。</p>
+<div class="stats"><div class="stat"><div class="v">O(n²d)</div><div class="k">Self-Attention の計算量（n: 系列長、d: 次元）</div></div><div class="stat"><div class="v">3</div><div class="k">QKV 行列を生成するための線形変換の数</div></div><div class="stat"><div class="v">√d_k</div><div class="k">スケーリング係数（Softmax の温度を安定化する）</div></div></div>
+<h2><span class="n">5</span>現代 LLM での使われ方</h2>
+<p>GPT-4・LLaMA・Claude などの大規模言語モデルはすべてこの Scaled Dot-Product Attention を積み重ねて構築されています。ただし原論文の形式からいくつかの改良が加えられています。例えば <strong><span class="term-tip" tabindex="0">Multi-Head Attention<span class="tip">異なる重み行列で複数の Attention を並列計算し結果を結合する手法</span></span></strong> は d_k を h 個のヘッドに分割して多様な注意パターンを学習します。</p>
+<p>また近年の研究では <strong><span class="term-tip" tabindex="0">Flash Attention<span class="tip">GPU のメモリ階層を活用して Attention を高速化するアルゴリズム。Dao ら 2022</span></span></strong> が注目されています。O(n²) のメモリ使用量を O(n) に削減しながら同一の計算結果を保証します。長文脈処理が求められる現代 LLM 研究では必須の知識です。</p>
+<h2><span class="n">6</span>実装のヒント ─ PyTorch で Attention を書く</h2>
+<div class="code"><div class="ln"><span class="no">1</span><span class="ct">def scaled_dot_product_attention(Q, K, V, mask=None):</span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="ind"></span># Q: (batch, n, d_k), K: (batch, m, d_k), V: (batch, m, d_v)</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="ind"></span>d_k = Q.shape[-1]</span></div><div class="ln"><span class="no">4</span><span class="ct"></span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span># STEP 1: 内積で類似度を計算</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span>scores = Q @ K.transpose(-2, -1)   # (batch, n, m)</span></div><div class="ln"><span class="no">7</span><span class="ct"></span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="ind"></span># STEP 2: √d_k でスケーリング</span></div><div class="ln"><span class="no">9</span><span class="ct"><span class="ind"></span>scores = scores / sqrt(d_k)</span></div><div class="ln"><span class="no">10</span><span class="ct"></span></div><div class="ln"><span class="no">11</span><span class="ct"><span class="ind"></span># STEP 3: マスク（任意）</span></div><div class="ln"><span class="no">12</span><span class="ct"><span class="ind"></span>if mask is not None:</span></div><div class="ln"><span class="no">13</span><span class="ct"><span class="ind"></span><span class="ind"></span>scores = scores + mask   # mask=-inf で未来をブロック</span></div><div class="ln"><span class="no">14</span><span class="ct"></span></div><div class="ln"><span class="no">15</span><span class="ct"><span class="ind"></span># STEP 4: Softmax で確率分布へ</span></div><div class="ln"><span class="no">16</span><span class="ct"><span class="ind"></span>attn_weights = softmax(scores, dim=-1)   # 行方向</span></div><div class="ln"><span class="no">17</span><span class="ct"></span></div><div class="ln"><span class="no">18</span><span class="ct"><span class="ind"></span># STEP 5: Value の加重平均</span></div><div class="ln"><span class="no">19</span><span class="ct"><span class="ind"></span>output = attn_weights @ V   # (batch, n, d_v)</span></div><div class="ln"><span class="no">20</span><span class="ct"><span class="ind"></span>return output, attn_weights</span></div></div><div class="code-cap">Scaled Dot-Product Attention の NumPy 風擬似コード</div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;D でよく出る考え方</div>Attention の重み行列（attn_weights）は可視化が非常に有益です。どのトークンがどのトークンに注目しているかを確認することで、モデルが文法・意味をどう処理しているか直感的に理解できます。BERTVisualize などのツールや、seaborn のヒートマップで簡単に可視化できます。研究では Attention の解釈可能性（Interpretability）がひとつの重要な課題になっています。</div>
+<h2><span class="n">7</span>計算量の理解 ─ なぜ長文脈は難しいか</h2>
+<p>Scaled Dot-Product Attention の計算量を整理しておきましょう。系列長 n、モデル次元 d_model とすると、QK^⊤ の計算は <strong>O(n² × d_k)</strong> です。n が 2 倍になると計算量が 4 倍になります。GPT-4 が 128K トークン、Claude が 200K トークンの長文脈に対応するには、この二乗コストをどう乗り越えるかが鍵です。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{Time Complexity: } O(n^2 d_k), \quad \text{Space Complexity: } O(n^2)"></div><div class="tx-cap">Attention の計算量・空間量。系列長の二乗がボトルネック</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">FlashAttention は再計算で空間量を O(n) に削減</span><span class="katex-display-wrapper" data-tex="\text{FlashAttention Space: } O(n)"></span></div></div></div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>この O(n²) 問題を解決しようとした研究は多く、Linformer・Performer・Longformer などが代表例です。ただし現時点では FlashAttention + KV Cache の組み合わせが実用上最も広く採用されています。理論的な面白さと実用性のギャップに注目するのも研究者の目線です。</div>
+<h2><span class="n">8</span>まとめ ─ Attention が「万能」な理由</h2>
+<p>Scaled Dot-Product Attention の本質は「<strong>Q と K の内積で類似度を計り、その重みで V を集約する</strong>」という非常にシンプルな操作です。しかしこのシンプルさの中に、位置に依存しない長距離依存の捕捉・並列計算の容易さ・学習可能な重み行列による柔軟性という 3 つの強みが詰まっています。</p>
+<p>明日の DAY 12 では、この Attention を h 個並列に走らせる <strong>Multi-Head Attention</strong> と、それを積み重ねる Transformer ブロック全体の構造に進みます。今日の数式 Attention(Q,K,V) = softmax(QK^⊤/√d_k)V をしっかり手に馴染ませておくと、残りの Transformer の議論がぐっとクリアになるはずです。</p>
+<div class="pull">Attention(Q,K,V) = softmax(QK^⊤/√d_k)V ─ この一行が現代 AI の中核をなす。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI 30日講座 — Week 1〜6 ・ generated by Claude
+  </div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Render explicit tex-block wrappers
+      document.querySelectorAll('.katex-display-wrapper').forEach(el => {
+        const tex = el.dataset.tex;
+        if (tex) {
+          try {
+            katex.render(tex, el, {displayMode: true, throwOnError: false});
+          } catch(e) {
+            el.textContent = tex;
+          }
+        }
+      });
+      // Auto-render inline $...$ and $$...$$ in text
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+</body>
+</html>
