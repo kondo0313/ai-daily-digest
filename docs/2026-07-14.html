@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-07-14</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-07-14</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #LLM #学習ダイナミクス #新人研究者向け</div>
+    <h1 class="headline">出力層が学習を遅くする?―「LMヘッド」に潜む見えない勾配ボトルネックの正体</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-07-14 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Lost in Backpropagation: The LM Head is a Gradient Bottleneck</div>
+      <div class="pc-row">
+        <span>Nathan Godey, Yoav Artzi</span>
+        <span>arXiv cs.CL ・ 2026年3月(第2版: 2026年7月)</span>
+        <a href="https://arxiv.org/abs/2603.10145">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<p>「モデルを大きくすれば賢くなる」「データを増やせば性能が伸びる」。LLM の学習に関わっていると、こうした直感はすぐに身につきます。では、モデルの隅々にある小さな設計判断が、実は学習の効率そのものを静かに縛っていると言われたらどうでしょうか。今日紹介する論文は、ほぼすべての Transformer 系 LLM が持つ「出力層(LMヘッド)」に、そんな見えない足かせが潜んでいることを理論と実験の両面から突き止めました。</p>
+<h2><span class="n">1</span>出力層が抱える古くて新しい問題</h2>
+<p>LLM の最後の層は、Transformer が作った隠れ表現(次元 D)を、語彙に含まれる各単語の「もっともらしさ」を表すロジット(次元 V)に変換します。この変換を担うのが LM ヘッドと呼ばれる線形層です。ところが現実には D は数千程度なのに対し、V は数万〜十数万にもなります。つまり LM ヘッドは、狭い部屋(D次元)から広い部屋(V次元)へ情報を無理やり引き伸ばす仕組みだと言えます。</p>
+<p>この非対称性が引き起こす問題として以前から知られていたのが <span class="term-tip" tabindex="0">softmaxボトルネック<span class="tip">出力層の表現力(次元D)が語彙サイズVより小さいため、理論上どうしても表現できない確率分布が出てくる現象</span></span> です。LM ヘッドの行列のランクは高々 D しかないので、本当はもっと複雑な次単語の確率分布を出したくても、その形に到達できないことがある、という「表現力」の限界として議論されてきました。これに対しては、入力埋め込みと出力層の重みを共有する <span class="term-tip" tabindex="0">重み共有<span class="tip">入力の単語埋め込み行列と出力層の行列を同じものにして、パラメータ数と表現力の課題を同時に緩和する工夫</span></span> など、いくつかの緩和策も提案されてきました。</p>
+<p>ただしこれらの議論は、あくまで「学習し終わったモデルが、どんな確率分布を出力できるか」という完成後の性能の話でした。今回の論文が問い直したのは、その手前の段階、つまり「学習が進んでいく過程そのものが、この同じボトルネックによって歪められていないか」という点です。</p>
+<div class="pull">出力層のランク不足は、モデルの「表現力」だけでなく、学習中に流れる勾配そのものも押しつぶしていた。</div>
+<h2><span class="n">2</span>発見:ボトルネックは前向きだけでなく後ろ向きにも効く</h2>
+<p>この論文の核心は、ソフトマックスボトルネックが「出力の表現力」の問題だけでなく、「学習信号の伝わり方」の問題でもあると示した点です。誤差逆伝播(<span class="term-tip" tabindex="0">バックプロパゲーション<span class="tip">出力側の誤差を、層をさかのぼって各パラメータの更新量に変換していく計算手続き</span></span>)では、LM ヘッドの行列を今度は転置して使い、V次元の誤差信号を D次元の隠れ表現の勾配へと送り返します。この「送り返す」変換もまた同じランク D の行列を使うため、V次元にあったはずの豊かな誤差の情報が、D次元という狭い通路を通る際に大きく圧縮されてしまうのです。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 順伝播: 隠れ表現 h (D次元) からロジット (V次元) を作る</span></div><div class="ln"><span class="no">1</span><span class="ct">h = <span class="fn">transformer_layers</span>(x)</span></div><div class="ln"><span class="no">2</span><span class="ct">logits = W_U @ h   # W_U は D×V, D ≪ V</span></div><div class="ln comment"><span class="no"></span><span class="ct"># 逆伝播: V次元の誤差を、同じ W_U を転置して送り返す</span></div><div class="ln"><span class="no">3</span><span class="ct">grad_logits = <span class="fn">d_loss_d_logits</span>(logits, target)</span></div><div class="ln"><span class="no">4</span><span class="ct">grad_h = W_U.T @ grad_logits<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># grad_h がそのまま、それより前の全層へ伝わっていく</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="kw">for</span> layer <span class="kw">in</span> reversed(transformer_layers):</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span>grad_h = layer.<span class="fn">backward</span>(grad_h)<span class="badge">②</span></span></div></div><div class="code-cap">LM ヘッドを通る勾配の流れ(擬似コード)</div>
+<h3>① で何が起きているのか</h3>
+<p>① の grad_h = W_U.T @ grad_logits という一行が、実は事件の現場です。grad_logits は V次元というとても情報量の多いベクトルですが、それを D次元の grad_h に変換する時点で、W_U のランクが D しかないという制約から逃れられません。論文はこれを理論的に解析したうえで、実際のモデルで測定し、<span class="term-tip" tabindex="0">勾配ノルム<span class="tip">パラメータ更新の「大きさ」を表す指標。小さいほど学習の推進力が弱いことを意味する</span></span> のなんと 95〜99% が LM ヘッドを通過する際に失われている(押しつぶされている)ことを確認しました。</p>
+<h3>② で何が失われるのか</h3>
+<p>② のように、圧縮済みの grad_h はそのまま前段の全ての Transformer 層へ伝わっていきます。つまり出力層で一度圧縮された学習信号を、モデルの残り(パラメータの大部分を占める部分)がずっと受け取り続けることになります。出力に近い1層のロス設計が、モデル全体の学習の質を左右してしまう、というのがこの論文の見立てです。</p>
+<div class="stats"><div class="stat"><div class="v">95〜99%</div><div class="k">LM ヘッドを通過する際に抑制される勾配ノルムの割合</div></div><div class="stat"><div class="v">D ≪ V</div><div class="k">隠れ層次元と語彙サイズの非対称性が根本原因</div></div></div>
+<h2><span class="n">3</span>小さな実験が示した実害</h2>
+<p>理論と大規模モデルの実測だけでなく、著者らは制御された事前学習実験も行っています。そこでは、本来なら簡単に学習できるはずの「単純なパターン」でさえ、この勾配ボトルネックのせいで学習できなくなってしまう(unlearnable になる)ケースが確認されました。つまりこれは理論上の懸念にとどまらず、実際の学習ダイナミクスを目に見える形で歪めている、ということです。</p>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>論文は、この問題が特定のアーキテクチャに固有のものではなく、「隠れ次元 D よりずっと大きい語彙 V を、線形層1枚で受け止めている」構造を持つモデル全般に当てはまると主張しています。裏を返せば、LM ヘッドの設計を見直すだけで、モデル規模やアーキテクチャを変えずに学習効率を改善できる余地がある、ということでもあります。</div>
+<p>新人研究者にとって示唆的なのは、モデルの「入口」と「出口」は対称に見えて、実は逆伝播での役割がまったく違うという点です。埋め込み層は語彙 V から次元 D へ情報を圧縮して読み込むだけですが、LM ヘッドは D から V への変換を担いながら、逆伝播では今度は V から D への圧縮を強いられる、いわば二重の役割を負っています。学習が思うように進まないとき、原因をつい大きなモジュールや学習率に求めがちですが、この論文は「地味に見える出力層の形」こそ疑うべき場所になり得ることを教えてくれます。</p>
+<h2><span class="n">4</span>意義と限界</h2>
+<div class="step"><span class="si">STEP 1</span><p>実証されているのは主に小〜中規模の制御実験。数百億〜数千億パラメータ級の実運用モデルでどこまで同じ規模の効果が出るかは、今後の追試が必要。</p></div><div class="step"><span class="si">STEP 2</span><p>論文は「新しい LM ヘッド設計が必要」という問題提起までで、決定版の解決策そのものは示していない。</p></div><div class="step"><span class="si">STEP 3</span><p>「アーキテクチャに依存しない普遍的な問題」という主張自体、幅広いモデル族での追試によってさらに検証されるべき段階にある。</p></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「性能が伸び悩む原因は、派手なモジュールではなく地味な接続部分にある」というのは研究の現場でよくあるパターンです。今回のようにソフトマックスボトルネックという既知の話に「実は勾配にも効いていた」という新しい切り口を足す、既存概念の再解釈は、新人のうちから鍛えておきたい視点の一つです。当たり前だと思っていた部品を、順伝播だけでなく逆伝播の視点からも見直してみる癖をつけると、思わぬボトルネックに気づけることがあります。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
