@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 30日講座 — 多様な視点で見る ─ Multi-Head Attention の設計と直感</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+
+.course-card{background:linear-gradient(135deg,#1c6f8c15,#2cb69615);border:1.5px solid var(--accent);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.course-card .cc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--accent-ink);text-transform:uppercase;margin-bottom:6px;}
+.course-card .cc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;color:var(--ink);}
+.course-card .cc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:4px 16px;}
+.cc-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;border-radius:6px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;}
+.progress-bar{height:4px;background:var(--line);border-radius:2px;margin:10px 0 4px;}
+.progress-bar .bar{height:100%;background:var(--accent);border-radius:2px;transition:width .4s;}
+.progress-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-faint);text-align:right;}
+/* KaTeX blocks */
+.tex-block{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;overflow-x:auto;}
+.tex-block .katex-display{margin:0;}
+.tex-block .tx-cap{font-size:12.5px;color:var(--ink-faint);margin-top:10px;text-align:center;}
+.tex-derive{margin-top:12px;border-top:1px solid var(--line);padding-top:10px;}
+.tex-derive-row{display:flex;gap:10px;align-items:baseline;margin-top:6px;font-size:14px;}
+.tex-derive-label{font-size:12px;color:var(--ink-faint);flex-shrink:0;min-width:80px;}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">📚</span> AI 30日講座</div>
+      <div class="date-pill">2026-07-15</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI30日講座 #Transformer #MultiHeadAttention #NLP #深層学習</div>
+    <h1 class="headline">多様な視点で見る ─ Multi-Head Attention の設計と直感</h1>
+
+    <div class="author">
+      <div class="avatar" style="background:linear-gradient(135deg,#1c6f8c,#2cb696);">📚</div>
+      <div class="author-meta">
+        <div class="name">AI 30日講座</div>
+        <div class="sub">2026-07-15 ・ DAY 12 ・ Transformer ─ 現代 LLM の心臓部</div>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="cc-label">本日のカリキュラム</div>
+      <div class="cc-title">
+        <span class="cc-badge">DAY 12 / 30</span>
+        &nbsp;多様な視点で見る ─ Multi-Head Attention の設計と直感
+      </div>
+      <div class="progress-bar"><div class="bar" style="width:40%"></div></div>
+      <div class="progress-label">40% 完了</div>
+      <div class="cc-row">
+        <span>Week 3: Transformer ─ 現代 LLM の心臓部</span>
+        <span>基礎〜中級</span>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>なぜ「一つの目」では足りないのか</h2>
+<p>「The bank by the river was steep.」という文を考えてみましょう。&quot;bank&quot; が「川岸」であることを理解するには、少なくとも「river」と「steep」の両方を同時に参照しなければなりません。さらに「was」は過去形として動詞の時制を解析する必要があり、「the」は名詞句の開始を示しています。一つの<span class="term-tip" tabindex="0">Attention機構<span class="tip">入力系列の任意の位置同士の関連度を計算し、文脈に応じた表現を作る仕組み</span></span>では、これら複数の「視点」を同時に、かつ独立に捉えることが難しいのです。Multi-Head Attention は、まさにこの問題を解決するために設計されました。</p>
+<div class="pull">一つの Attention ヘッドは「一つの視点」。Multi-Head Attention は、複数の独立した視点を並列に走らせ、最後に統合する設計思想だ。</div>
+<h2><span class="n">2</span>Scaled Dot-Product Attention の復習</h2>
+<p>Multi-Head Attention を理解するには、まず土台となる<span class="term-tip" tabindex="0">Scaled Dot-Product Attention<span class="tip">クエリ・キー・バリューの三つ組から重み付き和を計算する基本 Attention</span></span>を正確に押さえる必要があります。クエリ行列 Q、キー行列 K、バリュー行列 V が与えられたとき、出力は次のように定義されます。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V"></div><div class="tx-cap">Scaled Dot-Product Attention の基本定義</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">① 類似度スコアの計算</span><span class="katex-display-wrapper" data-tex="S = QK^\top \in \mathbb{R}^{n \times n}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">② スケーリング（次元の爆発を防ぐ）</span><span class="katex-display-wrapper" data-tex="\hat{S} = \frac{S}{\sqrt{d_k}}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">③ 行方向に softmax で重みへ変換</span><span class="katex-display-wrapper" data-tex="A = \text{softmax}(\hat{S}) \in \mathbb{R}^{n \times n}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">④ バリューの重み付き和が最終出力</span><span class="katex-display-wrapper" data-tex="\text{Output} = A V \in \mathbb{R}^{n \times d_v}"></span></div></div></div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>√d_k で割る理由：d_k が大きいとドット積の分散が d_k 倍に膨らみ、softmax の勾配がほぼゼロになる（vanishing gradient）。スケーリングで分散を 1 に正規化することで勾配の流れを安定させます。</div>
+<h2><span class="n">3</span>Multi-Head Attention の数学的定義</h2>
+<p>Multi-Head Attention の本質は、「同一の入力を h 個の異なる線形変換で射影し、それぞれ独立に Attention を計算した後、結果を連結して再射影する」という操作です。各ヘッド i に対して、専用の射影行列 W_i^Q, W_i^K, W_i^V が用意されます。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, \dots, \text{head}_h)\, W^O"></div><div class="tx-cap">Multi-Head Attention の出力計算式</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">各ヘッドの定義（i = 1, …, h）</span><span class="katex-display-wrapper" data-tex="\text{head}_i = \text{Attention}(Q W_i^Q,\; K W_i^K,\; V W_i^V)"></span></div><div class="tex-derive-row"><span class="tex-derive-label">射影行列の次元（元論文の設定）</span><span class="katex-display-wrapper" data-tex="W_i^Q \in \mathbb{R}^{d_{\text{model}} \times d_k},\quad W_i^K \in \mathbb{R}^{d_{\text{model}} \times d_k},\quad W_i^V \in \mathbb{R}^{d_{\text{model}} \times d_v}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">出力射影行列の次元</span><span class="katex-display-wrapper" data-tex="W^O \in \mathbb{R}^{h d_v \times d_{\text{model}}}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">元論文の典型的なパラメータ設定</span><span class="katex-display-wrapper" data-tex="h = 8,\quad d_{\text{model}} = 512,\quad d_k = d_v = \frac{d_{\text{model}}}{h} = 64"></span></div></div></div>
+<div class="stats"><div class="stat"><div class="v">h = 8</div><div class="k">元論文 (Vaswani et al. 2017) のヘッド数</div></div><div class="stat"><div class="v">d_k = 64</div><div class="k">各ヘッドが扱うキー次元（512/8）</div></div><div class="stat"><div class="v">W^O で統合</div><div class="k">連結後を d_model = 512 に再射影</div></div></div>
+<h2><span class="n">4</span>直感：各ヘッドは何を「見て」いるのか</h2>
+<p>たとえ話を使いましょう。記者会見の動画を報道する際、一人の記者が「発言内容」「表情」「会場の雰囲気」をすべて同時に同等の注意で観察することは難しい。そこで複数の記者が分担します。一人目は言葉の内容に、二人目は感情表現に、三人目は前後の文脈の整合性に集中する——これが Multi-Head Attention の分業です。各ヘッドは異なる W_i^Q, W_i^K で「どこに注目するか」の視点が変わり、異なる<span class="term-tip" tabindex="0">表現空間<span class="tip">データを埋め込む幾何学的な空間のこと</span></span>で類似度を計算します。</p>
+<p>研究によって実際に確認されたヘッドの役割の例としては、「直前のトークンを強く参照するヘッド」「文の動詞と主語の対応を追うヘッド」「長距離依存（coreference）を捉えるヘッド」などがあります。全ヘッドが同一の動作をするわけではなく、<strong>学習によって自然に分業が生まれる</strong>のが美しい点です。</p>
+<h2><span class="n">5</span>設計の深掘り</h2>
+<h3>① 計算量は Single-Head と同等になる理由</h3>
+<p>h 個のヘッドに分割すると「計算量が h 倍になるのでは？」と思うかもしれません。しかし各ヘッドの次元は d_model/h に圧縮されているため、トータルの行列積の計算コストはほぼ変わりません。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\underbrace{h \cdot (n \cdot d_k \cdot d_k)}_{{\text{h ヘッドの Attention}}} \approx \underbrace{n \cdot d_{\text{model}} \cdot d_{\text{model}}}_{{\text{Single-Head の Attention}}}\quad \left(d_k = \frac{d_{\text{model}}}{h}\right)"></div><div class="tx-cap">h ヘッドに分割しても総計算量はほぼ不変</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">d_k = d_model / h を代入</span><span class="katex-display-wrapper" data-tex="h \cdot n \cdot \left(\frac{d_{\text{model}}}{h}\right)^2 = \frac{n \cdot d_{\text{model}}^2}{h}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">QK^⊤ の計算に加え射影コストも考慮すると</span><span class="katex-display-wrapper" data-tex="\text{Total} \sim O\!\left(n^2 d_{\text{model}} + n d_{\text{model}}^2\right)"></span></div></div></div>
+<h3>② 出力射影行列 W^O の役割</h3>
+<p>各ヘッドの出力を Concat した後に W^O で線形変換する理由は二つあります。一つ目は次元を d_model に戻すこと、二つ目は「各ヘッドの情報を混合・調整する」ことです。W^O は各ヘッドの寄与を重みづけしながら統合する「編集者」の役割を担います。この段階で初めて、異なる視点の情報が一つの<span class="term-tip" tabindex="0">埋め込みベクトル<span class="tip">トークンの意味や文脈を数値のベクトルとして表現したもの</span></span>に統合されます。</p>
+<h3>③ Masked Multi-Head Attention（デコーダ側）</h3>
+<p>GPT などの<span class="term-tip" tabindex="0">自己回帰モデル<span class="tip">過去のトークンのみから次のトークンを予測するモデル</span></span>では、未来のトークンを参照してはいけません。これを実現するのが Causal Mask です。softmax の前に「未来の位置」に -∞ を加算することで、それらの Attention 重みをゼロに強制します。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{MaskedAttention}(Q,K,V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}} + M\right)V"></div><div class="tx-cap">Causal Mask を加えた Masked Attention</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">Causal Mask M の定義（i &lt; j の位置を -∞ でマスク）</span><span class="katex-display-wrapper" data-tex="M_{ij} = \begin{cases} 0 &amp; \text{if } i \geq j \\ -\infty &amp; \text{if } i &lt; j \end{cases}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">softmax(-∞) = 0 なので未来への Attention は完全にゼロ</span><span class="katex-display-wrapper" data-tex="\lim_{x \to -\infty} \frac{e^x}{\sum_j e^{x_j}} = 0"></span></div></div></div>
+<h2><span class="n">6</span>現代 LLM への接続</h2>
+<p>GPT-4、LLaMA、Gemini など現代の大規模言語モデルはすべて Multi-Head Attention を中核に持ちます。ただし、スケールアップに伴っていくつかの改良が施されています。例えば <strong>Grouped-Query Attention (GQA)</strong> は、h 個のクエリヘッドに対してキー・バリューヘッドを g グループ（g &lt; h）に削減する技術で、KV キャッシュのメモリを大幅に節約します。LLaMA 2 や Mistral で採用されています。また <strong>Multi-Query Attention (MQA)</strong> は GQA の極限（g = 1）で、全クエリが単一の K/V を共有します。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{GQA: } \text{head}_i = \text{Attention}\!\left(Q W_i^Q,\; K W_{\lceil i/r \rceil}^K,\; V W_{\lceil i/r \rceil}^V\right),\quad r = h/g"></div><div class="tx-cap">Grouped-Query Attention の定義（r はクエリヘッドとKVヘッドの比率）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">g = h のとき（MHA）</span><span class="katex-display-wrapper" data-tex="\text{各ヘッドが独立の K, V を持つ通常の Multi-Head Attention}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">g = 1 のとき（MQA）</span><span class="katex-display-wrapper" data-tex="\text{全クエリヘッドが単一の K, V を共有する Multi-Query Attention}"></span></div></div></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;D でよく出る考え方</div>実務では「ヘッド数 h を増やす ≠ 精度が上がる」という事実が重要です。ヘッド数を増やしすぎると各ヘッドの次元 d_k が小さくなりすぎ、表現力が低下することがあります。LLM の設計では h と d_model のバランス調整が重要なハイパーパラメータチューニングの一つです。</div>
+<h2><span class="n">7</span>実装のヒント：PyTorch 風の擬似コード</h2>
+<div class="code"><div class="ln"><span class="no">1</span><span class="ct">class MultiHeadAttention:</span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="ind"></span>def __init__(self, d_model, h):</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="ind"></span><span class="ind"></span>self.h = h</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span><span class="ind"></span>self.d_k = d_model // h   # 各ヘッドの次元</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span><span class="ind"></span>self.W_Q = Linear(d_model, d_model)  # 全ヘッド分まとめて射影</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span><span class="ind"></span>self.W_K = Linear(d_model, d_model)</span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="ind"></span><span class="ind"></span>self.W_V = Linear(d_model, d_model)</span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="ind"></span><span class="ind"></span>self.W_O = Linear(d_model, d_model)</span></div><div class="ln"><span class="no">9</span><span class="ct"></span></div><div class="ln"><span class="no">10</span><span class="ct"><span class="ind"></span>def forward(self, Q, K, V, mask=None):</span></div><div class="ln"><span class="no">11</span><span class="ct"><span class="ind"></span><span class="ind"></span>B, n, _ = Q.shape  # バッチ・系列長・次元</span></div><div class="ln"><span class="no">12</span><span class="ct"><span class="ind"></span><span class="ind"></span># (B, n, d_model) → (B, h, n, d_k) に reshape</span></div><div class="ln"><span class="no">13</span><span class="ct"><span class="ind"></span><span class="ind"></span>Q = self.W_Q(Q).view(B, n, self.h, self.d_k).transpose(1,2)</span></div><div class="ln"><span class="no">14</span><span class="ct"><span class="ind"></span><span class="ind"></span>K = self.W_K(K).view(B, n, self.h, self.d_k).transpose(1,2)</span></div><div class="ln"><span class="no">15</span><span class="ct"><span class="ind"></span><span class="ind"></span>V = self.W_V(V).view(B, n, self.h, self.d_k).transpose(1,2)</span></div><div class="ln"><span class="no">16</span><span class="ct"><span class="ind"></span><span class="ind"></span># Scaled Dot-Product Attention（各ヘッドに並列適用）</span></div><div class="ln"><span class="no">17</span><span class="ct"><span class="ind"></span><span class="ind"></span>scores = (Q @ K.transpose(-2,-1)) / sqrt(self.d_k)</span></div><div class="ln"><span class="no">18</span><span class="ct"><span class="ind"></span><span class="ind"></span>if mask is not None: scores = scores.masked_fill(mask, -1e9)</span></div><div class="ln"><span class="no">19</span><span class="ct"><span class="ind"></span><span class="ind"></span>attn = softmax(scores, dim=-1)  # (B, h, n, n)</span></div><div class="ln"><span class="no">20</span><span class="ct"><span class="ind"></span><span class="ind"></span>out = attn @ V              # (B, h, n, d_k)</span></div><div class="ln"><span class="no">21</span><span class="ct"><span class="ind"></span><span class="ind"></span># ヘッドを連結して W_O で再射影</span></div><div class="ln"><span class="no">22</span><span class="ct"><span class="ind"></span><span class="ind"></span>out = out.transpose(1,2).contiguous().view(B, n, -1)</span></div><div class="ln"><span class="no">23</span><span class="ct"><span class="ind"></span><span class="ind"></span>return self.W_O(out)         # (B, n, d_model)</span></div></div><div class="code-cap">Multi-Head Attention の前向き計算（PyTorch 風擬似コード）</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>実装上のポイント：射影行列を「全ヘッドまとめて一つの大きな Linear 層」として実装すると、GPU のバッチ行列積（bmm）を最大限に活用でき、実際のスループットが大幅に向上します。ヘッドごとにループを回す実装は避けましょう。</div>
+<h2><span class="n">8</span>Multi-Head Attention の学習ダイナミクス</h2>
+<p>Multi-Head Attention は、<span class="term-tip" tabindex="0">表現学習<span class="tip">データの有用な特徴を自動的に獲得する学習のこと</span></span>の観点からも重要です。各ヘッドの射影行列は、バックプロパゲーションを通じて「どの視点が損失関数を下げるか」を学習します。興味深いことに、学習済みモデルのヘッドを解析すると、一部のヘッドが冗長であることが知られており（Attention Head Pruning の研究）、全ヘッドが常に重要というわけではありません。これは<strong>スパース性</strong>と<strong>冗長性の許容</strong>がモデルの汎化能力に貢献していることを示唆しています。</p>
+<div class="step"><span class="si">STEP 1</span><p>入力 X を Q, K, V の三つに（または Encoder-Decoder では別々に）射影する</p></div><div class="step"><span class="si">STEP 2</span><p>h 個の (W_i^Q, W_i^K, W_i^V) で異なる部分空間に変換し、各ヘッドで独立に Scaled Dot-Product Attention を計算</p></div><div class="step"><span class="si">STEP 3</span><p>全ヘッドの出力を Concat し、W^O で d_model 次元に再射影して残差接続・Layer Norm へ送る</p></div><div class="step"><span class="si">STEP 4</span><p>損失から逆伝播することで各ヘッドの射影行列が「専門化」し、異なる言語的パターンを担当するようになる</p></div>
+<h2><span class="n">9</span>まとめと次のステップ</h2>
+<p>Multi-Head Attention は「複数の独立した視点から入力を解析し、その知見を統合する」というシンプルかつ強力なアイデアです。数学的には、同一入力への複数の線形射影と Attention の並列適用、そして最終的な線形変換による統合として記述されます。実装コストは Single-Head と同等でありながら、表現の多様性と冗長性を獲得できるのが設計の妙です。</p>
+<p>明日 DAY 13 では、Transformer のもう一つの柱である <strong>Position-wise Feed-Forward Network と Positional Encoding</strong> に踏み込みます。Attention だけでは「位置情報」が欠落していますが、どのようにして系列の順序を表現に組み込むのか——その仕組みを数式と直感の両面から丁寧に解説します。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;D でよく出る考え方</div>論文読解のコツ：Multi-Head Attention の論文（Vaswani et al., 2017）では Attention の可視化図が掲載されています。異なるヘッドが「代名詞の照応」「構文的依存」など異なる構造を学習していることが視覚的に確認できます。自分で学習済みモデルの Attention 重みを可視化するツール（BertViz など）を触ってみると、理論の理解が一段と深まります。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI 30日講座 — Week 1〜6 ・ generated by Claude
+  </div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Render explicit tex-block wrappers
+      document.querySelectorAll('.katex-display-wrapper').forEach(el => {
+        const tex = el.dataset.tex;
+        if (tex) {
+          try {
+            katex.render(tex, el, {displayMode: true, throwOnError: false});
+          } catch(e) {
+            el.textContent = tex;
+          }
+        }
+      });
+      // Auto-render inline $...$ and $$...$$ in text
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+</body>
+</html>

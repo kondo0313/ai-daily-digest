@@ -120,8 +120,8 @@ h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
   </div>
 
   <div class="page">
-    <div class="tags">#AI #論文解説 #世界モデル #ロボティクス #新人研究者向け</div>
-    <h1 class="headline">予測誤差を下げても賢くなるとは限らない ― 世界モデルの「見えない前提」を暴いた制御理論</h1>
+    <div class="tags">#AI #論文解説 #ロボティクス #拡散モデル #マニピュレーション #新人研究者向け</div>
+    <h1 class="headline">「どの座標系で考えるか」を混ぜ合わせる――バイマニュアルロボットのための拡散ポリシー新手法 MoF</h1>
 
     <div class="author">
       <div class="avatar">AI</div>
@@ -133,37 +133,45 @@ h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
 
     <div class="paper-card">
       <div class="pc-label">本日の論文</div>
-      <div class="pc-title">A Control Theory of Predictability in Latent World Models</div>
+      <div class="pc-title">Mixture of Frames Policy: Multi-Frame Action Denoising for Bimanual Mobile Manipulation</div>
       <div class="pc-row">
-        <span>Hanzhe You, Yonggang Zhang, Maohao Ran, Zhiqin Yang, Zhenyuan Zhang, Wei Xue, Jun Song, Xinmei Tian, Yike Guo</span>
-        <span>arXiv cs.LG ・ 2026年7月</span>
-        <a href="https://arxiv.org/abs/2607.10362">原文 →</a>
+        <span>（著者・所属は公開情報から確認できる範囲のみ）</span>
+        <span>arXiv cs.RO ・ 2025年7月</span>
+        <a href="https://arxiv.org/abs/2607.11884">原文 →</a>
       </div>
     </div>
 
     <div class="content">
-<h2><span class="n">1</span>「予測誤差を下げれば、ロボットは賢くなる」って本当?</h2>
-<p>ロボットの<span class="term-tip" tabindex="0">世界モデル<span class="tip">環境がどう変化するかを学習した予測モデル。未来の状態をシミュレーションできる</span></span>を作るとき、私たちは当たり前のように「検証データでの予測誤差が小さいモデルほど良いモデルだ」と考えます。学習を止めるタイミングも、どのアーキテクチャを採用するかも、たいていこの一本の指標で決めます。ですが今日紹介する論文は、この「当たり前」を制御理論の立場から真正面から検証し、実は成り立たない場合があることを数式で示しました。新人のうちに知っておくと、モデル選びで足をすくわれずに済む、地味だけれど本質的な話です。</p>
-<h2><span class="n">2</span>背景: 世界モデルとプランニングの関係</h2>
-<h3>頭の中でシミュレーションしてから動く</h3>
-<p>世界モデルを使うロボットの多くは、<span class="term-tip" tabindex="0">MPC<span class="tip">Model Predictive Control: 何手か先までシミュレーションして一番良さそうな行動列を選ぶ制御手法</span></span>という考え方で動きます。何通りもの行動の候補を頭の中で(モデルの中で)先読みし、その結果として得られる状態が一番コストの低いものを選んで実行する、というやり方です。将棋や囲碁で「この手を指したらどうなるか」を何手も先まで読んでから指すのに似ています。</p>
-<p>この世界モデルは、ロボットが実際に集めた過去のデータ(状態と次の状態のペア)から学習されます。そして学習の良し悪しは、集めたデータの一部を検証用に取り分けておき、そこでの予測誤差(1ステップ先、あるいは数ステップ先までの誤差)を測ることで判断されます。この「検証誤差が小さい=良いモデル」という前提は、業界標準といっていいほど広く使われています。</p>
-<h2><span class="n">3</span>論文の核心: 「プランナーは学習データの外を見ている」</h2>
-<div class="pull">プランナーが実際に問い合わせるのは、訓練データの分布ではなく、候補となる行動が導く先の状態である。</div>
-<p>検証誤差は、あくまで手元にある過去データという<span class="term-tip" tabindex="0">データ多様体<span class="tip">訓練データが実際に分布している状態空間の中の「地図」のようなもの</span></span>の上で平均した値です。ところがプランニングの最中、モデルは何百通りもの仮想的な行動列を試すために何度も呼び出され、その多くは地図の外――つまり訓練データが一度も通ったことのない状態――へと連れ出されます。地図の中でどれだけ正確でも、地図の外での正確さについては何も保証してくれません。これが著者らの突いた急所です。</p>
-<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># --- 学習・検証のフェーズ ---</span></div><div class="ln"><span class="no">1</span><span class="ct">model = <span class="fn">train_world_model</span>(offline_data)</span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="kw">for</span> x, x_next <span class="kw">in</span> held_out_data:</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="ind"></span>pred = <span class="fn">model.predict</span>(x)<span class="badge">①</span></span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>val_loss += <span class="fn">mse</span>(pred, x_next)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># --- 実際にロボットを動かすフェーズ (プランニング) ---</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="kw">for</span> actions <span class="kw">in</span> planner.propose_candidates():</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span>state = x0</span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="ind"></span><span class="kw">for</span> a <span class="kw">in</span> actions:</span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="ind"></span><span class="ind"></span>state = <span class="fn">model.predict</span>(state, a)<span class="badge">②</span></span></div><div class="ln"><span class="no">9</span><span class="ct"><span class="ind"></span>cost = <span class="fn">evaluate</span>(state)</span></div><div class="ln"><span class="no">10</span><span class="ct">best_plan = <span class="fn">argmin</span>(cost, over=all_candidates)<span class="badge">③</span></span></div></div><div class="code-cap">「誤差を測る場所」と「実際に使われる場所」はズレている</div>
-<p>①では、モデルは訓練データそのものの上で評価されています。しかし②では、プランナーが仮に選んだ行動列がたどり着く先――多くの場合は訓練データの外側――で、モデルは何度も呼び出されます。そして③で最終的に選ばれる計画のコストこそが、ロボットの実際の性能を左右します。①の指標がいくら小さくても、②③で使われる場所での正確さはまったく別問題、というのがこの論文の主張です。</p>
-<h3>正しい物差し: 「選ばれた計画」のコストのズレ</h3>
-<p>そこで著者らは、平均的な予測誤差の代わりに、プランナーが最終的にコミットした計画について「モデルが予測したコスト」と「実際に行動した場合の真のコスト」の食い違い(discrepancy、これをΔとします)を新しい物差しとして定義しました。そのうえで、プランナーの性能劣化(理想的な最適行動と比べてどれだけ損をするか)は、このΔの高々2倍に収まることを証明しています。一方で、従来からある「データ平均の予測誤差」は、このΔを保証もしなければ、追跡すらしないことも同時に示されました。</p>
-<h3>誤差を二つに分解する: 「地図の中」と「地図の外」</h3>
-<p>線形な制御という前提のもとで、このΔはさらに二つの項に分解できます。ひとつは地図の中(訓練データが実際に通った範囲)での小さな誤差で、著者らはこれを「<span class="term-tip" tabindex="0">スペクトル税<span class="tip">潜在空間の遷移を表す変換が対称でない(非正規)場合に生じる、一時的な誤差の増幅コスト</span></span>」と呼びます。潜在空間の遷移が<span class="term-tip" tabindex="0">非正規作用素<span class="tip">対称でない変換のこと。最終的には収束しても、途中で誤差が一時的に大きく膨らむことがある</span></span>だと、たとえ長期的には安定していても、数ステップの間だけ誤差が思いのほか膨らむことがあるためです。もうひとつは地図の外での誤差(off-manifold divergence)で、こちらはどんなデータ平均の指標を使っても捉えられない、性能劣化の本当の主犯だと論文は結論づけています。</p>
-<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「本当に最適化したい目的」と「実際に最適化している代理指標」がズレてしまう現象は、機械学習の現場でしばしば起こります。検証ロスを下げることと、実運用での性能を上げることは、似ているようで別物になりうる――この論文は、その典型例のひとつを厳密な証明つきで示した、貴重なケーススタディです。</div>
-<h2><span class="n">4</span>実験でも裏付けられた「ズレ」</h2>
-<p>著者らはまず、解析的に扱いやすい線形の潜在遷移作用素(synthetic operators)を使い、上で導いた「スペクトル税」の理論式が実際に成り立つことを確認しました。さらに、実際の潜在空間でのMPC実験でも、この分解が実測データと整合することを確かめています。乱数の初期値(シード)を変えて何度も学習をやり直したところ、「1ステップ先の検証誤差」は制御の成功率とほとんど相関しない一方で、プランナーが実際に到達しうる状態の集合上で測った忠実度スコアは、制御の成功率をよく追跡することが分かりました。</p>
-<div class="pull">1ステップ先の検証誤差は、制御の成功率とはほとんど無関係だった。</div>
-<h2><span class="n">5</span>意義と限界</h2>
-<div class="step"><span class="si">前提</span><p>誤差を「地図の中」と「地図の外」に分解する議論は、線形制御という前提のもとで導かれている。非線形な実ロボットのダイナミクスへどこまで一般化できるかは今後の課題。</p></div><div class="step"><span class="si">検証範囲</span><p>理論の裏付けは解析可能な合成オペレータと潜在空間でのMPC実験で行われており、より複雑な実世界ロボットでの検証は論文内では示されていない。</p></div><div class="step"><span class="si">新しい指標</span><p>「プランナーが到達しうる状態の集合上での忠実度スコア」は本論文が新たに提案した概念であり、既存の評価パイプラインにそのまま組み込むには追加の整備が必要になりそうだ。</p></div>
-<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>「検証ロスが下がっている=モデルが良くなっている」は、直感的には正しそうに見えて、実は暗黙の前提(そのモデルが使われる場所と、誤差を測った場所が一致している)に支えられています。新人のうちは指標を疑い、その指標が「本当に測りたいもの」のどこまでを代弁できているかを一度立ち止まって考える癖をつけておくと、あとで大きな回り道をせずに済みます。</div>
+<h2><span class="n">1</span>「どの座標系で動きを表すか」は、実はとても難しい問題だ</h2>
+<p>ロボットが「コップを掴んで持ち上げる」という動作を学習するとき、その動きを<strong>どの座標系（フレーム）で表現するか</strong>が学習の難易度を大きく左右します。たとえばハンドの細かな開閉は「手先（エンドエフェクタ）を基準にした座標系」で表すとシンプルですが、部屋を横断して物を運ぶ動作は「ロボットの胴体（ベース）を基準にした座標系」のほうが自然です。これはちょうど、地図を読むとき「自分の向きを基準にした地図」と「北を上にした地図」を使い分けるのと似た話です。</p>
+<p>ところが現代の<span class="term-tip" tabindex="0">拡散ポリシー<span class="tip">ノイズ除去拡散過程でロボット行動を生成するニューラルネット手法</span></span>は、ひとつの座標系だけを事前に決めてしまうのが一般的です。その「たったひとつのフレーム」が全タスクにとってベストとは限らず、むしろ複雑な行動分布を無理やり学ばせてしまうことになります。この論文が解決しようとしているのはまさにこの問題です。</p>
+<h2><span class="n">2</span>背景：拡散ポリシーとフレーム問題</h2>
+<h3>拡散ポリシーとは何か</h3>
+<p><span class="term-tip" tabindex="0">拡散ポリシー<span class="tip">画像や観測を入力にし、ノイズを段階的に除去しながらロボット行動を生成する手法</span></span>は近年ロボット学習で大きな成果を上げています。「ランダムなノイズ」から始めて少しずつノイズを取り除き（デノイジング）、最終的に実行すべき行動系列を出力します。高次元かつ多峰性の行動分布を扱えるのが強みです。</p>
+<h3>バイマニュアル移動マニピュレーションの難しさ</h3>
+<p>この研究が対象にするのは「両腕を持ちながら移動もできるロボット」の制御です。右手・左手それぞれの精密な操作と、ロボット全体の移動が同時に絡み合います。ある動作は<span class="term-tip" tabindex="0">エンドエフェクタ座標系<span class="tip">ロボットの手先を原点とした座標系</span></span>で表すと単純になり、別の動作はベース座標系（ロボットの胴体基準）で表すほうが単純になる、という状況が頻繁に起こります。</p>
+<div class="pull">「最適なフレームはタスク依存」——ならば、複数フレームを混ぜ合わせてしまえばよい。</div>
+<h2><span class="n">3</span>提案手法：Mixture of Frames Policy (MoF)</h2>
+<p>MoFのアイデアはシンプルです。「ひとつのフレームを選ぶ」のではなく、<strong>複数の座標系でそれぞれ専門のデノイザー（ノイズ除去器）を走らせて、その予測をひとつにまとめる</strong>というアプローチをとります。料理のたとえで言えば、和食のシェフ・洋食のシェフ・中華のシェフを同時に使い、それぞれの得意料理を合わせてひとつの定食を作るようなイメージです。</p>
+<h3>処理の流れ：4つのステップ</h3>
+<div class="step"><span class="si">STEP 1</span><p>【正準状態を保持】まず「正準フレーム（canonical frame）」というひとつの基準座標系でノイズ入り行動状態を管理します。</p></div><div class="step"><span class="si">STEP 2</span><p>【各フレームへ変換】その状態をエンドエフェクタ系・ベース系など、タスクに関連する複数の座標系へ変換（re-express）します。</p></div><div class="step"><span class="si">STEP 3</span><p>【フレーム専門デノイザーを適用】各座標系に特化したデノイザーがそれぞれノイズ予測を行います。</p></div><div class="step"><span class="si">STEP 4</span><p>【正準フレームで融合】各デノイザーのノイズ予測を正準フレームに逆変換して集約し、最終的な行動予測を得ます。</p></div>
+<h3>技術的難所：途中のノイズ状態をどう変換するか</h3>
+<p>ここに大きな技術的チャレンジがあります。拡散の途中段階では行動は「ノイズが混じった汚い状態」です。回転成分はきれいな<span class="term-tip" tabindex="0">SO(3)多様体<span class="tip">3次元回転行列全体が作る数学的な曲面空間</span></span>の上にはのっていません。通常の回転表現（クォータニオンや回転行列）はこういった「汚い」状態に対して正確な変換ができないという問題があります。</p>
+<p>そこでMoFは「列ベース6D回転表現」を<span class="term-tip" tabindex="0">SE(3)行動パラメータ化<span class="tip">位置＋回転の6自由度剛体変換を統一的に表す数学的な枠組み</span></span>の中で使います。6D回転表現は回転行列の最初の2列だけを使う手法で、残りの1列はクロス積で復元できます。この表現は「多様体の上にのっていないノイズ入りの状態」でも、座標系の変換が<strong>厳密かつ微分可能</strong>に行えるという優れた性質を持ちます。数式で書くと、行動ベクトル `a` を変換行列 `T` で変換するとき、位置成分は `T * p`、回転成分の2列それぞれを `R * c1`, `R * c2` として変換するだけです。GPUで自動微分しながら学習できるのが実用上の強みです。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 正準フレームのノイズ入り行動状態を各フレームに変換してデノイズ</span></div><div class="ln"><span class="no">1</span><span class="ct">a_canonical = <span class="fn">sample_noise</span>(shape)<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># 各フレームへの変換</span></div><div class="ln"><span class="no">2</span><span class="ct">frame_actions = []</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="kw">for</span> frame <span class="kw">in</span> [ee_frame, base_frame, ...]:</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>a_f = <span class="fn">transform_6D</span>(a_canonical, frame.T)<span class="badge">②</span></span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span>noise_pred_f = frame.<span class="fn">denoiser</span>(a_f, obs, t)<span class="badge">③</span></span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span>noise_canonical = <span class="fn">inv_transform_6D</span>(noise_pred_f, frame.T)</span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="ind"></span>frame_actions.<span class="fn">append</span>(noise_canonical)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># 正準フレームで予測を融合</span></div><div class="ln"><span class="no">8</span><span class="ct">noise_fused = <span class="fn">aggregate</span>(frame_actions)<span class="badge">④</span></span></div><div class="ln"><span class="no">9</span><span class="ct">a_canonical = <span class="fn">denoise_step</span>(a_canonical, noise_fused)</span></div></div><div class="code-cap">MoFの概念的な処理フロー（擬似コード）</div>
+<p>①正準フレームでノイズ状態を初期化し、②各フレームへ6D回転表現を使って変換、③それぞれの専門デノイザーで推論、④正準フレームへ戻して集約、というループを拡散ステップ数だけ繰り返します。</p>
+<h2><span class="n">4</span>実験結果：MoFは「オラクルなフレーム選択」すら上回る</h2>
+<p>実験は<strong>9つのシミュレーション両腕マニピュレーションタスク</strong>と<strong>2つの実世界両腕移動マニピュレーションタスク</strong>で実施されました。比較相手として、各タスクに最適なフレームを事前に知っている「<span class="term-tip" tabindex="0">オラクル<span class="tip">正解情報を使ったズル前提のベースライン。上限性能の目安</span></span>フレーム選択」と、<span class="term-tip" tabindex="0">Mixture-of-Experts<span class="tip">複数の専門家モデルが入力に応じて使い分けられる定番アーキテクチャ</span></span>（MoE）ベースラインも用意されています。</p>
+<div class="stats"><div class="stat"><div class="v">9タスク</div><div class="k">シミュレーション両腕操作タスクで評価</div></div><div class="stat"><div class="v">2タスク</div><div class="k">実世界の両腕移動マニピュレーションで検証</div></div><div class="stat"><div class="v">全単一フレーム超</div><div class="k">実世界タスクで構成する全単一フレームベースラインを上回る</div></div></div>
+<p>特筆すべきは「<strong>最適なフレームはタスク依存</strong>」という事実が実験で確認されたことです。あるタスクではエンドエフェクタ系が最強、別のタスクではベース系が最強、という結果が得られました。MoFはそれらを混ぜ合わせることで、オラクルフレーム選択をも上回るパフォーマンスを示しました。「正解を知っている架空の比較相手」より良い結果が出るのは、混合による相乗効果が働いているためと考えられます。</p>
+<h2><span class="n">5</span>新規性のポイント：なぜこれが重要か</h2>
+<p>これまでの拡散ポリシー研究では「どのフレームを使うか」はハイパーパラメータとして人手で設計するものでした。MoFは<strong>フレーム選択そのものを「混合」として定式化</strong>し、学習で最適な混合を自動的に発見できる枠組みを提供します。さらに、6D回転表現を用いてノイジーな中間状態でも正確な変換ができることを理論的・実験的に示した点も新しい貢献です。</p>
+<div class="pull">MoEが「どのネットワークを使うか」を混ぜるなら、MoFは「どの座標系で考えるか」を混ぜる——次元の異なる混合戦略だ。</div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方：帰納バイアスの設計</div>「どの座標系で表現するか」という選択は、モデルに「こういう構造を持つはずだ」という先入れを与える帰納バイアスの一種です。適切な帰納バイアスはデータ効率を大きく改善します。MoFはこの「フレーム設計」という暗黙の設計判断を、学習可能な混合として明示的に扱うアプローチです。タスクごとにフレームを手動チューニングする工数を減らせる可能性があります。</div>
+<h2><span class="n">6</span>限界と今後の課題</h2>
+<div class="step"><span class="si">限界 1</span><p>【評価スケール】シミュレーション9タスク・実世界2タスクと、評価規模はまだ限られています。より多様なロボットプラットフォームや長期タスクへの汎化は今後の課題です。</p></div><div class="step"><span class="si">限界 2</span><p>【フレームの手動設計】MoFは混合の学習は自動化しますが、「どの座標系を候補に入れるか」の設計は依然として人手です。候補フレームを自動探索する仕組みは含まれていません。</p></div><div class="step"><span class="si">限界 3</span><p>【計算コスト】フレーム数だけデノイザーが走るため、推論コストは単一フレームポリシーより大きくなります。リアルタイム制御での実用性はシステム設計次第です。</p></div><div class="step"><span class="si">限界 4</span><p>【融合方式の選択】ノイズ予測の集約方法（平均・重み付き平均など）の選択が結果に影響する可能性があり、最適な融合戦略の詳細な比較は将来の研究に委ねられます。</p></div>
+<h2><span class="n">7</span>新人研究者へのひとこと</h2>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>「どの座標系で表現するか」という問いは、ロボット学習に限らずAI全般で本質的です。画像認識でのデータ拡張（回転・反転）や、物理シミュレーションでの慣性系の選択なども、根は同じ「表現の設計」問題です。MoFの「混ぜる」というアプローチは、アンサンブル学習やMoEと同じ思想をより深い構造設計レベルに持ち込んだもの、と捉えると他分野への応用アイデアも膨らみます。論文のプロジェクトページ（https://mofpo.github.io）には実機デモ動画も公開されているので、まず動作イメージを掴んでから本文を読むと理解がぐっと深まりますよ。</div>
     </div>
   </div>
 
