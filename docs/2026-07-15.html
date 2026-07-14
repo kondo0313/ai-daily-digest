@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-07-15</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-07-15</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #世界モデル #ロボティクス #新人研究者向け</div>
+    <h1 class="headline">予測誤差を下げても賢くなるとは限らない ― 世界モデルの「見えない前提」を暴いた制御理論</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-07-15 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">A Control Theory of Predictability in Latent World Models</div>
+      <div class="pc-row">
+        <span>Hanzhe You, Yonggang Zhang, Maohao Ran, Zhiqin Yang, Zhenyuan Zhang, Wei Xue, Jun Song, Xinmei Tian, Yike Guo</span>
+        <span>arXiv cs.LG ・ 2026年7月</span>
+        <a href="https://arxiv.org/abs/2607.10362">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>「予測誤差を下げれば、ロボットは賢くなる」って本当?</h2>
+<p>ロボットの<span class="term-tip" tabindex="0">世界モデル<span class="tip">環境がどう変化するかを学習した予測モデル。未来の状態をシミュレーションできる</span></span>を作るとき、私たちは当たり前のように「検証データでの予測誤差が小さいモデルほど良いモデルだ」と考えます。学習を止めるタイミングも、どのアーキテクチャを採用するかも、たいていこの一本の指標で決めます。ですが今日紹介する論文は、この「当たり前」を制御理論の立場から真正面から検証し、実は成り立たない場合があることを数式で示しました。新人のうちに知っておくと、モデル選びで足をすくわれずに済む、地味だけれど本質的な話です。</p>
+<h2><span class="n">2</span>背景: 世界モデルとプランニングの関係</h2>
+<h3>頭の中でシミュレーションしてから動く</h3>
+<p>世界モデルを使うロボットの多くは、<span class="term-tip" tabindex="0">MPC<span class="tip">Model Predictive Control: 何手か先までシミュレーションして一番良さそうな行動列を選ぶ制御手法</span></span>という考え方で動きます。何通りもの行動の候補を頭の中で(モデルの中で)先読みし、その結果として得られる状態が一番コストの低いものを選んで実行する、というやり方です。将棋や囲碁で「この手を指したらどうなるか」を何手も先まで読んでから指すのに似ています。</p>
+<p>この世界モデルは、ロボットが実際に集めた過去のデータ(状態と次の状態のペア)から学習されます。そして学習の良し悪しは、集めたデータの一部を検証用に取り分けておき、そこでの予測誤差(1ステップ先、あるいは数ステップ先までの誤差)を測ることで判断されます。この「検証誤差が小さい=良いモデル」という前提は、業界標準といっていいほど広く使われています。</p>
+<h2><span class="n">3</span>論文の核心: 「プランナーは学習データの外を見ている」</h2>
+<div class="pull">プランナーが実際に問い合わせるのは、訓練データの分布ではなく、候補となる行動が導く先の状態である。</div>
+<p>検証誤差は、あくまで手元にある過去データという<span class="term-tip" tabindex="0">データ多様体<span class="tip">訓練データが実際に分布している状態空間の中の「地図」のようなもの</span></span>の上で平均した値です。ところがプランニングの最中、モデルは何百通りもの仮想的な行動列を試すために何度も呼び出され、その多くは地図の外――つまり訓練データが一度も通ったことのない状態――へと連れ出されます。地図の中でどれだけ正確でも、地図の外での正確さについては何も保証してくれません。これが著者らの突いた急所です。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># --- 学習・検証のフェーズ ---</span></div><div class="ln"><span class="no">1</span><span class="ct">model = <span class="fn">train_world_model</span>(offline_data)</span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="kw">for</span> x, x_next <span class="kw">in</span> held_out_data:</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="ind"></span>pred = <span class="fn">model.predict</span>(x)<span class="badge">①</span></span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>val_loss += <span class="fn">mse</span>(pred, x_next)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># --- 実際にロボットを動かすフェーズ (プランニング) ---</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="kw">for</span> actions <span class="kw">in</span> planner.propose_candidates():</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span>state = x0</span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="ind"></span><span class="kw">for</span> a <span class="kw">in</span> actions:</span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="ind"></span><span class="ind"></span>state = <span class="fn">model.predict</span>(state, a)<span class="badge">②</span></span></div><div class="ln"><span class="no">9</span><span class="ct"><span class="ind"></span>cost = <span class="fn">evaluate</span>(state)</span></div><div class="ln"><span class="no">10</span><span class="ct">best_plan = <span class="fn">argmin</span>(cost, over=all_candidates)<span class="badge">③</span></span></div></div><div class="code-cap">「誤差を測る場所」と「実際に使われる場所」はズレている</div>
+<p>①では、モデルは訓練データそのものの上で評価されています。しかし②では、プランナーが仮に選んだ行動列がたどり着く先――多くの場合は訓練データの外側――で、モデルは何度も呼び出されます。そして③で最終的に選ばれる計画のコストこそが、ロボットの実際の性能を左右します。①の指標がいくら小さくても、②③で使われる場所での正確さはまったく別問題、というのがこの論文の主張です。</p>
+<h3>正しい物差し: 「選ばれた計画」のコストのズレ</h3>
+<p>そこで著者らは、平均的な予測誤差の代わりに、プランナーが最終的にコミットした計画について「モデルが予測したコスト」と「実際に行動した場合の真のコスト」の食い違い(discrepancy、これをΔとします)を新しい物差しとして定義しました。そのうえで、プランナーの性能劣化(理想的な最適行動と比べてどれだけ損をするか)は、このΔの高々2倍に収まることを証明しています。一方で、従来からある「データ平均の予測誤差」は、このΔを保証もしなければ、追跡すらしないことも同時に示されました。</p>
+<h3>誤差を二つに分解する: 「地図の中」と「地図の外」</h3>
+<p>線形な制御という前提のもとで、このΔはさらに二つの項に分解できます。ひとつは地図の中(訓練データが実際に通った範囲)での小さな誤差で、著者らはこれを「<span class="term-tip" tabindex="0">スペクトル税<span class="tip">潜在空間の遷移を表す変換が対称でない(非正規)場合に生じる、一時的な誤差の増幅コスト</span></span>」と呼びます。潜在空間の遷移が<span class="term-tip" tabindex="0">非正規作用素<span class="tip">対称でない変換のこと。最終的には収束しても、途中で誤差が一時的に大きく膨らむことがある</span></span>だと、たとえ長期的には安定していても、数ステップの間だけ誤差が思いのほか膨らむことがあるためです。もうひとつは地図の外での誤差(off-manifold divergence)で、こちらはどんなデータ平均の指標を使っても捉えられない、性能劣化の本当の主犯だと論文は結論づけています。</p>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「本当に最適化したい目的」と「実際に最適化している代理指標」がズレてしまう現象は、機械学習の現場でしばしば起こります。検証ロスを下げることと、実運用での性能を上げることは、似ているようで別物になりうる――この論文は、その典型例のひとつを厳密な証明つきで示した、貴重なケーススタディです。</div>
+<h2><span class="n">4</span>実験でも裏付けられた「ズレ」</h2>
+<p>著者らはまず、解析的に扱いやすい線形の潜在遷移作用素(synthetic operators)を使い、上で導いた「スペクトル税」の理論式が実際に成り立つことを確認しました。さらに、実際の潜在空間でのMPC実験でも、この分解が実測データと整合することを確かめています。乱数の初期値(シード)を変えて何度も学習をやり直したところ、「1ステップ先の検証誤差」は制御の成功率とほとんど相関しない一方で、プランナーが実際に到達しうる状態の集合上で測った忠実度スコアは、制御の成功率をよく追跡することが分かりました。</p>
+<div class="pull">1ステップ先の検証誤差は、制御の成功率とはほとんど無関係だった。</div>
+<h2><span class="n">5</span>意義と限界</h2>
+<div class="step"><span class="si">前提</span><p>誤差を「地図の中」と「地図の外」に分解する議論は、線形制御という前提のもとで導かれている。非線形な実ロボットのダイナミクスへどこまで一般化できるかは今後の課題。</p></div><div class="step"><span class="si">検証範囲</span><p>理論の裏付けは解析可能な合成オペレータと潜在空間でのMPC実験で行われており、より複雑な実世界ロボットでの検証は論文内では示されていない。</p></div><div class="step"><span class="si">新しい指標</span><p>「プランナーが到達しうる状態の集合上での忠実度スコア」は本論文が新たに提案した概念であり、既存の評価パイプラインにそのまま組み込むには追加の整備が必要になりそうだ。</p></div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>「検証ロスが下がっている=モデルが良くなっている」は、直感的には正しそうに見えて、実は暗黙の前提(そのモデルが使われる場所と、誤差を測った場所が一致している)に支えられています。新人のうちは指標を疑い、その指標が「本当に測りたいもの」のどこまでを代弁できているかを一度立ち止まって考える癖をつけておくと、あとで大きな回り道をせずに済みます。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
