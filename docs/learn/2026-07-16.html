@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 30日講座 — Transformer の全体図 ─ Encoder・Decoder・FFN の役割分担</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+
+.course-card{background:linear-gradient(135deg,#1c6f8c15,#2cb69615);border:1.5px solid var(--accent);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.course-card .cc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--accent-ink);text-transform:uppercase;margin-bottom:6px;}
+.course-card .cc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;color:var(--ink);}
+.course-card .cc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:4px 16px;}
+.cc-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;border-radius:6px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;}
+.progress-bar{height:4px;background:var(--line);border-radius:2px;margin:10px 0 4px;}
+.progress-bar .bar{height:100%;background:var(--accent);border-radius:2px;transition:width .4s;}
+.progress-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-faint);text-align:right;}
+/* KaTeX blocks */
+.tex-block{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;overflow-x:auto;}
+.tex-block .katex-display{margin:0;}
+.tex-block .tx-cap{font-size:12.5px;color:var(--ink-faint);margin-top:10px;text-align:center;}
+.tex-derive{margin-top:12px;border-top:1px solid var(--line);padding-top:10px;}
+.tex-derive-row{display:flex;gap:10px;align-items:baseline;margin-top:6px;font-size:14px;}
+.tex-derive-label{font-size:12px;color:var(--ink-faint);flex-shrink:0;min-width:80px;}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">📚</span> AI 30日講座</div>
+      <div class="date-pill">2026-07-16</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI30日講座 #Transformer #NLP #DeepLearning #LLM</div>
+    <h1 class="headline">Transformer 全体像を「工場の生産ライン」で理解する ─ Encoder・Decoder・FFN の役割分担</h1>
+
+    <div class="author">
+      <div class="avatar" style="background:linear-gradient(135deg,#1c6f8c,#2cb696);">📚</div>
+      <div class="author-meta">
+        <div class="name">AI 30日講座</div>
+        <div class="sub">2026-07-16 ・ DAY 13 ・ Transformer ─ 現代 LLM の心臓部</div>
+      </div>
+    </div>
+
+    <div class="course-card">
+      <div class="cc-label">本日のカリキュラム</div>
+      <div class="cc-title">
+        <span class="cc-badge">DAY 13 / 30</span>
+        &nbsp;Transformer の全体図 ─ Encoder・Decoder・FFN の役割分担
+      </div>
+      <div class="progress-bar"><div class="bar" style="width:43%"></div></div>
+      <div class="progress-label">43% 完了</div>
+      <div class="cc-row">
+        <span>Week 3: Transformer ─ 現代 LLM の心臓部</span>
+        <span>基礎〜中級</span>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>なぜ Transformer は「革命」と呼ばれるのか</h2>
+<p>2017 年、Google の論文「<span class="term-tip" tabindex="0">Attention Is All You Need<span class="tip">RNN を使わず Attention だけで seq2seq を実現した革新的論文</span></span>」が発表されました。それまでの機械翻訳は RNN や LSTM を積み重ねるアーキテクチャが主流でしたが、Transformer は <strong>逐次処理を捨て</strong>、全トークン間の関係を一度に計算する設計を採用。学習の並列化と長距離依存の捕捉を同時に実現しました。</p>
+<p>今日は Transformer の全体図を「工場の生産ライン」にたとえながら、Encoder・Decoder・FFN それぞれの役割を数式レベルまで掘り下げます。GPT や BERT など現代の LLM はすべてこのアーキテクチャを起源としているため、ここをしっかり理解することが今後の研究の土台になります。</p>
+<div class="pull">Transformer は「逐次処理を並列処理に置き換えた」アーキテクチャ革命であり、現代 LLM すべての祖先である。</div>
+<h2><span class="n">2</span>Transformer の全体構造 ─ 工場のたとえ</h2>
+<p>Transformer を「精密部品の製造工場」として考えてみましょう。原材料（入力文）を受け取る <strong>検査・前処理ライン（Encoder）</strong>、完成品（出力文）を一語ずつ組み立てる <strong>組み立てライン（Decoder）</strong>、そして各ステーションで部品を非線形変換する <strong>加工機（FFN）</strong> という三者の分業で成り立っています。</p>
+<div class="stats"><div class="stat"><div class="v">6</div><div class="k">元論文の Encoder/Decoder 積み重ね層数（各 N=6）</div></div><div class="stat"><div class="v">512</div><div class="k">モデルの次元数 d_model（元論文）</div></div><div class="stat"><div class="v">8</div><div class="k">Multi-Head Attention のヘッド数（元論文）</div></div></div>
+<p>入力トークン列 $x_1, \dots, x_n$ はまず <strong>Embedding + Positional Encoding</strong> によってベクトル列に変換されます。これが工場への「原材料の搬入」に相当します。その後 Encoder と Decoder が連携して意味の理解と出力生成を行います。</p>
+<h2><span class="n">3</span>数学的基礎 ─ Scaled Dot-Product Attention から全体フローへ</h2>
+<h3>Positional Encoding：位置情報の埋め込み</h3>
+<p>Transformer は RNN と違い順序を自動では知りません。そこで <span class="term-tip" tabindex="0">Positional Encoding<span class="tip">トークンの位置情報を正弦波で数値化してベクトルに加算する手法</span></span> を用います。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="PE_{(pos, 2i)} = \sin\!\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right), \quad PE_{(pos, 2i+1)} = \cos\!\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right)"></div><div class="tx-cap">Positional Encoding の定義（pos: トークン位置、i: 次元インデックス）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">埋め込みベクトルに加算</span><span class="katex-display-wrapper" data-tex="\tilde{x}_{pos} = x_{pos} + PE_{pos}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">これにより語の意味と位置情報が合成される</span><span class="katex-display-wrapper" data-tex="\tilde{x}_{pos} \in \mathbb{R}^{d_{\text{model}}}"></span></div></div></div>
+<h3>Scaled Dot-Product Attention</h3>
+<p>Transformer の中心にある計算です。Query・Key・Value という三つの行列を使い、各トークンが他のすべてのトークンをどれだけ「参照すべきか」を重みとして計算します。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right) V"></div><div class="tx-cap">Scaled Dot-Product Attention の定義（d_k: Key の次元数）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">Q, K, V は入力 X から線形変換で生成</span><span class="katex-display-wrapper" data-tex="Q = XW^Q,\; K = XW^K,\; V = XW^V"></span></div><div class="tex-derive-row"><span class="tex-derive-label">スコア行列（スケーリング前）</span><span class="katex-display-wrapper" data-tex="S = QK^\top \in \mathbb{R}^{n \times n}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">√d_k で割ることで内積の分散を安定化</span><span class="katex-display-wrapper" data-tex="\hat{S} = \frac{S}{\sqrt{d_k}}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">softmax で各行を確率分布に変換</span><span class="katex-display-wrapper" data-tex="A = \text{softmax}(\hat{S}) \in \mathbb{R}^{n \times n}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">Attention の出力：V の加重和</span><span class="katex-display-wrapper" data-tex="\text{Output} = A \cdot V \in \mathbb{R}^{n \times d_v}"></span></div></div></div>
+<h3>Multi-Head Attention</h3>
+<p>単一の Attention は一種類の「視点」しか持てません。<span class="term-tip" tabindex="0">Multi-Head Attention<span class="tip">複数の Attention を並列に走らせ結果を結合することで、多様な依存パターンを同時に捕捉する手法</span></span> を使うことで、文法・意味・位置など複数の観点を並行して学習できます。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, \dots, \text{head}_h)\, W^O"></div><div class="tx-cap">Multi-Head Attention の定義（h 個のヘッドを結合して線形変換）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">各ヘッド i の計算</span><span class="katex-display-wrapper" data-tex="\text{head}_i = \text{Attention}(Q W_i^Q,\, K W_i^K,\, V W_i^V)"></span></div><div class="tex-derive-row"><span class="tex-derive-label">h=8 のとき各ヘッドの次元</span><span class="katex-display-wrapper" data-tex="d_k = d_v = d_{\text{model}} / h = 64"></span></div><div class="tex-derive-row"><span class="tex-derive-label">出力射影（全ヘッドを d_model に圧縮）</span><span class="katex-display-wrapper" data-tex="W^O \in \mathbb{R}^{hd_v \times d_{\text{model}}}"></span></div></div></div>
+<h2><span class="n">4</span>Encoder の役割 ─「意味の地図」を作る</h2>
+<p>Encoder は N 個の同一構造の層を積み重ねたものです。各層は <strong>(1) Multi-Head Self-Attention</strong> と <strong>(2) Feed-Forward Network (FFN)</strong> の二つのサブ層からなり、それぞれに <span class="term-tip" tabindex="0">Residual Connection<span class="tip">層をスキップして入力を出力に加算する接続。勾配消失を防ぐ</span></span> と Layer Normalization が付きます。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{EncoderLayer}(x) = \text{LayerNorm}\bigl(x + \text{FFN}(\text{LayerNorm}(x + \text{MHA}(x)))\bigr)"></div><div class="tx-cap">Encoder 1 層の計算フロー（MHA: Multi-Head Self-Attention）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">Self-Attention サブ層</span><span class="katex-display-wrapper" data-tex="z = \text{LayerNorm}(x + \text{MHA}(x, x, x))"></span></div><div class="tex-derive-row"><span class="tex-derive-label">FFN サブ層</span><span class="katex-display-wrapper" data-tex="\text{out} = \text{LayerNorm}(z + \text{FFN}(z))"></span></div></div></div>
+<p>Encoder は入力文の <strong>すべてのトークン間の関係を双方向に参照</strong> できます。たとえば「銀行（bank）」という単語が「お金」の文脈なのか「川岸」の文脈なのかを、前後のトークンを見て判断する能力が Self-Attention によって実現されます。これが工場における「原材料の精密検査・前処理」です。</p>
+<h2><span class="n">5</span>Decoder の役割 ─「一語ずつ組み立てる」生成器</h2>
+<p>Decoder も N 層積み重ねですが、Encoder と異なり <strong>三つ</strong> のサブ層を持ちます。</p>
+<div class="step"><span class="si">STEP 1</span><p>Masked Multi-Head Self-Attention：未来のトークンを見ないようマスクをかけた Self-Attention。生成時の「カンニング防止」に相当。</p></div><div class="step"><span class="si">STEP 2</span><p>Cross-Attention（Encoder-Decoder Attention）：Query は Decoder 側、Key・Value は Encoder の出力を使う。「原材料の情報を参照しながら組み立てる」工程。</p></div><div class="step"><span class="si">STEP 3</span><p>Feed-Forward Network (FFN)：各トークン位置で独立した非線形変換を適用。</p></div>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{CrossAttention}(Q_{\text{dec}}, K_{\text{enc}}, V_{\text{enc}}) = \text{softmax}\!\left(\frac{Q_{\text{dec}}\, K_{\text{enc}}^\top}{\sqrt{d_k}}\right) V_{\text{enc}}"></div><div class="tx-cap">Cross-Attention：Decoder が Encoder の出力を参照する計算</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">Q は Decoder の現在の表現</span><span class="katex-display-wrapper" data-tex="Q_{\text{dec}} = H_{\text{dec}} W^Q"></span></div><div class="tex-derive-row"><span class="tex-derive-label">K, V は Encoder の最終出力</span><span class="katex-display-wrapper" data-tex="K_{\text{enc}} = H_{\text{enc}} W^K,\; V_{\text{enc}} = H_{\text{enc}} W^V"></span></div></div></div>
+<div class="tip-box"><div class="tb-label">💡 Masked Attention の仕組み</div>マスクは上三角行列 M（対角より右上が -∞）を Attention スコアに加算することで実装します。softmax 後に -∞ の位置は 0 になるため、未来のトークンへの Attention が完全に遮断されます。
+  M[i][j] = 0 if j ≤ i else -∞
+  Attention = softmax((QKᵀ + M) / √d_k) · V</div>
+<h2><span class="n">6</span>FFN（Feed-Forward Network） ─「各ポジションの加工機」</h2>
+<p>Transformer の FFN はシンプルな 2 層の全結合ネットワークです。しかし <strong>全トークンで重みを共有しながらも、各トークン位置で独立して適用</strong> されるという特徴があります。Attention が「どのトークンに注目するか」を決めるのに対し、FFN は「注目した情報をどう変換するか」を担当します。</p>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\text{FFN}(x) = \max(0,\, x W_1 + b_1)\, W_2 + b_2"></div><div class="tx-cap">Transformer における Position-wise FFN の定義（ReLU 活性化）</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">第 1 層：d_model → d_ff に拡張（d_ff = 4 × d_model）</span><span class="katex-display-wrapper" data-tex="h = \text{ReLU}(x W_1 + b_1),\quad W_1 \in \mathbb{R}^{d_{\text{model}} \times d_{\text{ff}}}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">第 2 層：d_ff → d_model に圧縮</span><span class="katex-display-wrapper" data-tex="\text{FFN}(x) = h W_2 + b_2,\quad W_2 \in \mathbb{R}^{d_{\text{ff}} \times d_{\text{model}}}"></span></div><div class="tex-derive-row"><span class="tex-derive-label">元論文の次元数（d_model=512, d_ff=2048）</span><span class="katex-display-wrapper" data-tex="d_{\text{ff}} = 4 \times d_{\text{model}} = 2048"></span></div></div></div>
+<p>Attention が <strong>トークン間の関係</strong>（水平方向の情報統合）を担うのに対し、FFN は <strong>各トークン内部の表現変換</strong>（垂直方向の非線形変換）を担います。最近の研究では FFN が「知識の貯蔵庫」として機能しているという仮説も提唱されています。</p>
+<div class="note-box"><div class="nb-label">⚙️ 現代 LLM の FFN 変種</div>GPT-2 以降は ReLU の代わりに GELU 活性化関数が主流です。また LLaMA などでは SwiGLU（Swish-Gated Linear Unit）という 3 行列版 FFN が採用され、より豊かな非線形変換を実現しています。
+  FFN_SwiGLU(x) = (Swish(xW₁) ⊙ (xW₃)) · W₂</div>
+<h2><span class="n">7</span>LLM への接続 ─ BERT と GPT は Transformer のどの部分を使うか</h2>
+<p>現代の LLM は Transformer を <strong>Encoder のみ</strong> または <strong>Decoder のみ</strong> で使うことが多いです。</p>
+<div class="step"><span class="si">Encoder only</span><p>BERT 系モデル。双方向 Self-Attention で文の理解・分類に強い。翻訳より「文書理解タスク」向き。</p></div><div class="step"><span class="si">Decoder only</span><p>GPT 系・LLaMA 系。Masked Self-Attention で自己回帰的にテキストを生成。現在の ChatGPT もこの系統。</p></div><div class="step"><span class="si">Encoder + Decoder</span><p>T5・BART 系。翻訳・要約など入力と出力の言語が異なるタスクに強い。元論文の完全な形。</p></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;D でよく出る考え方：なぜ Decoder only が主流になったか</div>Decoder only モデルは「次のトークンを予測する」という単純な目標（言語モデリング）だけで学習できるため、ラベルなし大規模テキストをフル活用できます。これが GPT 系が急速にスケールできた理由の一つです。Encoder only は事前学習タスクの設計が複雑（MASK トークンの導入など）で、スケーリングで不利になりました。</div>
+<h2><span class="n">8</span>実装のヒント ─ Transformer Encoder Layer を実装する</h2>
+<div class="code"><div class="ln"><span class="no">1</span><span class="ct">class EncoderLayer:</span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="ind"></span>def __init__(self, d_model=512, n_heads=8, d_ff=2048, dropout=0.1):</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="ind"></span><span class="ind"></span>self.self_attn = MultiHeadAttention(d_model, n_heads)</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span><span class="ind"></span>self.ffn      = FFN(d_model, d_ff)  # 2層 ReLU / GELU</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span><span class="ind"></span>self.norm1    = LayerNorm(d_model)</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span><span class="ind"></span>self.norm2    = LayerNorm(d_model)</span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="ind"></span><span class="ind"></span>self.dropout  = Dropout(dropout)</span></div><div class="ln"><span class="no">8</span><span class="ct"></span></div><div class="ln"><span class="no">9</span><span class="ct"><span class="ind"></span>def forward(self, x, mask=None):</span></div><div class="ln"><span class="no">10</span><span class="ct"><span class="ind"></span><span class="ind"></span># --- Sublayer 1: Multi-Head Self-Attention + Residual ---</span></div><div class="ln"><span class="no">11</span><span class="ct"><span class="ind"></span><span class="ind"></span>attn_out = self.self_attn(x, x, x, mask)  # Q=K=V=x</span></div><div class="ln"><span class="no">12</span><span class="ct"><span class="ind"></span><span class="ind"></span>x = self.norm1(x + self.dropout(attn_out))</span></div><div class="ln"><span class="no">13</span><span class="ct"><span class="ind"></span><span class="ind"></span># --- Sublayer 2: FFN + Residual ---</span></div><div class="ln"><span class="no">14</span><span class="ct"><span class="ind"></span><span class="ind"></span>ffn_out = self.ffn(x)</span></div><div class="ln"><span class="no">15</span><span class="ct"><span class="ind"></span><span class="ind"></span>x = self.norm2(x + self.dropout(ffn_out))</span></div><div class="ln"><span class="no">16</span><span class="ct"><span class="ind"></span><span class="ind"></span>return x  # shape: (batch, seq_len, d_model)</span></div></div><div class="code-cap">PyTorch ライクな擬似コードで Encoder Layer を実装</div>
+<div class="note-box"><div class="nb-label">⚙️ Pre-LN vs Post-LN</div>元論文は Post-LN（Attention → Add → Norm の順）ですが、現代の LLM の多くは Pre-LN（Norm → Attention → Add）を採用します。Pre-LN は学習が安定しやすく、大規模モデルでは標準になっています。疑似コードを書くときはどちらか明記する習慣をつけましょう。</div>
+<h2><span class="n">9</span>全体フローの整理 ─ 入力から出力まで一気通貫</h2>
+<div class="step"><span class="si">STEP 1</span><p>入力トークン列 → Token Embedding + Positional Encoding → x̃ ∈ ℝ^(n × d_model)</p></div><div class="step"><span class="si">STEP 2</span><p>x̃ を N 層の Encoder に通す → 文脈を含んだ表現 H_enc ∈ ℝ^(n × d_model)</p></div><div class="step"><span class="si">STEP 3</span><p>出力トークン列（右シフト）→ Embedding + PE → ẙ ∈ ℝ^(m × d_model)</p></div><div class="step"><span class="si">STEP 4</span><p>ẙ を N 層の Decoder（Masked SA → Cross-Attention with H_enc → FFN）に通す → H_dec</p></div><div class="step"><span class="si">STEP 5</span><p>H_dec → Linear → Softmax → 次のトークンの確率分布 P ∈ ℝ^(m × |V|)</p></div><div class="step"><span class="si">STEP 6</span><p>学習時は Cross-Entropy Loss で P と正解トークンを比較してパラメータ更新</p></div>
+<div class="tex-block"><div class="katex-display-wrapper" data-tex="\mathcal{L} = -\sum_{t=1}^{m} \log P(y_t \mid y_{&lt;t},\, H_{\text{enc}})"></div><div class="tx-cap">Transformer の学習損失：各ステップの条件付き対数尤度の和</div><div class="tex-derive"><div class="tex-derive-row"><span class="tex-derive-label">P はモデルのソフトマックス出力</span><span class="katex-display-wrapper" data-tex="P(y_t \mid \cdot) = \text{softmax}(H_{\text{dec},t}\, W_{\text{lm}})"></span></div><div class="tex-derive-row"><span class="tex-derive-label">全ステップを並列計算できるのが RNN との大きな違い</span><span class="katex-display-wrapper" data-tex="\mathcal{L} = -\frac{1}{m}\sum_{t=1}^{m} \log P(y_t \mid y_{&lt;t}, H_{\text{enc}})"></span></div></div></div>
+<h2><span class="n">10</span>まとめ ─ Transformer を「三つの役割」で覚える</h2>
+<p>本日の核心は <strong>Encoder = 理解、Decoder = 生成、FFN = 変換</strong> という役割分担です。Attention が「どこを見るか」を決め、FFN が「見た情報をどう料理するか」を決める。この二つの組み合わせが Transformer の強さの源です。</p>
+<p>明日（DAY 14）はこの構造を深掘りし、<strong>Multi-Head Attention の実装詳細と計算複雑度</strong>に踏み込みます。今日の数式をノートに書き直してみると、明日の理解が格段に速くなります。ぜひ手を動かしてみてください。</p>
+<div class="pull">Encoder が「意味の地図」を描き、Decoder が「地図を読みながら言葉を紡ぐ」─ Transformer はこの分業で seq2seq を制覇した。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI 30日講座 — Week 1〜6 ・ generated by Claude
+  </div>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Render explicit tex-block wrappers
+      document.querySelectorAll('.katex-display-wrapper').forEach(el => {
+        const tex = el.dataset.tex;
+        if (tex) {
+          try {
+            katex.render(tex, el, {displayMode: true, throwOnError: false});
+          } catch(e) {
+            el.textContent = tex;
+          }
+        }
+      });
+      // Auto-render inline $...$ and $$...$$ in text
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+</body>
+</html>
