@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-07-17</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-07-17</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #ロボティクス #VisionLanguageAction #新人研究者向け</div>
+    <h1 class="headline">「取って」と頼んだのに違うモノを掴む――VLAロボットの“見たものを繰り返すクセ”を治す新手法</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-07-17 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">When Vision Overrides Language: Evaluating and Mitigating Counterfactual Failures in VLAs</div>
+      <div class="pc-row">
+        <span>著者情報は取得したアブストラクトに記載なし</span>
+        <span>arXiv cs.RO ・ 2026年2月 (v2)</span>
+        <a href="https://arxiv.org/abs/2602.17659">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>ロボットは本当に“言葉”を聞いているのか？</h2>
+<p>想像してみてほしい。家庭用ロボットに「赤いコップを取って」と頼んだのに、いつも目の前に置いてある青いコップばかり掴んでしまう。まるで指示を聞いていないかのようなこの現象が、いま最先端の<span class="term-tip" tabindex="0">VLAモデル<span class="tip">Vision-Language-Action: 視覚と言語からロボットの行動を出力するモデル</span></span>で頻繁に起きている——と、今日紹介する論文は指摘する。ロボットは言葉ではなく、“よく見る景色”に引きずられて動いている疑いがあるのだ。</p>
+<h2><span class="n">2</span>背景：VLAは“見たものを繰り返すクセ”を持っている</h2>
+<p>VLAモデルは、カメラ画像と自然言語の指示を入力として受け取り、ロボットの関節や手先の動きを出力する。学習には主に<span class="term-tip" tabindex="0">行動クローニング<span class="tip">人間の実演データを真似するように方策を学習させる手法</span></span>が使われる。大量の実演データからパターンを学ぶうちに、モデルは「この見た目の場面では、だいたいこう動けばよい」という強い経験則を身につけてしまう。</p>
+<p>問題は、既存のベンチマークの多くが「タスクに成功したかどうか」だけを見ている点にある。仮にモデルが指示文をまったく無視し、目に映る物体をいつも同じ順番で操作していたとしても、その物体が正解であれば「成功」と記録されてしまう。つまり、モデルが本当に言葉に従っているのか、それとも視覚的な癖に従っているだけなのかを、従来の評価方法では区別できていなかった。</p>
+<h2><span class="n">3</span>LIBERO-CF：“指示だけをすり替える”テストで化けの皮を剥がす</h2>
+<p>この論文はまず、<span class="term-tip" tabindex="0">LIBERO<span class="tip">ロボット操作タスクを模擬するシミュレーションベンチマーク</span></span>の環境をベースに、LIBERO-CFという新しい評価セットを作った。発想はシンプルで、カメラに映る場面(レイアウト)はそのままに、与える指示文だけを差し替える。これは一種の<span class="term-tip" tabindex="0">反実仮想<span class="tip">「もしこの条件が違ったら」を試すことで、本当の原因を切り分ける考え方</span></span>的なテストで、もしモデルが視覚だけに頼っているなら、指示を変えても同じ行動を繰り返すはずだ。実際に評価してみると、最先端のVLAの多くがこの“指示すり替え”に弱く、頻繁に元の(視覚的に見慣れた)行動を繰り返してしまうことが明らかになった。</p>
+<h3>Counterfactual Action Guidance（CAG）：言語の効き目を後から強める</h3>
+<p>この弱点に対して論文が提案するのが CAG(Counterfactual Action Guidance) という推論時の工夫だ。考え方は二段構えになっている。ひとつは普段どおり画像と言語の両方を条件にした通常のVLA方策。もうひとつは、あえて言語情報を外し、画像だけを条件にした VA(Vision-Action) モジュールだ。この二つの出力を比較することで、「言語を入れたことでどれだけ行動が変わったか」という差分を取り出せる。あとはその差分を強調する方向に最終的な行動を補正すればよい。</p>
+<p>この発想は、画像生成モデルで使われる<span class="term-tip" tabindex="0">classifier-free guidance<span class="tip">条件付きの出力と無条件の出力の差を利用し、狙った条件の効き目を強める生成モデルの技法</span></span>によく似ている。論文のアイデアを直感的な擬似コードで表すと、次のようなイメージになる（実装の詳細を簡略化した一例）。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># ① 通常どおり、画像+言語を条件にした行動</span></div><div class="ln"><span class="no">1</span><span class="ct">a_lang = <span class="fn">VLA_policy</span>(image, instruction, state)<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># ② あえて言語を使わない、画像だけの行動</span></div><div class="ln"><span class="no">2</span><span class="ct">a_vision = <span class="fn">VA_module</span>(image, state)<span class="badge">②</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># ③ 「言語のおかげで変わった分」だけを取り出して強調</span></div><div class="ln"><span class="no">3</span><span class="ct">guidance = a_lang - a_vision</span></div><div class="ln"><span class="no">4</span><span class="ct">a_final = a_lang + lambda * guidance<span class="badge">③</span></span></div></div><div class="code-cap">CAGの推論イメージ（論文のアイデアを簡略化した例）</div>
+<p>この方法の良いところは、追加の学習データも、モデルの改造も要らない点にある。既存のVLAモデルをそのまま使い、推論のやり方だけを変える“プラグアンドプレイ”の解法だ。</p>
+<h2><span class="n">4</span>実験結果：数字で見る改善効果</h2>
+<div class="stats"><div class="stat"><div class="v">+9.7pt</div><div class="k">追加学習なしでπ0.5に適用した際の言語追従精度の向上</div></div><div class="stat"><div class="v">+15.5pt</div><div class="k">VAモデルと組み合わせた場合の言語追従精度の向上</div></div><div class="stat"><div class="v">+17.2pt</div><div class="k">実機(実世界)実験でのタスク成功率の向上</div></div></div>
+<p>シミュレーション上のLIBERO-CFでは、追加学習なしでπ0.5という代表的なVLAに適用するだけで言語追従精度が9.7ポイント、タスク成功率も3.6ポイント向上した。VAモデルと組み合わせるとさらに伸び、言語追従精度は15.5ポイント、タスク成功率は8.5ポイントの改善が見られている。シミュレーションだけでなく実機での評価でも、指示を無視してしまう反実仮想的な失敗が9.4ポイント減り、タスク成功率は平均17.2ポイント向上したという。</p>
+<div class="pull">VLAは“見たものを繰り返す”クセを持っている。CAGは、そのクセを追加学習なしで矯正する。</div>
+<h2><span class="n">5</span>なぜこの研究が重要なのか</h2>
+<p>この論文の面白さは、派手な新モデルを作ったことではなく、「モデルが本当に指示された条件を使っているか」を測る評価方法そのものを設計し直した点にある。見た目の成功率だけを追いかけていると、モデルの本当の弱点——ここでは言語を無視して視覚のショートカットに頼るクセ——を見逃してしまう。良い評価軸を立てることは、新しい手法を作ることと同じくらい価値がある、という姿勢は研究全般に通じる教訓だ。</p>
+<h2><span class="n">6</span>意義と限界</h2>
+<div class="step"><span class="si">限界 1</span><p>評価の中心はLIBERO-CFというシミュレーション環境であり、実機実験は補足的な検証にとどまる。</p></div><div class="step"><span class="si">限界 2</span><p>単体のVLAだけでもある程度の改善はあるが、より大きな効果を得るには追加のVAモジュールを別途用意する必要がある。</p></div><div class="step"><span class="si">限界 3</span><p>推論時に2つの分岐（言語ありとなし）を計算する必要があり、単純なVLA単体推論より計算コストが増える。</p></div><div class="step"><span class="si">限界 4</span><p>根本的にモデルの内部表現の偏りを直すわけではなく、あくまで推論時の“後付けの補正”である点には注意が必要。</p></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>見た目の性能指標が高くても、モデルが「正しい理由」でその答えに辿り着いているとは限らない。この論文のように、条件を意図的にすり替えて反応を見る反実仮想的なテストは、言語処理や画像認識など他分野でもモデルの本当の理解力を確かめる定番の手口になっている。</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>この論文が使っているCAGの発想は、拡散モデルのclassifier-free guidanceと同じ「条件ありと条件なしの差分を利用する」という発想の応用例。ひとつの分野で磨かれたアイデアが別分野の課題を解く鍵になることは珍しくない。新人のうちから分野をまたいだ発想の“引き出し”を増やしておくと、こうした橋渡しに気づきやすくなる。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
