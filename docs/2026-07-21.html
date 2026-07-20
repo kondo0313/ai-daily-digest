@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-07-21</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-07-21</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #VLA #自動運転 #新人研究者向け</div>
+    <h1 class="headline">「考える」と「動く」を分離したら、自動運転VLAの完走率が37から94に跳ね上がった話</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-07-21 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Think at 5 Hz, Act at 20 Hz: Asynchronous Fast-Slow Vision-Language-Action Inference for Closed-Loop Driving</div>
+      <div class="pc-row">
+        <span>arXivの抄録に著者名・所属の記載なし</span>
+        <span>arXiv cs.RO ・ 2026年7月</span>
+        <a href="https://arxiv.org/abs/2607.15621">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>なぜ自動運転AIは「速く動く」と「賢く考える」を両立できないのか</h2>
+<p>大規模言語モデル(LLM)や<span class="term-tip" tabindex="0">VLAモデル<span class="tip">視覚と言語の理解から直接ロボットや車の行動を出力するモデル</span></span>を自動運転に使うと、指示に従ったり周囲の状況を賢く理解したりできるようになる。しかしその賢さには代償がある。モデル1回分の計算(推論)には時間がかかるのに、車を安全に走らせるには数十ミリ秒ごとに新しいハンドル操作を出し続けなければならない。この「賢さの遅さ」と「制御の速さ」のせめぎ合いこそ、今日の論文が挑む問題だ。</p>
+<h2><span class="n">2</span>これまでの解決策と、その隠れた代償</h2>
+<p>既存のクローズドループ型エージェントは、モデルを1ティックおきにしか呼び出さず、間の1ティックは前回の指令をそのまま使い回す(フレームスキップ)ことで、この速度差を隠してきた。一見動いているように見えても、実際には半分の判断が古い情報のまま出されている。</p>
+<div class="pull">その結果、車が出す制御指令のうち半分は、最新の状況をまったく見ずに決められている。</div>
+<h2><span class="n">3</span>解決策: 「遅い頭脳」と「速い反射」を分けるFast-Slow構成</h2>
+<p>この論文は、7Bパラメータの<span class="term-tip" tabindex="0">VLMバックボーン<span class="tip">画像とテキストを同時に理解できる大規模なニューラルネットワーク</span></span>を「遅いシステム」として固定し、ナビ指示や映像の履歴を低頻度(5Hz)で処理する。その処理の副産物として、各層の<span class="term-tip" tabindex="0">KVキャッシュ<span class="tip">Transformerが過去に処理した文脈の情報を保持しておく記憶領域</span></span>を、周囲状況の要約として取り出しておく。一方、軽量な「行動エキスパート」が「速いシステム」として、このキャッシュと今の瞬間のカメラ映像を毎ティック(20Hz)組み合わせ、1回の順伝播でハンドルの軌道(waypoint)を出す。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 遅いシステム(5Hz): 指示と映像履歴からKVキャッシュを作る</span></div><div class="ln"><span class="no">1</span><span class="ct">kv_cache = <span class="fn">vlm_backbone</span>(instruction, visual_history)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># 速いシステム(20Hz): 毎ティック、キャッシュ+今の画像から行動を出す</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="kw">for</span> tick <span class="kw">in</span> simulation_ticks:</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>frame = <span class="fn">get_camera_frame</span>()<span class="badge">①</span></span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span>action = <span class="fn">action_expert</span>(kv_cache, frame)<span class="badge">②</span></span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span><span class="fn">execute</span>(action)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># 学習時はキャッシュをわざと古くして、本番のズレに慣らす</span></div><div class="ln"><span class="no">8</span><span class="ct">kv_cache_for_training = <span class="fn">add_random_staleness</span>(kv_cache)<span class="badge">③</span></span></div></div><div class="code-cap">Fast-Slow VLA の推論ループ(擬似コード)</div>
+<h3>人間の「直感」と「反射」にも似た二層構造</h3>
+<p>人間が車を運転する時も、「この先で右折する」という判断はゆっくり考えるが、目の前に人が飛び出してきたらほぼ反射的にブレーキを踏む。このFast-Slow構成もこれに近い。遅いシステムが状況の意味を理解し、速いシステムがその意味を土台にして瞬時の操作を返す。</p>
+<h3>本番と学習のズレを、学習側からわざと作る</h3>
+<p>実運用では、遅いシステムが作ったKVキャッシュはすでに少し古い情報になっている。計算している間にも車は前に進んでいるからだ。この論文では、行動エキスパートを学習する段階で意図的にキャッシュを古くして与える(擬似コードの③、randomized staleness)。こうして本番で必ず起きるズレにあらかじめ慣らしておく、というシンプルだが効果的な工夫が入っている。</p>
+<h2><span class="n">4</span>実験: CARLAシミュレータでの評価結果</h2>
+<p>この手法は<span class="term-tip" tabindex="0">CARLA<span class="tip">自動運転アルゴリズムを検証するためのオープンソースの市街地シミュレータ</span></span>上のLangAuto-Shortルートで評価されている。フレームスキップを行う既存手法と比べ、50msごとの全ティックで新鮮な制御指令を出せるようになった。</p>
+<div class="stats"><div class="stat"><div class="v">37.0 → 94.0</div><div class="k">経路完走の指標(フレームスキップ手法との比較)</div></div><div class="stat"><div class="v">82.1 → 94.0</div><div class="k">同じ行動エキスパートで毎ティック新鮮な情報にした効果</div></div><div class="stat"><div class="v">約32ms</div><div class="k">1ティックあたりの計算コスト(履歴の長さに依存せず一定)</div></div></div>
+<p><span class="term-tip" tabindex="0">アブレーション実験<span class="tip">モデルの構成要素を1つずつ取り除いて、それぞれの効果を切り分ける実験手法</span></span>により、「行動エキスパート自体の性能向上」と「毎ティック新鮮な情報を使う効果」が切り分けられている。信号無視は約3分の1減り、単一の街で学習したモデルが未知の2つの街へ<span class="term-tip" tabindex="0">ゼロショット転移<span class="tip">追加の学習をせずに、新しい環境でもそのまま性能を発揮すること</span></span>し、完走率84〜94%を達成した(ベースラインは31〜41%)。waypointの誤差もバックボーン自身の行動出力よりおよそ4分の1に減っている。</p>
+<h2><span class="n">5</span>何がこの研究の核心か</h2>
+<div class="pull">モデルそのものを速くするのではなく、賢さと速さを別々の時間スケールで動かし、その間をキャッシュという共有メモリでつなぐ。</div>
+<p>モデルを圧縮したり蒸留したりして速くするのではなく、アーキテクチャを二つの時間スケールに分割し、KVキャッシュという既存の仕組みを状況認識の共有メモリとして転用するだけで、この速度と賢さのトレードオフを解消した点が新しい。追加の巨大な学習コストをかけずに、既存の大規模モデルをほぼそのまま活かせる設計になっている。</p>
+<h2><span class="n">6</span>意義と限界</h2>
+<div class="step"><span class="si">限界①</span><p>評価はCARLAというシミュレータ上のLangAuto-Shortルートに限られており、実車での検証結果は述べられていない。</p></div><div class="step"><span class="si">限界②</span><p>遅いシステムのバックボーンは凍結(パラメータを固定)されたままで、行動エキスパートだけを学習している。バックボーン自体の理解力を向上させる話ではない。</p></div><div class="step"><span class="si">限界③</span><p>学習は単一の街で行われた。2つの未知の街への転移は示されているが、より多様な天候や道路環境まで一般化するかどうかは今後の検証課題として残る。</p></div>
+<h2><span class="n">7</span>新人研究者へのひとこと</h2>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「モデルをもっと速くする」だけが解決策ではない。処理を異なる時間スケールに分割し、その間をキャッシュや共有表現でつなぐという発想は、ロボティクスに限らず、リアルタイム性が求められるあらゆるAIシステムの設計に応用できる考え方だ。</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>KVキャッシュは元々LLMの推論高速化のための仕組みだが、この論文ではそれを状況認識の共有メモリとして転用している。ひとつの技術要素を本来の目的とは違う文脈で再利用する視点も、研究のヒントになる。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
