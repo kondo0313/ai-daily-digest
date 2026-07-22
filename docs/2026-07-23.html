@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-07-23</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-07-23</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #ロボティクス #世界モデル #新人研究者向け</div>
+    <h1 class="headline">動画に「マスク」をかけるだけで、ロボットの脳になる</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-07-23 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Masked Visual Actions for Unified World Modeling</div>
+      <div class="pc-row">
+        <span>Hadi Alzayer, Wenlong Huang, Haonan Chen, Christopher Luey, Lvmin Zhang, Maneesh Agrawala, Gordon Wetzstein, Li Fei-Fei, Yilun Du, Jiajun Wu, Jia-Bin Huang</span>
+        <span>arXiv cs.RO ・ 2026年7月</span>
+        <a href="https://arxiv.org/abs/2607.19343">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>動画予測モデルを、そのままロボットの頭脳にできないか</h2>
+<p>YouTubeの料理動画やニュース映像から学んだ動画生成モデルは、「コップを押したら倒れる」「手を離したらボールが落ちる」といった、この世界の物理を驚くほど自然に理解しています。だったらそれを丸ごとロボットに使わせればいいのでは、と考えるのは自然な発想です。実際、ロボット研究では<span class="term-tip" tabindex="0">世界モデル<span class="tip">エージェントの行動を入力すると、その先に何が起こるかを予測してくれる内部シミュレーターのこと</span></span>として動画モデルを転用する試みが盛んになっています。</p>
+<p>ただしそこには一つ厄介な壁があります。動画モデルは「次にどんな絵が来るか」を学んでいるだけで、「ロボットの関節をこう動かした」というような行動の表現を知りません。ロボット側の言葉（関節角度や速度指令など）を動画モデルに伝えようとすると、せっかく学習で獲得した豊かな物理理解と噛み合わない、別の言語を無理やり通訳させるような状態になってしまいます。行動をどう動画モデルに伝えるかは、今日の1本が挑んだ問いです。</p>
+<h2><span class="n">2</span>アイデアはひとつ、「軌跡を一部だけ見せる」</h2>
+<p>この論文が提案する Masked Visual Actions は、驚くほどシンプルです。動画の中で、ロボットや物体といった「注目したい対象」の軌跡を追跡し、その軌跡の一部だけを動画モデルに見せる<span class="term-tip" tabindex="0">マスク<span class="tip">画像や動画の一部だけを隠したり見せたりする操作のこと。ここでは軌跡の一部だけを見せる指示として使われる</span></span>をつくります。これだけで、行動を画像そのものの言葉（ピクセル空間）で伝えられるようになります。</p>
+<div class="pull">ロボットの動きを見せれば「この先どうなるか」を予言し、物体の理想の動きを見せれば「どう動けばいいか」を教えてくれる。同じモデルが、見せる中身を変えるだけで役割を変える。</div>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 動画中の対象(ロボットや物体)の軌跡を取り出す</span></div><div class="ln"><span class="no">1</span><span class="ct">trajectory = <span class="fn">track_entity</span>(video, entity)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># 軌跡の一部だけを見せるマスクをつくる（これが唯一の行動の表現）</span></div><div class="ln"><span class="no">2</span><span class="ct">mask = <span class="fn">reveal_partial</span>(trajectory)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ①ロボットの動きを見せる場合 → 順動力学モデルとして働く</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="kw">if</span> reveal_target == <span class="st">&quot;robot_motion&quot;</span>:<span class="badge">①</span></span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>future_scene = <span class="fn">video_model</span>(video, mask)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ②物体の理想的な動きを見せる場合 → 逆モデルとして働く</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="kw">else</span>:<span class="badge">②</span></span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span>robot_behavior = <span class="fn">video_model</span>(video, mask)</span></div></div><div class="code-cap">Masked Visual Actionsの考え方（概念図）</div>
+<h3>① 順モデルとして：未来を予言させる</h3>
+<p>ロボットの実際の動きの軌跡を部分的に見せてあげると、動画モデルは「その動きの結果、周りの物体がどう反応するか」を映像として描き出します。これは<span class="term-tip" tabindex="0">順動力学モデル<span class="tip">ある行動をとったとき、次にどんな状態になるかを予測するモデルのこと</span></span>そのものです。ロボットが行動を決める前に「この行動をしたらどうなりそうか」を頭の中で試せるので、実際に手を動かす前の<span class="term-tip" tabindex="0">ロールアウト<span class="tip">モデルが未来の状態を何ステップも予測し続けて生成する、想像上の映像のこと</span></span>による評価や、複数の行動候補を比べて一番良さそうなものを選ぶ計画にそのまま使えます。</p>
+<h3>② 逆モデルとして：目標から行動を逆算させる</h3>
+<p>今度は逆に、物体側の「こうなってほしい」という理想の軌跡だけを見せます。すると同じモデルが、その結果を実現するために必要なロボットの動きを描き出します。これは目標から行動を逆算する逆モデルの役割です。ふつうは順モデル用・逆モデル用と別々に学習するところを、マスクする対象を変えるだけで同じ1つのモデルが両方をこなせる、というのがこの論文のいちばんの面白さです。</p>
+<h2><span class="n">3</span>結果：わずかな追加学習で、複数の身体・場面に効く</h2>
+<div class="stats"><div class="stat"><div class="v">15時間分</div><div class="k">追加学習に使った実写・シミュレーション映像の量</div></div><div class="stat"><div class="v">1つの重み</div><div class="k">順モデルと逆モデルの両方を兼ねるチェックポイント数</div></div></div>
+<p>実写映像とシミュレーション映像を合わせてわずか15時間ぶんのマスク付きサンプルで<span class="term-tip" tabindex="0">ファインチューニング<span class="tip">すでに学習済みの大きなモデルを、少量のデータで目的に合わせて追加学習すること</span></span>しただけで、見た目の再現度と操作性が多様な場面・複数の身体構成にわたって安定して得られたと報告されています。生成された想像上のロールアウトの結果は実際にロボットを動かした結果とよく対応しており、行動候補の順位付けや意思決定の質の向上にも役立つことが示されました。</p>
+<p>特筆すべきは、この仕組みが特定の1種類のロボットに縛られていない点です。同じ動画モデルとマスクの与え方を使い回すだけで、腕の形も関節の数も異なる複数の<span class="term-tip" tabindex="0">エンボディメント<span class="tip">ロボットの腕の形や関節の数といった、身体の物理的な構成のこと</span></span>にまたがって機能することが確認されています。行動の表現を「画像そのものの言葉」に統一したことで、身体構成ごとに専用の行動表現を設計し直す必要がなくなった、と捉えると分かりやすいでしょう。</p>
+<h2><span class="n">4</span>なぜこれが新しいのか</h2>
+<div class="pull">「行動をどう表現するか」という設計問題を、モデルのアーキテクチャではなく、見せる映像そのものの中に埋め込んでしまった。</div>
+<p>多くの世界モデル研究は、行動を数値ベクトルやトークン列として別途モデルに入力する設計を取ります。この論文は逆に、行動そのものを動画と同じ「ピクセル空間」の言葉で語らせることで、動画モデルがすでに持っている物理理解をほぼそのまま流用できるようにしました。しかも見せる対象を変えるだけで順モデルと逆モデルを行き来できるという発想の転換は、モデル設計というより「モデルへの話しかけ方」を工夫した好例と言えます。</p>
+<p>新人研究者にとって覚えておきたいのは、この工夫が新しい損失関数や新しいネットワーク構造を発明したわけではない、という点です。既存の動画モデルの「入力の与え方」を変えただけで、順モデルと逆モデルという本来別物として扱われがちな2つの能力を1つの仕組みから引き出せることを示しました。強力な事前学習済みモデルがあるとき、それをゼロから作り替えるのではなく、その能力を引き出す「問いかけ方」を工夫する道があるという点は、日々の研究でも参考になる視点です。</p>
+<h2><span class="n">5</span>意義と限界</h2>
+<div class="step"><span class="si">留意点1</span><p>アブストラクトには本手法特有の限界は明記されていません。ここでは動画予測を使う世界モデル研究一般で広く指摘される論点として、映像の見た目は自然でも物理法則を厳密に守る保証はない、という点が挙げられます。</p></div><div class="step"><span class="si">留意点2</span><p>同様に、ロールアウトを何ステップも先まで伸ばすほど、誤差が積み重なって現実とずれていきやすいという課題は、この種の手法に共通して残ります。</p></div><div class="step"><span class="si">留意点3</span><p>動画モデル本体はすでに大規模学習済みという前提があるため、その事前学習にかかる計算コストは別途大きい、という点も念頭に置く価値があります。</p></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>新しい問題に出会ったとき、「モデルの構造を複雑にして解く」だけでなく「問題の表現そのものを、モデルが得意な形に翻訳し直す」という発想が有効なことがあります。今日の論文は後者の好例で、行動という異質な情報を、動画モデルが最も得意とする画像の言葉に翻訳し直しました。</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>同じ仕組みが役割を変えて働く、という設計は他の分野でもよく見られます。ある技術を学ぶときは「これは何ができるか」だけでなく「入力の与え方を変えると何に化けるか」も考えてみると、応用の幅がぐっと広がります。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
