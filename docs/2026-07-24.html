@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-07-24</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-07-24</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #Attention #推論高速化 #新人研究者向け</div>
+    <h1 class="headline">推論コストをO(n²)からO(nM)へ ── LISAが挑む「長考するAI」の高速化</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-07-24 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">LISA: Linear-Indexed Sparse Attention for Efficient Long-Context Reasoning</div>
+      <div class="pc-row">
+        <span>Yu Zhao, Zekun Zhang, Fan Jiang, Bo Zeng, Linlong Xu, Shimin Shan, Yu Liu, Longyue Wang, Weihua Luo</span>
+        <span>arXiv cs.AI ・ 2026年7月</span>
+        <a href="https://arxiv.org/abs/2607.19358">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>なぜ「長考するAI」ほど遅くなるのか</h2>
+<p>DeepSeek-R1のような、答えを出す前に長い<span class="term-tip" tabindex="0">Chain-of-Thought<span class="tip">最終回答の前に長い思考過程を出力させる推論方式</span></span>を書き出すモデルが増えました。賢く考えるほど出力トークン数は数千〜数万に伸びますが、その裏では計算コストが静かに、しかし急激に膨らんでいます。</p>
+<p>この「考える時間（＝出力トークン数）を増やすほど賢くなる」という<strong>test-time scaling</strong>の潮流は、推論精度を大きく引き上げてきました。しかし本番環境でユーザーにレスポンスを返すサービスにとっては、1回の応答に数万トークンかかること自体が遅延とコストの直撃になります。今日読む論文は、この「賢さの代償」に正面から切り込むものです。</p>
+<h2><span class="n">2</span>背景：Self-Attentionの二次コストという壁</h2>
+<p>Transformerの<span class="term-tip" tabindex="0">Self-Attention<span class="tip">文中の全単語どうしの関連度を計算する仕組み</span></span>は、全トークン対全トークンの関係を計算するため、文の長さnに対して計算量がO(n²)で増えます。長いCoT推論では出力自体がどんどん伸びていくので、この二次コストがそのまま推論速度のボトルネックになります。</p>
+<p>既存の対処法にも一長一短があります。計算量をO(n)に抑える<strong>線形アテンション</strong>は速いものの精度が落ちやすく、重要な部分だけを見る<strong>スパースアテンション</strong>は近似の精度こそ保てても、どこを見るかの選び方が静的・ヒューリスティックになりがちでした。今日の論文「LISA」は、この2つを「賢く組み合わせる」ことで両立を狙います。</p>
+<h2><span class="n">3</span>LISAの全体設計：2つの軽量モジュール＋ゲート</h2>
+<p>LISAの大きな特徴は、既存の学習済みモデルに<strong>後付けできる</strong>ことです。ゼロからの事前学習をやり直す必要がなく、(1) 線形アテンションモジュールと (2) Lightning Indexerという2つの軽量な仕組みを元のモデルに並列で組み込み、ゲート機構で結果を混ぜ合わせます。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 入力トークン列 x（長さ n）に対する1層分の処理</span></div><div class="ln"><span class="no">1</span><span class="ct">linear_out = <span class="fn">linear_attention</span>(x)<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># 全文脈を要約状態として O(n) で保持</span></div><div class="ln"><span class="no">3</span><span class="ct">topM_idx = <span class="fn">lightning_indexer</span>(x, M)<span class="badge">②</span></span></div><div class="ln"><span class="no">4</span><span class="ct">sparse_out = <span class="fn">sparse_self_attention</span>(x, topM_idx)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># 2つの出力を重要度に応じて融合</span></div><div class="ln"><span class="no">6</span><span class="ct">gate = <span class="fn">sigmoid</span>(W_g @ x)<span class="badge">③</span></span></div><div class="ln"><span class="no">7</span><span class="ct">out = gate * linear_out + (1 - gate) * sparse_out</span></div></div><div class="code-cap">LISAの推論時フォワードパス（擬似コード）</div>
+<h3>① 線形アテンション ─ 長距離の記憶を安く持ち歩く</h3>
+<p>会議の議事録を逐次要約して持ち歩くようなイメージです。全参加者の発言を毎回すべて聞き返す（O(n²)）のではなく、そのつど要約状態を更新していく（O(n)）ので、長い文脈でも記憶コストが膨らみにくくなります。</p>
+<h3>② Lightning Indexer ─ 全部見ずに「重要な発言」だけ拾う</h3>
+<p>大人数の会議で発言をすべて深く読み込むのではなく、重要そうな発言だけを見つけて重点的に読む役割です。全トークンからM個（M≪n）だけを選び、その部分にだけ本格的なSelf-Attentionをかけます。これにより計算量はO(n×M)まで下がります。</p>
+<h3>③ ゲート融合と2段階学習 ─ 「先生」の注意パターンを写す</h3>
+<p>2つのモジュールの出力は、入力に応じた<strong>ゲート</strong>で重み付けして混ぜられます。学習は2段階です。まずStage 1で線形アテンションとスライディングウィンドウ（近くのトークンだけを見る簡易版）を、元のフルアテンションモデル（教師）から<span class="term-tip" tabindex="0">知識蒸留<span class="tip">大きな教師モデルの出力や内部の振る舞いを、軽量なモデルに学習させる手法</span></span>して近づけます。Stage 2ではスライディングウィンドウをLightning Indexerに置き換え、教師モデルの注意パターンとの<span class="term-tip" tabindex="0">KLダイバージェンス<span class="tip">2つの確率分布がどれだけ違うかを測る指標</span></span>を損失として学習し、動的にどこを見るべきかを覚えさせます。</p>
+<div class="stats"><div class="stat"><div class="v">50%</div><div class="k">16K文脈での推論速度の向上</div></div><div class="stat"><div class="v">+5.6%</div><div class="k">AIME・MATH-500など推論ベンチマークの平均改善</div></div><div class="stat"><div class="v">O(n²)→O(nM)</div><div class="k">計算量オーダーの変化（M≪n）</div></div></div>
+<p>ここで注目したいのは、速度が上がっただけでなく推論ベンチマークの成績まで<strong>改善</strong>している点です。ふつう近似を入れると精度は多少落ちるものですが、LISAでは教師モデルの注意パターンをきちんと写し取れているぶん、むしろ余分なトークンへの注意が削られてノイズが減り、結果的に精度が上向いたと考えられます。</p>
+<div class="pull">「速くする」ことと「賢くする」ことはふつうトレードオフだが、教師モデルの注意パターンそのものを蒸留で写し取ることで、LISAは両方を同時に得ようとしている。</div>
+<h2><span class="n">4</span>意義と限界</h2>
+<p>この論文の面白さは、単に「速いattention」を新設計するのではなく、既存の学習済みモデルに後付けし、精度の落ち込みを蒸留で補うという実務的な設計にあります。DeepSeek-distilled-Qwen系のモデルで、速度と推論性能を同時に改善できたことが実験で示されています。ゼロからの事前学習をやり直さずに済むという点も、実際に大規模モデルを運用する現場では大きな利点です。</p>
+<div class="step"><span class="si">限界1</span><p>性能は蒸留元となる教師モデル（フルアテンションモデル）の質に依存する。教師が弱ければLISAの上限も下がる</p></div><div class="step"><span class="si">限界2</span><p>選択するトークン数Mはハイパーパラメータであり、タスクやモデルごとに最適値を探すコストが残る</p></div><div class="step"><span class="si">限界3</span><p>検証はDeepSeek-distilled-Qwen系モデルとAIME・MATH-500などの推論ベンチマークが中心で、他のアーキテクチャや幅広いタスクへの一般化はまだ確認されていない</p></div><div class="step"><span class="si">限界4</span><p>あくまで近似であり、フルアテンションと完全に同一の出力を理論的に保証するものではない</p></div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>「既存モデルに後付けできて、事前学習をやり直さなくていい」という設計は、実務では非常に価値が高いポイントです。ゼロからの再学習には莫大な計算資源がかかるため、後付けで性能改善できる手法は現場で重宝されます。</div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>効率化系の論文を読むときは、数値の改善幅だけでなく「どこで近似しているか・どこを教師に頼っているか」を探す視点を持つと理解が深まります。速さと精度はトレードオフになりやすく、その天秤をどう傾けたかが手法の個性になります。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
