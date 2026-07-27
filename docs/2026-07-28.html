@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-07-28</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-07-28</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #LoRA #ファインチューニング #新人研究者向け</div>
+    <h1 class="headline">LoRAは万能ではなかった――「手順を踏んで判断する」タスクだけがなぜ失敗するのか</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-07-28 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Procedural Knowledge Is Not Low-Rank: Why LoRA Fails to Internalize Multi-Step Procedures</div>
+      <div class="pc-row">
+        <span>Simon Dennis, Kevin Shabahang, Hao Guo, Rivaan Patil</span>
+        <span>arXiv cs.LG (cross-listed) ・ 2026年7月</span>
+        <a href="https://arxiv.org/abs/2607.21612">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>LoRAは「いつでも使える万能節約術」なのか？</h2>
+<p>大規模言語モデル(LLM)をファインチューニングするとき、今や標準の選択肢になっているのが <span class="term-tip" tabindex="0">LoRA (Low-Rank Adaptation)<span class="tip">モデルの全パラメータではなく、少数の追加パラメータだけを学習して微調整する省メモリな手法</span></span> です。指示追従、文体の変更、知識の追加——さまざまな用途で「フルファインチューニングに匹敵する性能を、ずっと少ない計算量で」実現できることが報告されてきました。</p>
+<p>しかし今日取り上げる論文は、その「万能さ」に一つの穴を見つけました。旅行予約やカスタマーサポートのように、<strong>条件分岐をしながら複数ステップをこなす仕事</strong>——つまり<span class="term-tip" tabindex="0">手続き的知識<span class="tip">「次に何をすべきか」を状況に応じて判断しながら実行していく知識</span></span>——になると、LoRAはどんなに設定を変えてもフルファインチューニングに追いつけないというのです。</p>
+<div class="pull">LoRAが失敗するのは「学習が足りない」からではなく、「そもそも表現できる形が違う」から。</div>
+<h2><span class="n">2</span>LoRAのしくみをおさらいする</h2>
+<p>LoRAの発想はシンプルです。本来ならモデルの重み行列 W をまるごと更新するところを、代わりに小さな2つの行列 B と A を学習し、W&#x27; = W + B×A という形で「差分」だけを表現します。B と A のサイズを決める数を <span class="term-tip" tabindex="0">ランク (rank)<span class="tip">行列がどれだけ複雑な変化を表現できるかを決めるパラメータ。小さいほど省メモリ</span></span> と呼び、ランクが小さいほど学習パラメータは少なくて済みます。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 本来のフルファインチューニング: 巨大な行列 W をまるごと更新</span></div><div class="ln"><span class="no">1</span><span class="ct">W_new = W + <span class="fn">full_update</span>(W)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># LoRA: 差分を低ランクの2行列 B・A の積で近似</span></div><div class="ln"><span class="no">2</span><span class="ct">delta = B <span class="kw">@</span> A<span class="badge">①</span></span></div><div class="ln"><span class="no">3</span><span class="ct">W_new = W + delta</span></div><div class="ln comment"><span class="no"></span><span class="ct"># B, A のサイズ(ランク r)が小さいほど学習は軽い</span></div></div><div class="code-cap">LoRAによる重み更新のイメージ</div>
+<p>この「差分は低ランクの行列で近似できる」という前提が、指示追従や文体変更ではうまく機能します。ところが今回の論文は、<strong>この前提自体が手続き的知識には当てはまらない</strong>ことを実験で突き止めました。</p>
+<h2><span class="n">3</span>実験:旅行予約ボットで検証する</h2>
+<p>検証には「14の分岐ノードを持つ旅行予約タスク」を用意しました。ユーザーの希望を聞きながら、条件によって異なる手順に分岐し、最終的な予約完了(終端状態)までたどり着けるかを評価します。LoRAのランクを16から128まで振って比較したところ、<strong>どのランク設定でもフルファインチューニングに勝てず</strong>、むしろランクを上げるほどスコアが下がるという逆転現象すら見られました。</p>
+<p>会話自体は95〜99%が最後まで完走しているのに、タスクの成功率だけが低い——つまりLoRAで学習したモデルは「それらしく会話を続けること」はできても、「正しい手順通りに完遂すること」に失敗していたのです。この結果はZoomサポート対応や保険金請求(55ノード)といった別ドメイン・別モデルサイズ(8B)でも再現され、複雑な手順ほど差が開くことが確認されました。</p>
+<div class="stats"><div class="stat"><div class="v">2.54 vs 4.11</div><div class="k">旅行予約タスクの成功スコア(LoRA全設定 vs フルFT、p&lt;0.001)</div></div><div class="stat"><div class="v">95〜99%</div><div class="k">会話の完走率(手順の成否によらずほぼ同水準)</div></div><div class="stat"><div class="v">43〜51%</div><div class="k">ランク128のLoRAが捉えられる更新情報の割合</div></div></div>
+<h2><span class="n">4</span>なぜ失敗するのか――SVDで「更新の複雑さ」を測る</h2>
+<h3>有効ランクという物差し</h3>
+<p>この謎を解く鍵が <span class="term-tip" tabindex="0">特異値分解 (SVD)<span class="tip">行列を「回転・引き伸ばし」の要素に分解する数学的な道具。行列の複雑さを数値で測れる</span></span> です。研究チームはフルファインチューニングで生じた重みの変化量をSVDで分解し、その <span class="term-tip" tabindex="0">有効ランク (effective rank)<span class="tip">行列がどれだけ多くの独立した方向の情報を持っているかを表す実質的な複雑さの指標</span></span> を測定しました。</p>
+<p>結果、3つのドメイン・2つのモデルサイズいずれでも、フルファインチューニングによる更新の有効ランクは <strong>761〜1,026</strong> という非常に大きな値になりました。一方LoRAでよく使われるランク128は、その更新が持つ情報量(<span class="term-tip" tabindex="0">フロベニウスノルム<span class="tip">行列の全要素の大きさを2乗和で表した指標。情報量のものさしとして使う</span></span>の2乗)のわずか43〜51%しか捉えられていませんでした。つまり「もっと学習すれば追いつく」という量の問題ではなく、<strong>低ランクという表現の形そのものが手続き的知識と相性が悪い</strong>ことが数字で裏付けられたのです。</p>
+<div class="code"><div class="ln"><span class="no">1</span><span class="ct">U, S, V = <span class="fn">svd</span>(delta_full_ft)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># S には特異値が大きい順に並ぶ。値の分布の広がりが「複雑さ」</span></div><div class="ln"><span class="no">2</span><span class="ct">effective_rank = <span class="fn">count_significant</span>(S)<span class="badge">②</span></span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="kw">if</span> effective_rank <span class="kw">&gt;&gt;</span> lora_rank:</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span># LoRAはこの更新を表現しきれない</span></div></div><div class="code-cap">有効ランクを測るイメージ(疑似コード)</div>
+<h2><span class="n">5</span>この発見が重要な理由</h2>
+<p>近年、LLMを使った<strong>エージェント的タスク</strong>——ツールを呼び出し、条件によって振る舞いを変え、複数ステップの手順をこなす応用——が急速に広がっています。そしてコスト削減のためにLoRAでエージェントを微調整するケースも増えています。今回の結果は、そうした場面で「LoRAだから性能が伸びない」という落とし穴が起きうることを、具体的な数字とメカニズムの説明つきで示した点に価値があります。</p>
+<p>特に、<strong>単なる性能比較で終わらせず、SVDによる有効ランク分析で「なぜ」を説明した</strong>ことが、この論文を単なるベンチマーク報告以上のものにしています。原因が分かれば、対策(どのタスクにフルFTを使うべきか、ランクをどう選ぶか)を考える土台になります。</p>
+<h2><span class="n">6</span>限界と、まだ分かっていないこと</h2>
+<div class="step"><span class="si">対象タスク</span><p>検証されたのは旅行予約・カスタマーサポート・保険金請求という「会話型の手続きタスク」に限られ、コード生成など他のエージェントタスクへの一般化は今後の課題です。</p></div><div class="step"><span class="si">モデル規模</span><p>実験は3B・8Bクラスのモデルが中心で、より大規模なモデルでも同じ傾向が続くかは検証されていません。</p></div><div class="step"><span class="si">ランクの上限</span><p>論文ではランクを128まで試し「上げても差は縮まらない」としていますが、有効ランクが761〜1,026である以上、実用的な範囲でランクをさらに上げても効率面の利点は失われてしまいます。</p></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「効率的な手法が万能とは限らない」という発想は、LoRAに限らずあらゆる近似・圧縮テクニックに共通する重要な視点です。新しい手法を採用する前に、「自分のタスクが持つ情報の複雑さ(この論文で言う有効ランク)は、その手法が表現できる範囲に収まっているか?」と自問する癖をつけると、思わぬ落とし穴を避けやすくなります。</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>SVDによる有効ランク分析は、LoRA以外にも量子化やモデル圧縮の妥当性を検討する際によく使われる汎用的な道具です。今回の分析手法自体も、手元のファインチューニング結果を診断する際にそのまま応用できます。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
