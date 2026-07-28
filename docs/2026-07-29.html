@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-07-29</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-07-29</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #ロボティクス #強化学習 #新人研究者向け</div>
+    <h1 class="headline">ロボットの脳は「足し算」ばかり——PRISMが問う、掛け算を織り込む制御</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-07-29 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">PRISM: Polynomial Representations for Interaction-Structured Motor Control</div>
+      <div class="pc-row">
+        <span>Seung Hyun Lee, Stella X. Yu(所属情報はarXiv上に記載なし)</span>
+        <span>arXiv cs.RO ・ 2026年7月</span>
+        <a href="https://arxiv.org/abs/2607.23473">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>ロボットの「脳」は、なぜいつも足し算でできているのか</h2>
+<p>多くのロボットの<span class="term-tip" tabindex="0">方策(ポリシー)<span class="tip">観測(センサー情報)を受け取って、次にどう動くかを決める関数</span></span>は、<span class="term-tip" tabindex="0">MLP(多層パーセプトロン)<span class="tip">入力の重み付け和と非線形関数を繰り返し重ねただけの、最も基本的なニューラルネット</span></span>で作られています。一方で、現実の物理量の多くは「掛け算」の関係にあります。仕事率は力×速度、慣性力は質量×加速度、床との摩擦や滑りは接触状態と速度の掛け合わせで決まります。</p>
+<p>MLPの基本操作は足し算(線形結合)です。掛け算的な関係を表現したいなら、本当は回り道をしているのではないか——今日紹介する PRISM は、この素朴な違和感を出発点にした論文です。</p>
+<h2><span class="n">2</span>なぜ「掛け算」はニューラルネット任せにしにくいのか</h2>
+<h3>線形結合がならしてしまう情報</h3>
+<p>MLPの1層は、おおよそ w1*x1 + w2*x2 + ... + b という重み付け和を計算し、そのあとに ReLU などの非線形関数を通します。ここには「x1が大きいときにx2も大きいと効果が跳ね上がる」といった、変数どうしの掛け算的な相互作用を直接表す項がありません。理論上は層とユニットを十分増やせばどんな関数も近似できますが、それには余分な容量と学習データが必要になります。</p>
+<p>接触・滑り・<span class="term-tip" tabindex="0">コンプライアンス<span class="tip">力を検知しなくても、対象に押されたら柔らかく追従するような、なめらかで安全な動き</span></span>といったロボットの物理現象は、力・速度・角度など複数の観測変数の「組み合わせ」に強く依存します。この組み合わせ構造をあらかじめアーキテクチャに埋め込めれば、モデルを無駄に大きくせずに済むはずだ、というのがPRISMの狙いです。</p>
+<h2><span class="n">3</span>PRISMのアイデア:相互作用を「陽に」織り込む</h2>
+<h3>組み合わせを全部並べない工夫</h3>
+<p>観測変数がN個あれば、2つの組み合わせ(2次の相互作用項)だけでもN×N通りになり、変数が増えるほど計算量が爆発します。PRISMは、<span class="term-tip" tabindex="0">因子分解(factorization)<span class="tip">大きな行列やテンソルを、より小さな行列の積の形で近似的に表し、計算量を抑える手法</span></span>の考え方を使った「factorized polynomial module(因子分解された多項式モジュール)」によって、この組み合わせ特徴を効率的かつコンパクトに計算する、と論文は説明しています。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 観測変数 x の全ペアの積(2次相互作用)を、愚直に計算すると x の個数の2乗かかる</span></div><div class="ln"><span class="no">1</span><span class="ct">pairwise = <span class="fn">sum_all_pairs</span>(x)<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># 因子分解:各変数を小さいベクトル v に埋め込んでおくと、同じ相互作用を線形時間で近似できる</span></div><div class="ln"><span class="no">3</span><span class="ct">embedded = <span class="fn">embed</span>(x)</span></div><div class="ln"><span class="no">4</span><span class="ct">pairwise_fast = (<span class="fn">sum</span>(embedded) ** <span class="nm">2</span> - <span class="fn">sum</span>(embedded ** <span class="nm">2</span>)) / <span class="nm">2</span><span class="badge">②</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># ①と②はほぼ同じ値になるが、②は変数の個数に対して線形の計算量で済む</span></div></div><div class="code-cap">因子分解によって2次の相互作用を効率よく求める、という考え方を簡略化して示したイメージ(論文の厳密な数式そのものではありません)</div>
+<h3>二つの学習の型に、同じ発想を差し込む</h3>
+<p><span class="term-tip" tabindex="0">強化学習<span class="tip">試行錯誤の結果得られる報酬をもとに、方策を改善していく学習方式</span></span>では、標準的なMLPバックボーンはそのまま残し、その出力段に「徐々に有効化される」要素ごとの多項式関数を追加します。学習の初期はもとのMLPに近い挙動から始まり、徐々に多項式的な相互作用が効いてくるという、安定した学習のための工夫がうかがえます。</p>
+<p><span class="term-tip" tabindex="0">模倣学習<span class="tip">人間やお手本のデモンストレーションを真似ることで方策を学ぶ学習方式</span></span>では、<span class="term-tip" tabindex="0">Diffusion Policy<span class="tip">ロボットの行動を、ノイズ除去を繰り返す過程として生成する模倣学習の手法</span></span>における<span class="term-tip" tabindex="0">固有受容感覚<span class="tip">関節角度や速度など、ロボット自身の内部状態を示すセンサー情報</span></span>の条件づけ(通常は線形層)を、多項式層に置き換えてend-to-endで学習します。既存のDiffusion Policyの枠組みを壊さず、部品を差し替えるだけで使える設計になっている点がポイントです。</p>
+<h2><span class="n">4</span>何を検証したか:ヒューマノイド歩行と接触の多い操作</h2>
+<div class="stats"><div class="stat"><div class="v">同容量のMLPに勝つ</div><div class="k">パラメータ数を揃えた大きめのMLPと比べても、PRISMの方が高い性能を示した</div></div><div class="stat"><div class="v">力センサー不要</div><div class="k">力・トルク・触覚センサーや接触ラベル、<span class="term-tip" tabindex="0">アドミタンス制御<span class="tip">力センサーの読み取り値に応じて動きを補正する制御方式</span></span>なしで柔らかい追従動作を実現</div></div></div>
+<p>検証はヒューマノイドの歩行と、接触の多い操作タスク(contact-rich manipulation)で行われました。重要なのは、単にMLPを大きくしただけの比較対象(パラメータ数を揃えたもの)よりもPRISMが上回った点です。つまり「表現力(パラメータ数)を増やすだけでは、相互作用の構造そのものは代替できない」ことを示しています。なお、具体的な成功率などの数値はプロジェクトページや論文本文に譲られており、アブストラクトの範囲では公開されていません。</p>
+<div class="pull">相互作用という「構造」は、モデルを大きくするだけでは代替できない</div>
+<h2><span class="n">5</span>この研究の意義と、まだ分からないこと</h2>
+<p>PRISMの面白さは、特定のタスク向けの専用モデルではなく、「RLでもILでも後付けできる、汎用的な小さなモジュール」として相互作用構造を提案している点です。物理的な直感(掛け算的な関係)をアーキテクチャに埋め込むという設計思想は、<span class="term-tip" tabindex="0">VLAモデル<span class="tip">Vision-Language-Action: 視覚と言語からロボットの行動を出力するモデル</span></span>のような、より大きなロボット基盤モデルにも展開できるかもしれません。</p>
+<div class="step"><span class="si">STEP 1</span><p>アブストラクトの範囲では具体的な性能改善幅(成功率などの数値)は示されておらず、詳細な検証はプロジェクトページや論文本文の確認が必要です。</p></div><div class="step"><span class="si">STEP 2</span><p>検証範囲はヒューマノイド歩行と特定の接触操作タスクに閉じており、多様なロボット・タスク・実機環境への一般化はこの論文だけでは分かりません。</p></div><div class="step"><span class="si">STEP 3</span><p>多項式的な相互作用項を増やすことによる計算コストや学習の安定性への影響については、アブストラクトからは読み取れません。</p></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「モデルを大きくすれば何とかなる」という発想と、「タスクの構造をアーキテクチャに陽に埋め込む」という発想は、しばしばトレードオフになります。今回のように後者が前者に勝る場面をどう見極めるかは、手法を選ぶうえで持っておきたい引き出しの一つです。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
