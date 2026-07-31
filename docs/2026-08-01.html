@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-08-01</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-08-01</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #ロボティクス #世界モデル #新人研究者向け</div>
+    <h1 class="headline">ロボットの『経験不足』を動画生成が埋める ―― EgoGenesisが見せた世界モデル×データ拡張の効き目</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-08-01 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">EgoGenesis: Egocentric World-Action Modeling with Online Anchored Projective Memory and Action-3D RoPE</div>
+      <div class="pc-row">
+        <span>Zexuan Yan, Yuzhou Wu, Yue Ma ほか（計12名）</span>
+        <span>arXiv cs.CV / cs.AI ・ 2026年7月</span>
+        <a href="http://arxiv.org/abs/2607.28243v1">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>ロボットは『経験』が足りない</h2>
+<p>画像認識や自然言語処理がインターネット上の膨大なデータで急成長したのに対し、ロボットが手や腕で物を操作する経験は圧倒的に少ない。人間が当たり前にこなす「持ち上げる」「回す」「置く」といった一人称視点の操作データは、実世界で撮影する以外に増やす方法がなく、環境・物体・ロボットの構成（<span class="term-tip" tabindex="0">エンボディメント<span class="tip">ロボットの身体の形や構成のこと。アームの本数や関節の自由度など</span></span>）が変わるたびに撮り直しが必要になる。今日紹介する論文は、この『経験不足』を映像生成モデルで補おうとする挑戦だ。</p>
+<h2><span class="n">2</span>背景：なぜ一人称視点の操作データはこんなに貴重で、こんなに少ないのか</h2>
+<p>ロボットに新しい作業を学ばせる代表的な方法は、人間の操作をお手本にする<span class="term-tip" tabindex="0">模倣学習<span class="tip">人間の実演データからロボットの行動方策を学ぶ手法</span></span>だ。しかし模倣学習は『見たことのある状況』にしか強くない。学習に使った環境・物体・ロボットの組み合わせから少しでも外れると、成功率は簡単に崩れる。これは<span class="term-tip" tabindex="0">分布外(OOD)<span class="tip">学習データの分布から外れた、これまで見たことのない状況のこと</span></span>への弱さと呼ばれる問題だ。実機での撮影は時間もコストもかかるため、研究チームの多くは『もっと安く、もっと多様な操作データを増やす方法』を探している。</p>
+<h2><span class="n">3</span>手法の全体像：世界モデルに『操作の映像』を作らせる</h2>
+<p>著者らが提案する EgoGenesis は、一人称視点で『ロボットの手が物を操作する様子』を映像として生成する<span class="term-tip" tabindex="0">世界モデル<span class="tip">環境の状態がどう変化していくかを予測する学習済みモデル。将来の状態をシミュレーションできる</span></span>だ。既存の映像生成の<span class="term-tip" tabindex="0">事前学習済みモデル<span class="tip">大量データで先に学習しておき、後から特定用途向けに調整して使うモデルのこと</span></span>をベースに、ロボットの行動指示に忠実で、かつ幾何的に破綻しない映像を長く生成し続けるための2つの工夫を加えている。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 最初の1フレームから3Dシーンの『道しるべ』を作る</span></div><div class="ln"><span class="no">1</span><span class="ct">anchor = <span class="fn">build_3d_anchor</span>(first_frame)</span></div><div class="ln"><span class="no">2</span><span class="ct">recent_state = anchor</span></div><div class="ln comment"><span class="no"></span><span class="ct"># 行動列ぶんだけ、映像を1フレームずつ自己回帰的に生成する</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="kw">for</span> t <span class="kw">in</span> actions:</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>action_embed = <span class="fn">A3D_RoPE</span>(actions[t], camera_pose)<span class="badge">①</span></span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span>frame_t = <span class="fn">video_prior</span>(anchor, recent_state, action_embed)<span class="badge">②</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"><span class="ind"></span># 直近の状態だけを更新し、最初の道しるべ(anchor)は保持し続ける</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span>recent_state = <span class="fn">update</span>(recent_state, frame_t)<span class="badge">③</span></span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="kw">return</span> video</span></div></div><div class="code-cap">EgoGenesisの生成ロールアウト（論文の説明をもとにした概念的な擬似コード）</div>
+<h3>① Online Anchored Projective Memory ―― 最初の1枚を『道しるべ』として持ち続ける</h3>
+<p>映像を1フレームずつ生成し続ける<span class="term-tip" tabindex="0">自己回帰生成<span class="tip">直前までの出力をもとに次の1つを予測し、それを繰り返して系列を作る生成方式</span></span>では、少しずつ蓄積した誤差でシーンの形や配置が徐々に歪んでいく問題がよく起こる。OAPMは、最初のフレームから作った3Dのシーン情報を『道しるべ(anchor)』として最後まで保持しつつ、直近の状態だけを定期的に更新する。旅行中ずっと出発地の地図を握りしめながら、現在地のメモだけを書き換えていくイメージに近い。これにより長い映像を作っても、部屋の形やものの位置が現実に沿ったまま安定する。</p>
+<h3>② Action-3D RoPE ―― ロボットの手の動きを『座標』として埋め込む</h3>
+<p>ロボットの<span class="term-tip" tabindex="0">エンドエフェクタ<span class="tip">ロボットアームの先端にある、実際に物をつかむ部分</span></span>がどう動くかという情報を、映像生成モデルにどう伝えるかも重要な課題だ。A3D-RoPEは、<span class="term-tip" tabindex="0">RoPE<span class="tip">Transformerでトークン同士の位置関係を回転操作として埋め込む位置エンコーディング手法</span></span>を3次元の動作情報に拡張し、カメラの視点も考慮した形で、手の動きの『幾何学的な意味』を映像生成の<span class="term-tip" tabindex="0">クロスアテンション<span class="tip">生成中の映像と条件情報を対応づけて参照する仕組み</span></span>に直接注入する。これによって『右に10cm動かす』といった指示が、映像の中で実際に正しい方向・距離の動きとして表現されやすくなる。</p>
+<h2><span class="n">4</span>実験結果：合成データが実ロボットの成功率を押し上げた</h2>
+<p>本当に効くかどうかを確かめるため、著者らは実ロボットの400本の実演軌道に、EgoGenesisが生成した400本の合成軌道を追加して学習させ、未知の状況（分布外）での成功率を比較した。</p>
+<div class="stats"><div class="stat"><div class="v">77%→84%</div><div class="k">片腕タスクでの実ロボット成功率(OOD)</div></div><div class="stat"><div class="v">53%→70%</div><div class="k">両腕タスクでの実ロボット成功率(OOD)</div></div><div class="stat"><div class="v">400+400本</div><div class="k">実データと合成データの軌道数</div></div></div>
+<p>特に、もともと成功率が低かった両腕タスク（53%）で17ポイントの改善が見られた点は興味深い。両腕の協調動作は片腕より状況の組み合わせが爆発的に増えるため、実データだけでは網羅しきれない『隙間』を合成データが埋めた可能性がある。</p>
+<div class="pull">幾何学的に一貫した合成映像は、実ロボットが未知の状況に対応する力そのものを底上げできる。</div>
+<h2><span class="n">5</span>意義と限界</h2>
+<p>この研究の面白さは、『映像生成モデルの見た目の品質』を評価して終わりにせず、実際にロボットの<span class="term-tip" tabindex="0">世界行動モデル(WAM)<span class="tip">世界の状態と行動の関係を学習し、行動から結果を予測・生成するモデル</span></span>の学習に使い、実機成功率という具体的な指標で効果を検証した点にある。生成映像がどれだけ綺麗かと、実際にロボット学習の役に立つかは別問題であり、その橋渡しをきちんとやった点が新人研究者にとっても学びになる。</p>
+<div class="step"><span class="si">限界1</span><p>効果が確認されたのは片腕・両腕の操作タスクに限られており、歩行や全身動作など別の身体性を持つロボットにも同様に効くかは、この論文だけからは分からない。</p></div><div class="step"><span class="si">限界2</span><p>ベースとなる映像生成の事前学習モデルの性能に強く依存するため、事前学習データに含まれない全く新しい物体や環境でどこまで通用するかは今後の検証が必要。</p></div><div class="step"><span class="si">限界3</span><p>1フレームずつ生成する自己回帰方式は一般に計算コストが高く、大量の合成データを作る際の生成速度やコストについてはアブストラクトで触れられていない。</p></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>『実データが足りないなら、条件を整えた生成やシミュレーションでデータを増やす』というアプローチは、ロボット学習に限らず様々な分野のR&amp;Dで繰り返し登場する。ただし、生成データの効果は必ず実タスクでの評価とセットで確認する、という本研究の姿勢は覚えておく価値がある。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
