@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-08-05</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-08-05</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #世界モデル #ロボティクス #新人研究者向け</div>
+    <h1 class="headline">ロボットは「想像」しなくていい？世界モデルの計算を折りたたむEnfoldの発想</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-08-05 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Enfold: Folding World Model Imagination into Predictive Representations for Ultra-Efficient Embodied Control</div>
+      <div class="pc-row">
+        <span>著者情報は収集データに含まれていません（詳細は原文をご参照ください）</span>
+        <span>arXiv cs.RO ・ 2026年7月</span>
+        <a href="https://arxiv.org/abs/2607.26657">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>「想像してから動く」ロボットの弱点</h2>
+<p>ロボットに「次に何が起きるか」を考えさせてから動かす、というアプローチが近年広がっている。まず現在の映像と指示から未来の映像や状態を<span class="term-tip" tabindex="0">世界モデル<span class="tip">環境の変化を予測し、未来の状態を推定するAIモデル</span></span>で“想像”し、その想像をもとに行動を決める。人間が手を伸ばす前に頭の中でシミュレーションするのに近い発想だ。だが、この「想像」の計算コストが高く、ロボットの反応を遅くしてしまうという問題があった。今日紹介する論文は、想像する計算そのものを丸ごと折りたたんで、動くたびに想像せずに済ませてしまうという逆転の発想を提案する。</p>
+<div class="pull">世界モデルの「未来を生成する力」は、未来を実際に描かなくても、現在の表現の中に折りたたんで使い回せる。</div>
+<h2><span class="n">2</span>背景：なぜロボットは動く前に「想像」するのか</h2>
+<h3>World Action Model という枠組み</h3>
+<p>近年注目される<span class="term-tip" tabindex="0">VLAモデル<span class="tip">Vision-Language-Action: 視覚と言語からロボットの行動を出力するモデル</span></span>の発展形として、行動生成と未来予測を組み合わせた World Action Model という枠組みが登場している。カメラ映像と言語指示から行動をいきなり出すのではなく、「この行動をとったら次にどんな映像・状態になるか」をまず予測（生成）し、その予測を手がかりに行動を洗練させる仕組みだ。</p>
+<p>ところがこの「想像」は、多くの場合、拡散モデルのような<span class="term-tip" tabindex="0">ノイズ除去<span class="tip">崩れた情報から元の綺麗な状態を少しずつ復元していく処理</span></span>を何ステップも繰り返して未来の映像や潜在状態を生成する、重い計算になる。ロボットが1回行動を決めるたびにこの重い生成過程を回すと、指示を受けてから行動を出力するまでの遅延（<span class="term-tip" tabindex="0">行動レイテンシ<span class="tip">指示を受けてから実際に行動を出力するまでの遅延時間</span></span>）が伸びてしまい、素早い反応が要求される実世界のタスクでは致命的になりうる。</p>
+<h2><span class="n">3</span>Enfold の発想：想像の「計算」だけを持ち帰る</h2>
+<p>著者らは、世界モデルが本当に有用なのは「生成された未来そのもの」ではなく「未来を組み立てていく過程で使われた計算」だと主張する。生成器がノイズだらけの未来を少しずつ整った軌道に直していく途中、その内部状態には、物体がどこにあり周囲とどう相互作用するかという情報が、抽象度の異なる複数のレベルで自然に整理されている。この「整理する力」こそが、使い回せる本当の資産だという発想だ。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 学習時: 世界モデルの生成過程を「正解」としてエンコーダを鍛える</span></div><div class="ln"><span class="no">1</span><span class="ct">future_states = <span class="fn">world_model.imagine</span>(obs, instruction)</span></div><div class="ln"><span class="no">2</span><span class="ct">pred = <span class="fn">encoder</span>(obs, instruction)<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># 複数レベルの内部状態を、勾配を止めた「正解」としてまねさせる</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="kw">for</span> level <span class="kw">in</span> levels:</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>loss += <span class="fn">distill</span>(pred[level], <span class="fn">stop_grad</span>(future_states[level]))<span class="badge">②</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># 推論時: 生成器は呼ばない。エンコーダだけで表現が一瞬で手に入る</span></div><div class="ln"><span class="no">5</span><span class="ct">pred = <span class="fn">encoder</span>(obs, instruction)</span></div><div class="ln"><span class="no">6</span><span class="ct">action = <span class="fn">policy_head</span>(pred)<span class="badge">③</span></span></div></div><div class="code-cap">学習時と推論時で「想像」の有無が変わる</div>
+<h3>学習：生成器の「頭の中」をエンコーダに教え込む</h3>
+<p>Enfold は、現在の映像と言語指示だけを受け取る軽量なエンコーダを新たに用意する。学習中は、実際に起きた未来の観測を世界モデルに読み込ませ、生成器が内部で作る複数レベルの状態を“正解”として、エンコーダの出力がそれに近づくよう<span class="term-tip" tabindex="0">蒸留<span class="tip">大きく賢いモデルの振る舞いを、小さく速いモデルに学ばせる手法</span></span>する（①②）。ここで重要なのは<span class="term-tip" tabindex="0">stop-gradient<span class="tip">片方のネットワークには学習の勾配を伝えない工夫</span></span>で、行動を当てるタスクの学習信号がこのエンコーダの中身を無理やり歪めてしまわないよう設計されている。</p>
+<p>推論、つまり実際にロボットを動かす時には、世界モデルの生成器はもう呼び出さない（③）。現在の映像と指示をエンコーダに通すだけで、生成器を回したのと同じような「未来を織り込んだ」表現が一瞬で手に入り、それを行動予測ヘッドに渡すだけでよい。</p>
+<h2><span class="n">4</span>実験結果</h2>
+<div class="stats"><div class="stat"><div class="v">3.7倍</div><div class="k">Enfold: Fast-WAM比の行動生成の高速化</div></div><div class="stat"><div class="v">10.1倍</div><div class="k">Enfold-Flash（軽量版）での高速化</div></div><div class="stat"><div class="v">3種</div><div class="k">検証環境: LIBERO・RoboTwin2.0・実機ロボット</div></div></div>
+<p><span class="term-tip" tabindex="0">LIBERO<span class="tip">ロボット操作タスクの代表的なシミュレーションベンチマーク</span></span> や RoboTwin2.0 のシミュレーション、そして実機ロボットでの評価を通じて、Enfold は強い制御性能を保ちながら行動レイテンシを大きく削減した。表現を分析すると、カメラの揺れのような無関係な変化（ノイズ）は抑えられ、より長い時間スケールで意味を持つ変化を優先的に捉えていることも確認されている。</p>
+<p>さらに興味深いのは、実行中に人間が物の配置を変えるなどして目の前の状況が変わると、生成される続きの想像も、実際に出力される行動も、その変化に合わせて調整される点だ。あらかじめ決めておいた軌道をただ再生しているのではなく、そのつどの状況に応じた「その場の判断」が起きていることの裏付けになっている。</p>
+<h2><span class="n">5</span>新規性・なぜ重要か</h2>
+<div class="pull">世界モデルは「未来を実際に描く生成器」としてだけでなく、「現在の表現に折りたたんで使う予測の源」として捉え直せる。</div>
+<p>これまでの多くの研究は、世界モデルの生成物（映像や潜在状態）をどう賢く使うかに注目してきた。Enfold は視点を変え、生成の「過程」こそが再利用可能な知識だと捉え直した点に新規性がある。生成モデル・蒸留・自己教師あり学習といった複数の技術領域をまたいだ発想であり、推論効率と性能の両立という実務上の課題に対して、シンプルながら筋の通った解決策を示している。</p>
+<p>実世界のロボットは、シミュレーションの中とは違い、待ってくれない。人や物が動き続ける環境で、行動を決めるまでに何百ミリ秒もかかっていては、せっかく賢い判断ができても間に合わない。強力だが重い世界モデルの恩恵を、軽くて速いモデルにも行き渡らせる、という今回の方向性は、精度と速度のどちらかを諦めがちだった実用ロボティクスに対して、両立への現実的な道筋を示すものだと言える。</p>
+<h2><span class="n">6</span>意義と限界</h2>
+<div class="step"><span class="si">限界 1</span><p>学習時には依然として世界モデル（生成器）を動かして正解データを作る必要があり、計算コストは消えたのではなく訓練フェーズに移されている。</p></div><div class="step"><span class="si">限界 2</span><p>検証は LIBERO・RoboTwin2.0・実機タスクの範囲にとどまっており、より多様で長期的な実世界タスクでの汎化性能は今後の検証課題として残る。</p></div><div class="step"><span class="si">限界 3</span><p>どのような世界モデル・どのレベルの内部状態を選べば効果的に折りたためるのか、その設計指針はまだ体系化されていない。</p></div>
+<h2><span class="n">7</span>新人へのひとこと</h2>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>推論を速くしたいとき、「重い処理そのものを消す」のではなく「重い処理が生み出す構造を軽いモデルに学ばせて肩代わりさせる」という発想は、蒸留や自己教師あり学習など様々な場面で繰り返し登場する、非常に汎用的な武器になる。今回の Enfold もその一例として読める。</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>arXiv の announce type が「replace」なのは初回投稿からの更新版という意味で、内容自体は2026年7月に登場したばかりの新しい研究。読むときは投稿日だけでなく version 表記もチェックする習慣をつけておくと良い。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
