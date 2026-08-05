@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-08-06</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-08-06</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #解釈可能性 #ChainOfThought #新人研究者向け</div>
+    <h1 class="headline">LLMは頭の中で答えを「重ね合わせ」ているのか? 潜在的思考の幻想を暴く新研究</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-08-06 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">The Illusion of Superposition? A Principled Analysis of Latent Thinking in Language Models</div>
+      <div class="pc-row">
+        <span>Michael Rizvi-Martel, Guillaume Rabusseau, Marius Mosbach</span>
+        <span>arXiv cs.CL (cross-listed cs.LG) ・ 2026年4月</span>
+        <a href="https://arxiv.org/abs/2604.06374">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>なぜこの論文が気になるのか</h2>
+<p>難しい問題を解くとき、私たちは頭の中でいくつかの可能性を同時に思い浮かべ、絞り込んでいく。もしLLMも答えを出す前に、複数の候補解を一つの内部表現の中に同時に「重ね合わせて」持てるとしたら——これは推論能力を大きく引き上げる仕組みになり得る。実際、そう期待する理論的な議論は以前からあった。だが、実際のモデルは本当にそれをやっているのだろうか? 今日紹介する論文は、この問いに正面から向き合い、期待を裏切るような誠実な答えを出した一本だ。</p>
+<h2><span class="n">2</span>背景: 「頭の中で考える」LLM</h2>
+<p>通常のChain-of-Thought(CoT)は、モデルが「まず○○を求め、次に△△を計算し…」と言葉(トークン)に出しながら段階的に考える手法だ。これに対して近年注目されているのが、<span class="term-tip" tabindex="0">Latent CoT<span class="tip">離散的なトークンではなく連続ベクトル空間のまま行う思考の連鎖</span></span>である。言葉に変換するという「ボトルネック」を経ないぶん表現力が高く、理論的には複数の候補解を一つの表現の中に同時に保持する<span class="term-tip" tabindex="0">重ね合わせ(スーパーポジション)<span class="tip">複数の候補解を一つの表現の中に同時に持たせること</span></span>が可能になるはずだと考えられてきた。ただし、これはあくまで「理屈のうえでは可能」という話であり、実際のモデルがその能力を使っているかどうかは、これまでほとんど検証されていなかった。</p>
+<h2><span class="n">3</span>3つの「考え方」を比較する</h2>
+<p>著者らは、潜在思考をモデルに持たせる方法を3パターン用意し、それぞれで重ね合わせが実際に起きているかを調べた。</p>
+<div class="step"><span class="si">設定A: 訓練なし</span><p>追加学習を一切せず、次のトークン候補の埋め込みベクトルを<span class="term-tip" tabindex="0">凸結合<span class="tip">複数のベクトルを重み付き平均で混ぜ合わせること(重みの合計は1になる)</span></span>して、人工的に「重ね合わせ状態」を作ってモデルに渡す</p></div><div class="step"><span class="si">設定B: 微調整</span><p>既存の事前学習済みモデルを、潜在思考を出力するように追加で学習させる</p></div><div class="step"><span class="si">設定C: ゼロから訓練</span><p>最初から潜在思考だけでタスクを解くように、モデルを一から学習する</p></div>
+<h3>覗き見る道具: Logit LensとProbing</h3>
+<p>「重ね合わせが起きているか」を確かめるには、モデルの内部状態を覗く必要がある。ここで使われるのが<span class="term-tip" tabindex="0">Logit Lens<span class="tip">中間層の隠れ状態を、最終層と同じ語彙空間に直接投影してモデルの『途中経過』を覗く手法</span></span>と、エンティティ(具体的な数値やトークン)の情報がどれだけ内部表現に残っているかを診断するプロービングだ。これらを使い、潜在思考の中に複数の候補が本当に同時に存在しているかを追跡した。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 次のトークン候補を埋め込みベクトルにする</span></div><div class="ln"><span class="no">1</span><span class="ct">candidates = <span class="fn">top_k_tokens</span>(logits, k=5)</span></div><div class="ln"><span class="no">2</span><span class="ct">weights = <span class="fn">softmax</span>(logits[candidates])</span></div><div class="ln comment"><span class="no"></span><span class="ct"># 埋め込みを確率の重みで混ぜて「重ね合わせ」を作る</span></div><div class="ln"><span class="no">3</span><span class="ct">latent_thought = <span class="fn">weighted_sum</span>(embed(candidates), weights)<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># その表現が実際どのトークンの情報を持つか覗く</span></div><div class="ln"><span class="no">4</span><span class="ct">peek = <span class="fn">logit_lens</span>(latent_thought)<span class="badge">②</span></span></div></div><div class="code-cap">「訓練なし」設定での潜在思考のつくり方(概念図)</div>
+<p>①で作った「重ね合わせ状態」を、②のLogit Lensでモデルにそのまま覗かせる。もしモデルが本当に重ね合わせを活用しているなら、ここで複数の候補トークンの情報が同時に読み取れるはずだ。しかし結果は、設定によって大きく異なるものだった。</p>
+<h3>『近道の解法』とは何か</h3>
+<p>ここで言う「近道の解法」とは、たとえば選択肢問題で複数の答えを吟味する代わりに、表面的に目立つ一つのトークンへすぐさま賭けてしまうような振る舞いを指す。一見すると通常のCoTと同じ最終結果にたどり着くこともあるため、出力だけを見ていては気づけない。だからこそ著者らは、最終的な正解率ではなく、Logit Lensやプロービングで内部表現そのものを覗くという手間のかかるアプローチを取った。表に出てくる答えが正しくても、その裏でモデルが本当に複数の可能性を検討していたのか、それとも早々に一本道を選んでいたのかは、まったく別の話なのだ。</p>
+<h2><span class="n">4</span>何がわかったのか</h2>
+<div class="stats"><div class="stat"><div class="v">3設定</div><div class="k">比較された学習方法(訓練なし/微調整/ゼロから訓練)</div></div><div class="stat"><div class="v">Cのみ</div><div class="k">重ね合わせの兆候が見られたのは「ゼロから訓練」のみ</div></div><div class="stat"><div class="v">2要因</div><div class="k">重ね合わせが崩れる原因として特定された要因の数</div></div></div>
+<p>「訓練なし」と「微調整」の設定では、モデルは重ね合わせをほとんど使わず、代わりに一つの候補に早々と絞り込んでしまう「近道の解法」に頼っていた。重ね合わせらしき振る舞いが確認できたのは、最初から潜在思考だけで学習された「ゼロから訓練」のモデルだけだった。著者らはこの違いを、(1)自然言語による事前学習がモデルに「最終層で一つのトークンに決め切る」癖を植え付けていること、(2)モデルの表現力(キャパシティ)がどの解法を選ぶかに大きく影響すること、という2つの要因で説明している。</p>
+<div class="pull">連続空間で考える自由を与えても、モデルは自分から『重ね合わせ』を選ぶわけではない——最初からそう訓練されていない限り。</div>
+<h2><span class="n">5</span>なぜこれが重要なのか</h2>
+<p>Latent CoTは、計算コストを抑えながら表現力を高められる推論手法として、既存の事前学習済みモデルへの後付けの改良としても期待されてきた。しかし本研究は、「理論的に可能」であることと「実際にモデルがそれを使っている」ことは別問題であると、具体的な実験によって示した。既存モデルにちょっとした微調整を加えるだけでは、重ね合わせという性質は引き出せない。真に潜在推論の恩恵を受けたいなら、学習の初期段階から設計に組み込む必要がある、という実践的な示唆を与えている。</p>
+<p>近年は、推論時に計算量を増やして精度を上げる<span class="term-tip" tabindex="0">テスト時計算<span class="tip">推論時に追加の計算を投じて回答の質を上げるアプローチ全般</span></span>が大きな潮流になっている。長い言葉によるCoTはその代表例だが、トークンを逐一生成する分だけ計算コストがかさむ。潜在空間で考えを進めるLatent CoTは、この計算コストを抑えつつ表現力を維持できる有望株として期待されてきた。だからこそ、その中核にある「重ね合わせ」という性質が本当に機能しているのかを見極める本研究の意義は大きい。</p>
+<h2><span class="n">6</span>意義と限界</h2>
+<div class="step"><span class="si">限界1</span><p>重ね合わせの有無はLogit Lensやプロービングという間接的な観測手法に基づく判断であり、内部表現の解釈には常に不確実性が伴う</p></div><div class="step"><span class="si">限界2</span><p>検証されたタスクやモデル規模は限定的で、より大規模・多様なモデルでも同じ傾向が成り立つかは今後の検証が必要</p></div><div class="step"><span class="si">限界3</span><p>「自然言語の事前学習がトークンへの決め打ちを促す」という説明は理にかなってはいるが、まだ仮説の域を出ていない</p></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「理論的に可能」と「実際にモデルがそれをしている」は全く別の主張。新しい手法を提案・評価するときは、期待している性質が本当に実現しているかを、こうした診断的な実験で確かめる癖をつけると、思い込みによる誤った結論を避けられる。</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>この研究は新しい手法を提案する論文ではなく、「期待されていた性質を追試したら、実は思ったより起きていなかった」と誠実に報告する研究だ。こうした地道な検証も、分野の理解を着実に前進させる重要な仕事である。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
