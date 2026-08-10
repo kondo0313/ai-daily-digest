@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-08-11</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-08-11</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #世界モデル #ロボティクス #新人研究者向け</div>
+    <h1 class="headline">「予測が当たる」だけでは足りない――ロボット世界モデルに物理を接地するPSG-JEPA</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-08-11 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Is Forward Prediction Enough? Physical State Grounding for JEPA World Models</div>
+      <div class="pc-row">
+        <span>Haodong Yan, Jiaguan Zhu ほか(共著16名)</span>
+        <span>arXiv cs.RO (cross-list: cs.CV) ・ 2026年8月</span>
+        <a href="https://arxiv.org/abs/2608.06799">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>「頭の中でシミュレーションする」ロボットの夢</h2>
+<p>ロボットが動く前に「もしこう動かしたら、次に何が起きるか」を頭の中で先読みできたら、失敗する前に計画を立て直せます。この「頭の中のシミュレーター」にあたるのが<span class="term-tip" tabindex="0">世界モデル<span class="tip">エージェントが行動の結果を予測するための内部モデル。頭の中でシミュレーションする役割を持つ</span></span>です。近年は、生の画像そのものではなく抽象的な特徴空間で未来を予測する<span class="term-tip" tabindex="0">JEPA<span class="tip">Joint-Embedding Predictive Architecture。画素ではなく特徴表現(潜在表現)の未来を予測する学習の枠組み</span></span>という考え方が世界モデルの主流になりつつあります。</p>
+<p>ただし、ここで新人研究者が見落としがちな問いがあります。「未来の予測がよく当たる」ことと、「その内部表現がロボットの物理的な状態を正しく捉えている」ことは、本当にイコールなのでしょうか。今日紹介する論文 PSG-JEPA は、この問いに正面から取り組み、シンプルな追加の学習目的だけで世界モデルの質を底上げしました。</p>
+<h2><span class="n">2</span>背景: 予測が当たっても「意味」が保証されるとは限らない</h2>
+<p>JEPA型の世界モデルは、観測を<span class="term-tip" tabindex="0">潜在表現<span class="tip">生データを圧縮した内部的な特徴ベクトル。ニューラルネットの中間層の出力にあたる</span></span>に変換するエンコーダーと、「今の潜在表現＋行動」から「次の潜在表現」を予測するプレディクタから成ります。学習は、予測した未来の潜在表現と実際の未来の潜在表現をできるだけ近づけるように行われます。</p>
+<p>この学習方法はとても素直に見えますが、実は落とし穴があります。予測損失を下げること自体は、潜在表現が「ロボットの関節がどの角度にあるか」といった具体的な物理量を表している保証にはなりません。たとえるなら、模範解答のパターンを丸暗記して穴埋めテストで高得点を取る学生のようなもので、テストの点(予測精度)は良くても、中身を本当に理解している(＝物理状態を正しく表現できている)とは限らないのです。論文はこの性質を<span class="term-tip" tabindex="0">同定可能性<span class="tip">ある内部表現から、元の物理量を一意に読み解いて復元できる性質。identifiability</span></span>という言葉で呼び、これが低いままだと、その潜在表現を使ったプランニングや方策学習の質が頭打ちになると指摘します。</p>
+<h2><span class="n">3</span>手法: 予測損失に「物理への接地」を2つ追加する</h2>
+<p>そこで提案されたのが PSG-JEPA です。アイデアはシンプルで、通常の予測損失に加えて、学習時にだけ2つの「接地(グラウンディング)」目的を追加します。1つ目は個々の潜在表現を、ロボット自身が感じ取れる<span class="term-tip" tabindex="0">固有受容覚<span class="tip">関節角度など自分の身体の状態を感じ取る感覚。プロプリオセプション</span></span>の値に対応づける目的。2つ目は、離れた2つの時刻の潜在表現の「差」を、その間に実際に起きた関節角度の変化量に対応づける目的です。どちらも学習時にだけ働く補助的な損失で、推論時のネットワーク構造や計算コストはまったく変わらないというのが実用上のポイントです。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 通常のJEPA学習: 現在の潜在表現から次の潜在表現を予測する</span></div><div class="ln"><span class="no">1</span><span class="ct">z_t = <span class="fn">encode</span>(obs_t)</span></div><div class="ln"><span class="no">2</span><span class="ct">z_next_pred = <span class="fn">predictor</span>(z_t, action_t)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ① 予測損失: 予測した未来の潜在と実際の未来の潜在の誤差</span></div><div class="ln"><span class="no">3</span><span class="ct">loss_pred = <span class="fn">mse</span>(z_next_pred, <span class="fn">encode</span>(obs_next))<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># ② 一点の接地: 潜在1つから関節角度を復元できるようにする</span></div><div class="ln"><span class="no">4</span><span class="ct">state_hat = <span class="fn">state_probe</span>(z_t)</span></div><div class="ln"><span class="no">5</span><span class="ct">loss_state = <span class="fn">mse</span>(state_hat, proprio_t)<span class="badge">②</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># ③ ペアの接地: 潜在の変化量を実際の関節角度の変化量に一致させる(複数先の時刻でも)</span></div><div class="ln"><span class="no">6</span><span class="ct">delta_hat = <span class="fn">delta_probe</span>(z_t, z_future)</span></div><div class="ln"><span class="no">7</span><span class="ct">loss_delta = <span class="fn">mse</span>(delta_hat, proprio_future - proprio_t)<span class="badge">③</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># 3つの損失を合算して最適化する。この処理は学習時だけで、推論時の構造・計算量は変わらない</span></div><div class="ln"><span class="no">8</span><span class="ct">loss = loss_pred + loss_state + loss_delta</span></div><div class="ln"><span class="no">9</span><span class="ct"><span class="fn">backward</span>(loss)</span></div></div><div class="code-cap">PSG-JEPA の学習ステップ(擬似コード)</div>
+<h3>① 一点の接地: 「今の姿勢」を潜在から読み取れるようにする</h3>
+<p>1つ目の接地は、1つの潜在表現 z_t だけから、軽量な読み出し器(プローブ)でロボットの関節角度などの状態を予測できるようにする、というものです。これにより潜在表現は「予測に都合が良いだけの抽象的な符号」ではなく、「今ロボットがどんな姿勢にあるか」という具体的な情報を含んだものに近づきます。</p>
+<h3>② ペアの接地: 「潜在の変化」を「実際の身体の変化」に揃える</h3>
+<p>2つ目の接地は、ある時刻とその先の時刻(複数の時間幅で試す)の潜在表現の差分が、実際に起きた関節角度の変化量と対応するように学習させるものです。プランニングでは「この行動をとったら状態がどれだけ変わるか」を潜在空間の中で比較する場面が多いため、潜在の「変化の仕方」そのものを物理的な変化と揃えておくことは、下流のプランニングにとって理にかなっています。</p>
+<h2><span class="n">4</span>検証: 3段階で「本当に効いているか」を確かめる</h2>
+<p>PSG-JEPA の評価が丁寧なのも見どころです。(1) プロービングによる潜在の同定可能性そのものの検証、(2) 固定した潜在表現の上でのゴール条件付きプランニングの性能、(3) シミュレーションおよび実ロボットでの方策学習、という3つの階層すべてで、既存の最先端な潜在世界モデルの手法を上回ったと報告されています。</p>
+<div class="stats"><div class="stat"><div class="v">3段階</div><div class="k">同定可能性・プランニング・方策学習で一貫して検証</div></div><div class="stat"><div class="v">2つ</div><div class="k">追加した接地損失の数(一点の接地／ペアの接地)</div></div><div class="stat"><div class="v">±0</div><div class="k">推論時のアーキテクチャと計算コストへの影響</div></div></div>
+<div class="pull">「予測が当たる」ことと「意味が物理的に接地されている」ことは別物であり、後者を明示的に鍛えて初めて、プランニングと方策学習の両方が底上げされる。</div>
+<h2><span class="n">5</span>なぜこの研究が重要か</h2>
+<p>世界モデル研究では、これまで「予測誤差をどれだけ下げられるか」が主な評価軸になりがちでした。PSG-JEPA は、予測精度という一つの指標だけを追いかけると、潜在表現が本当に使いたい物理的な意味を保証しないことを示し、それを補うための具体的でシンプルな処方箋(2つの接地損失)を提示した点に価値があります。しかも、この処方箋は学習時にだけ効くため、実運用のコストを上げずに恩恵を得られるという設計上のバランスの良さも、実務的な観点から見て学ぶところが多いです。</p>
+<h2><span class="n">6</span>意義と限界</h2>
+<div class="step"><span class="si">前提</span><p>接地損失を計算するには、学習データに関節角度などの固有受容覚の正解値が必要になる。シミュレーションでは容易に得られるが、実ロボットでは正確なセンサー値の同期・キャリブレーションという追加の手間が生じうる。</p></div><div class="step"><span class="si">対象</span><p>接地の対象は主に関節角度などのロボット自身の状態であり、接触力や柔らかい物体の変形といった、それ以外の物理量への一般化は今後の検討課題として残っていると考えられる。</p></div><div class="step"><span class="si">適用範囲</span><p>評価はシミュレーションと実ロボットの双方で行われているが、扱うタスクやロボットの種類は限られており、より多様な身体・環境への汎化性は今後の検証が必要になる。</p></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「損失関数を下げれば良いモデルになる」とは限りません。損失は目的を近似したものにすぎず、本当に欲しい性質(この論文では物理状態の同定可能性)は、それ専用の目的を明示的に足して初めて手に入ることが多いです。自分の研究でも「この指標さえ下がれば十分か？」と一度立ち止まって考えるくせをつけると、見落としを減らせます。</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>JEPA は Yann LeCun氏が提唱した「世界モデルを画素ではなく抽象表現の予測で学ぶ」という大きな潮流の一つです。今日の論文はその潮流の中で「抽象表現は具体的に何を表しているべきか」という、地味だけれど土台となる問いに答えようとした研究、と位置づけると理解しやすいでしょう。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
