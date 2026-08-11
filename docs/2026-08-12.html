@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-08-12</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-08-12</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #LLM #安全性 #量子化 #新人研究者向け</div>
+    <h1 class="headline">KVキャッシュを量子化したら、安全性が音もなく壊れていた</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-08-12 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Alignment Collapse Under KV Cache Quantization: Diagnosis and Mitigation</div>
+      <div class="pc-row">
+        <span>Bruce Changlong Xu, Adarsh Kumarappan, Mu Zhou</span>
+        <span>arXiv cs.LG ・ 2026年6月(初版)/8月(改訂版)</span>
+        <a href="https://arxiv.org/abs/2606.09864">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>「量子化してもパープレキシティは変わらない」は本当に安心材料か</h2>
+<p>LLM を実サービスで動かすとき、メモリと計算コストを削るために <span class="term-tip" tabindex="0">KVキャッシュ<span class="tip">Transformerが過去の文脈を保持するメモリ。長文ほど膨らむ</span></span> を <span class="term-tip" tabindex="0">量子化<span class="tip">数値を少ないビット数で近似的に表現し、メモリと計算を削減する技術</span></span> するのは、今やごく普通の最適化手段です。効果を測るときにチームがまず見る指標は、たいてい<strong>パープレキシティ</strong>(モデルの予測のもっともらしさ)や下流タスクの精度です。今日紹介する論文は、その「よくある確認方法」だけでは絶対に気づけない落とし穴を暴きます。KVキャッシュを量子化すると、パープレキシティがほぼ動かないまま、<strong>安全性のアラインメントだけが静かに壊れる</strong>ことがあるというのです。</p>
+<h2><span class="n">2</span>背景: 効率化と安全性は別の指標で測られてきた</h2>
+<p>LLM の <span class="term-tip" tabindex="0">アラインメント<span class="tip">人間の意図や安全基準にモデルの出力を合わせ込む調整</span></span> は、有害な依頼を検知して断る「拒否」行動として現れます。一方、量子化や蒸留などの効率化研究は、長らく「精度がどれだけ落ちるか」だけで評価されてきました。この論文は、11個の指示チューニング済みモデル(3.8B〜72Bパラメータ)、5つのベンチマーク、合計1,894件のプロンプトという規模で、両者を同時に測るという素朴だが誰もやっていなかった検証をしています。</p>
+<div class="stats"><div class="stat"><div class="v">15.2%</div><div class="k">Mistral-7Bで失われた拒否率(パープレキシティは1.03倍とほぼ無傷)</div></div><div class="stat"><div class="v">11モデル</div><div class="k">検証対象(3.8B〜72Bパラメータ)</div></div><div class="stat"><div class="v">1,894件</div><div class="k">評価に使われたプロンプト数</div></div></div>
+<div class="pull">パープレキシティは正常なのに、安全性だけが静かに崩れていく</div>
+<p>さらに厄介なのは、<strong>どのビット幅なら安全か</strong>という共通の答えが存在しないことです。モデルごとに崩壊が起きるビット幅が急に切り替わる「相転移」のような挙動を示し、しかも通常の指標ではその崩壊が全く見えません。</p>
+<h2><span class="n">3</span>なぜ安全性だけが壊れるのか: 幾何学的な説明</h2>
+<h3>安全性は「表現空間の中の狭い部屋」に住んでいる</h3>
+<p>著者らが突き止めた原因は幾何学的なものです。モデルの内部表現全体は非常に高次元ですが、安全性に関わる情報は、その中のごく一部の低次元な <span class="term-tip" tabindex="0">活性化部分空間<span class="tip">ニューロンの反応パターンが実際に使っている、全体よりずっと小さい方向の集合</span></span> に集中しています。パープレキシティは表現空間<strong>全体を平均</strong>して評価する指標なので、そこにわずかなノイズが乗っても数値はほとんど動きません。ところが安全性が住んでいる狭い部屋は、量子化ノイズに対して全体平均より<strong>100倍から1,000倍も敏感</strong>だとわかりました。たとえるなら、大きな倉庫全体の温度はほとんど変わっていなくても、その中の精密機器を置いた小部屋だけが急激に温度変化に弱い、というイメージです。</p>
+<h2><span class="n">4</span>診断ツール PCR: 3つの壊れ方を見分ける</h2>
+<p>この幾何学的な洞察をもとに、著者らは Per-Channel Reduction (PCR) という診断手法を提案しました。モデルを次の3つの「壊れ方」のどれかに分類します。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># ① 少数の校正用プロンプトで、量子化前後の内部活性化を比較する</span></div><div class="ln"><span class="no">1</span><span class="ct">acts_fp = <span class="fn">collect_activations</span>(model_fp16, calib_prompts)</span></div><div class="ln"><span class="no">2</span><span class="ct">acts_q  = <span class="fn">collect_activations</span>(model_quantized, calib_prompts)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ② チャネルごとの量子化ノイズの大きさを測る</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="kw">for</span> layer <span class="kw">in</span> model.layers:</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>diff = <span class="fn">per_channel_diff</span>(acts_fp[layer], acts_q[layer])<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># ③ ノイズの現れ方のパターンから故障モードを分類する</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span>mode = <span class="fn">classify_failure_mode</span>(diff)<span class="badge">②</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># ④ モードごとに異なる緩和策を、追加学習なしで適用する</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="kw">if</span> mode == <span class="st">&quot;outlier_crushes_safety&quot;</span>:</span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="ind"></span><span class="fn">rescale_non_outlier_channels</span>(layer)</span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="kw">elif</span> mode == <span class="st">&quot;outlier_as_safety&quot;</span>:</span></div><div class="ln"><span class="no">9</span><span class="ct"><span class="ind"></span><span class="fn">raise_precision_for_safety_channels</span>(layer)</span></div><div class="ln"><span class="no">10</span><span class="ct"><span class="kw">else</span>:</span></div><div class="ln"><span class="no">11</span><span class="ct"><span class="ind"></span><span class="fn">distribute_correction_across_layers</span>(model)<span class="badge">③</span></span></div></div><div class="code-cap">PCR による診断と緩和策の適用(擬似コード)</div>
+<div class="step"><span class="si">モード①</span><p>outlier-crushes-safety: 安全性は普通のチャネルに宿っているのに、<span class="term-tip" tabindex="0">外れ値チャネル<span class="tip">一部の次元だけ極端に大きい値を取る現象。量子化の精度を大きく左右する</span></span> に合わせたスケール調整の巻き添えで壊れる</p></div><div class="step"><span class="si">モード②</span><p>outlier-as-safety: 安全性そのものが外れ値チャネルと重なっており、量子化を細かくしても救えない</p></div><div class="step"><span class="si">モード③</span><p>multi-layer dilution: 安全性が多くの層に薄く分散しており、1層だけ直しても効かない</p></div>
+<p>PCR はわずか20件の校正用プロンプトだけで、9個の主要モデルと未知の1モデルすべてに対して正しい壊れ方を言い当てました。壊れ方が分かれば、打つべき対策も自動的に決まる、というのがこの手法の強みです。</p>
+<h2><span class="n">5</span>対策: 追加学習なしで最大97%回復</h2>
+<p>PCR が特定したモードに応じて緩和策を当てると、<strong>追加の学習をせずに</strong>約35 GPU分の計算で、失われたアラインメントの最大97%を回復できました。実運用で使われる量子化手法 KIVI に対しても97.2%の回復率を確認しており、NVIDIA GPU 上で FP8 KV キャッシュを使う本番相当の vLLM サービング環境でも効果が確認されています。</p>
+<div class="stats"><div class="stat"><div class="v">最大97%</div><div class="k">回復した安全性アラインメントの割合</div></div><div class="stat"><div class="v">約35分</div><div class="k">必要なGPU計算時間の目安</div></div><div class="stat"><div class="v">20件</div><div class="k">診断に必要な校正用プロンプト数</div></div></div>
+<h2><span class="n">6</span>意義と限界</h2>
+<div class="pull">効率化のベンチマークは『速いか』は測っても、『安全か』はほとんど測っていない</div>
+<p>この研究の一番の意義は、効率化と安全性という別々の文脈で語られがちな2つのテーマを、同じ土俵で測る枠組みを示したことです。特に、パープレキシティのような集約指標が「平均としては問題ない」という誤った安心感を与えてしまう構造そのものを、幾何学的に説明した点は教育的価値が高いといえます。</p>
+<div class="step"><span class="si">限界①</span><p>緩和策のレバーの効き方(どれくらい増幅・減衰させるべきか)はアーキテクチャ依存で、汎用的な閾値は示されていない</p></div><div class="step"><span class="si">限界②</span><p>検証は「拒否するか否か」という安全性の一側面が中心で、バイアスや事実性など他の望ましくない挙動は対象外</p></div><div class="step"><span class="si">限界③</span><p>20件の校正プロンプトで十分かどうかは、より敵対的・多様な状況での追試が必要</p></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「集約指標(パープレキシティ)が動かない = 何も壊れていない」とは限りません。平均は局所的な崩壊を覆い隠すことがあります。効率化の施策を評価するときは、狙った指標だけでなく、意図せず犠牲になりやすい別の性質(今回なら安全性)がないか、あえて疑ってみる姿勢が役立ちます。</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>量子化・蒸留・KVキャッシュ最適化といった効率化手法は、多くのチームが「精度がほぼ落ちないから安全」と判断してそのまま本番に投入しがちです。この論文は、その判断基準自体を見直す材料になります。自分のチームで効率化施策を評価する際も、性能指標と一緒に安全性・振る舞いの変化を確認する癖をつけておくと安心です。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
