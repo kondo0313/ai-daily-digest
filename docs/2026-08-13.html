@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-08-13</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-08-13</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #VLA #ロボット学習 #新人研究者向け</div>
+    <h1 class="headline">VLAロボットは「動詞」を忘れている ── 行動トークナイザに言葉を思い出させる SALT</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-08-13 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Lost in Reconstruction: Aligning Action Representations with Language in Vision-Language-Action Models</div>
+      <div class="pc-row">
+        <span>著者情報は本記事のデータソース(arXiv要約)には含まれていません</span>
+        <span>arXiv cs.RO ・ 2026年8月</span>
+        <a href="https://arxiv.org/abs/2608.10484">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>「持ち上げる」と「押しのける」、数値ではどちらも似ている</h2>
+<p>ロボットに「カップを持ち上げて」と指示すると、<span class="term-tip" tabindex="0">VLAモデル<span class="tip">Vision-Language-Action: 画像と言語の入力から直接ロボットの関節の動きなどを出力するモデル</span></span>はカメラ画像と文章を読み取り、腕を動かす一連の数値列(行動軌跡)を出力する。ここで面白い問いがある。「持ち上げる」動作と「押しのける」動作は、手先の座標の変化量だけを見ると意外と近い値になることがある。人間なら文脈と動詞から明確に区別できるこの2つを、ロボットの行動表現はきちんと区別できているだろうか。</p>
+<p>今日紹介する論文は、この「動作の数値としての近さ」と「言葉としての意味の近さ」がズレているという、地味だが根本的な問題を突いている。タイトルの通り、行動を<span class="term-tip" tabindex="0">トークン化<span class="tip">連続的な数値の並びを、有限個の離散的な記号(トークン)の並びに変換すること</span></span>する過程で、動詞が持つ意味が失われている(Lost in Reconstruction)というわけだ。</p>
+<h2><span class="n">2</span>背景: 行動トークナイザは「元に戻せるか」しか見ていない</h2>
+<p>多くのVLAモデルは、ロボットの関節角度や手先位置といった連続値の行動を、Transformerが扱いやすいように離散トークン列へ変換してから予測する。この変換には<span class="term-tip" tabindex="0">VQ-VAE<span class="tip">連続的なベクトルを、あらかじめ用意した有限個の「コードブック」の中から一番近いものに置き換える形式の生成モデル</span></span>という手法がよく使われる。エンコーダで行動を圧縮し、コードブックの中から最も近い記号を選び、デコーダで元の数値列に復元する。</p>
+<p>問題は学習のさせ方にある。このトークナイザは通常、「圧縮して復元した行動が、元の行動とどれだけ近いか」という<strong>L1/L2誤差だけ</strong>で学習される。つまり評価基準は「数値として復元できるか」のみで、「その行動がどんな言葉(動詞)を実行しているか」はまったく問われない。著者らはBridgeV2という操作デモデータセットを分析し、行動軌跡そのものに動詞を特定できるだけの情報(<span class="term-tip" tabindex="0">言語接地<span class="tip">言葉の意味を、実際の物理的な経験や観測と結びつけること</span></span>の手がかり)が含まれているのに、復元だけを目的にしたトークン化ではその情報が体系的に失われてしまうことを示した。</p>
+<h2><span class="n">3</span>手法: 「このトークン列は何をしている行動?」を当てさせる</h2>
+<p>著者らが提案するSALT(Semantically ALigned action Tokenizer)は、通常のVQ-VAE型トークナイザに<strong>補助タスク</strong>を1つ追加するというシンプルな発想である。量子化された行動トークンだけを見て、凍結した(学習を止めた)<span class="term-tip" tabindex="0">VLM<span class="tip">画像やテキストなど複数の種類の情報をまとめて理解できるAIモデル</span></span>に「このデモの指示文は何だったか」を当てさせる。行動トークンから指示文(例えば「カップを持ち上げる」)を正しく復元できるように追加の損失をかけることで、コードブックの記号自体が動詞の意味を反映するように学習が誘導される。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 通常のVQ-VAEはここまでしか見ていない</span></div><div class="ln"><span class="no">1</span><span class="ct">z = <span class="fn">encoder</span>(action_chunk)</span></div><div class="ln"><span class="no">2</span><span class="ct">tokens = <span class="fn">vector_quantize</span>(z, codebook)<span class="badge">①</span></span></div><div class="ln"><span class="no">3</span><span class="ct">recon = <span class="fn">decoder</span>(tokens)</span></div><div class="ln"><span class="no">4</span><span class="ct">loss_recon = <span class="fn">L2</span>(recon, action_chunk)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># SALTが追加するのはこの2行</span></div><div class="ln"><span class="no">5</span><span class="ct">pred_instruction = <span class="fn">frozen_VLM</span>(tokens)<span class="badge">②</span></span></div><div class="ln"><span class="no">6</span><span class="ct">loss_lang = <span class="fn">cross_entropy</span>(pred_instruction, true_instruction)<span class="badge">③</span></span></div><div class="ln"><span class="no">7</span><span class="ct">loss = loss_recon + lambda * loss_lang</span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="kw">update</span>(encoder, codebook, decoder)</span></div></div><div class="code-cap">SALTの学習ループ(概念コード。実際の実装を簡略化して示す)</div>
+<h3>① トークン化はそのまま、② 「聞き手」を追加する</h3>
+<p>①の量子化ステップ自体は既存手法と変わらない。ポイントは②で、画像を見せずに行動トークンだけをVLMに渡し、指示文を当てさせている点だ。これにより「行動トークンだけで指示文を再現できるか」が学習信号になり、動詞ごとに異なるコードブックの使われ方が自然と生まれる。</p>
+<h3>③ 復元と意味、両方を諦めない</h3>
+<p>損失は復元誤差と言語復元誤差の重み付き和(loss_recon + λ・loss_lang)になっている。片方だけに寄せるのではなく両方をバランスさせることで、行動の細かな軌跡は正確に保ちつつ、コードブックの中に動詞特化のパターン(著者らは「verb-specialized codes」と呼んでいる)が生まれることを確認している。</p>
+<div class="stats"><div class="stat"><div class="v">71.9%</div><div class="k">SALT(提案手法)のSimplerEnv平均成功率</div></div><div class="stat"><div class="v">42.7%</div><div class="k">復元のみで学習した通常のVQ-VAEトークナイザ</div></div><div class="stat"><div class="v">31.2%</div><div class="k">比較対象の手法 FAST</div></div></div>
+<p><span class="term-tip" tabindex="0">SimplerEnv<span class="tip">言語指示に従うロボット操作方策を、実機を使わずシミュレーション上で評価するためのベンチマーク環境</span></span>での評価では、SALTを使ったポリシーが平均71.9%の成功率を達成し、復元だけで学習したトークナイザ(42.7%)や別方式のFAST(31.2%)を大きく上回った。トークナイザという「入り口」の設計を変えただけで、下流のロボット制御性能にここまで差が出るのは印象的である。</p>
+<div class="pull">ロボットの行動軌跡そのものが、言葉の意味を学ぶための手がかりを含んでいる</div>
+<h2><span class="n">4</span>なぜこれが重要か</h2>
+<p>この論文の面白さは、モデルの構造を大きく変えたわけではない点にある。ネットワークの規模を増やしたのでも、新しいアーキテクチャを発明したのでもなく、<strong>「何を目的関数に入れるか」を変えただけ</strong>で性能が大きく動いた。表現学習において、損失関数の設計がモデルの学ぶ内容そのものを決めてしまうという、機械学習の基本原則を具体的な形で見せてくれる好例だと言える。</p>
+<h2><span class="n">5</span>意義と限界</h2>
+<div class="step"><span class="si">限界 1</span><p>評価はBridgeV2データセットとSimplerEnvというシミュレーション環境が中心で、実機ロボットでの検証結果は摘要からは確認できない。</p></div><div class="step"><span class="si">限界 2</span><p>学習時には凍結VLMへの推論が毎回必要になり、通常のVQ-VAEより学習コストが増える。</p></div><div class="step"><span class="si">限界 3</span><p>「持ち上げる」と「つまみ上げる」のような近い動詞をどこまで細かく区別できるかは、今回の結果だけでは分からない。</p></div><div class="step"><span class="si">意義</span><p>一方で、行動データに眠る言語的な構造を明示的に学習信号として使うという発想は、VLA以外の行動生成モデル全般にも応用できる可能性がある。</p></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「精度が上がらない」と感じたとき、真っ先にモデルを大きくしたり層を増やしたりしたくなるが、この論文のように損失関数や学習信号そのものを見直すことで解決することも多い。何を最適化しているかを疑う癖は、モデル設計と同じくらい重要なスキルだ。</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>VQ-VAEのような離散トークン化は、VLAだけでなく画像生成や音声合成など幅広い分野で使われている基礎技術。ここで得られた「復元だけを目的にすると意味情報が抜け落ちる」という教訓は、他分野のトークナイザ設計を考える際にも頭の片隅に置いておくと役立つはずだ。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
