@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-09-01</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-09-01</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #ロボティクス #VLA #新人研究者向け</div>
+    <h1 class="headline">迷ったらもっとよく見る──VLAロボットに“自己不確実性”を教えるSCALE</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-09-01 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">SCALE: Self-uncertainty Conditioned Adaptive Looking and Execution for Vision-Language-Action Models</div>
+      <div class="pc-row">
+        <span>Hyeonbeom Choi, Daechul Ahn, Youhan Lee, Taewook Kang, Seongwon Cho, Jonghyun Choi</span>
+        <span>arXiv cs.RO ・ 2026年2月投稿(2026年8月改訂)</span>
+        <a href="https://arxiv.org/abs/2602.04208">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>自信がないとき、ロボットはどうすべきか?</h2>
+<p>ロボットアームが物をつかむ場面を想像してほしい。周囲が薄暗い、つかみたい物の一部が別の物に隠れている——そんなとき、人間なら思わず目を凝らして確認し直し、手つきも慎重になる。ところが今のロボット向けAIの多くは、この「迷ったら確認し直す」というごく当たり前の振る舞いを持っていない。今日紹介するのは、その振る舞いをたった1つの数式でロボットに実装した論文だ。</p>
+<h2><span class="n">2</span>VLAモデルと、テスト時スケーリングの限界</h2>
+<p>近年のロボット制御では、<span class="term-tip" tabindex="0">VLAモデル<span class="tip">Vision-Language-Action: カメラ画像と言語指示から、ロボットの関節角度やグリッパー開閉などの行動を直接出力するモデル</span></span> が主流になりつつある。大量の操作データで学習しておき、「Aをつかんで B の上に置いて」のような指示と画像を入力するだけで、行動列を直接予測できるのが強みだ。</p>
+<p>こうしたVLAをさらに賢くする方向性として、追加の学習をせず推論時の工夫だけで性能を底上げする<span class="term-tip" tabindex="0">test-time scaling<span class="tip">推論時に計算量を増やして性能を上げる手法。追加学習なしに精度を上げる代表的な戦略</span></span>(TTS)が注目されている。しかし既存のTTS手法の多くは、追加の学習・別の検証モデル(verifier)・何度もやり直す複数回の推論を必要とし、リアルタイム制御が求められるロボットの現場では扱いにくい。さらに根本的な弱点として、これらの手法は「行動をどう決めるか」だけを調整し、「どう見るか」という視覚表現そのものは固定したままだった。だが霧がかった画像や物体の一部が隠れている場面のように、迷いの原因がそもそも「見え方」にあることは少なくない。</p>
+<h2><span class="n">3</span>SCALEの全体像:自己不確実性というたった1つの手がかり</h2>
+<p>SCALE は、VLAモデルが行動を1トークンずつ生成するたびに自然と得られる確率分布から「自分がどれだけ迷っているか」を計算し、その値1つで「見る」と「動く」の両方を同時に調整する。追加学習も外部の検証モデルも不要で、通常どおり1回だけ推論すれば完結する点が最大の特徴だ。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 直前までの不確実性の変化から、今回どれだけ広く見るかを決める</span></div><div class="ln"><span class="no">1</span><span class="ct">gamma = <span class="fn">attention_temperature</span>(delta_u_prev)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># その温度でカメラ画像を処理する(迷っているほど視野を広く)</span></div><div class="ln"><span class="no">2</span><span class="ct">v = <span class="fn">vision_encoder</span>(obs, gamma)<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># 行動トークンを1つずつ生成しながら、その都度の迷いを測る</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="kw">for</span> k <span class="kw">in</span> action_tokens:</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>logits = <span class="fn">policy</span>(v, instruction, a_prev)</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span>u = <span class="fn">self_uncertainty</span>(logits)<span class="badge">②</span></span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="ind"></span>tau = T0 * <span class="fn">sigmoid</span>(u)</span></div><div class="ln"><span class="no">7</span><span class="ct"><span class="ind"></span>action[k] = <span class="fn">sample</span>(logits / tau)<span class="badge">③</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># 今回の不確実性を履歴に反映し、次ステップの“見る温度”に使う</span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="fn">update_history</span>(u)</span></div></div><div class="code-cap">SCALEの推論ループ(論文 Algorithm 1 を簡略化)</div>
+<h3>① 「迷い」をどう数値化するか</h3>
+<p>SCALEはまず、モデルが出力する確率分布 p を2つの“ものさし”と比べる。1つは「完全に自信がある状態」——確率が1つのトークンに全部集中した分布。もう1つは「完全に迷っている状態」——全トークンに確率が均等に広がった分布だ。両者との<span class="term-tip" tabindex="0">KLダイバージェンス<span class="tip">2つの確率分布がどれだけ異なるかを測る指標</span></span>の差を取ることで、「今の予測がどちらに近いか」を1つの数値 u として取り出す。u が大きいほど「迷っている」ことになる。</p>
+<h3>② 迷うほど大胆に、自信があるほど迷わず動く</h3>
+<p>この u を使って、行動を選ぶ際の<span class="term-tip" tabindex="0">サンプリング温度<span class="tip">確率分布からどれだけランダムに選ぶかを決めるパラメータ。高いほど多様な選択肢を試し、低いほど最有力な答えに絞る</span></span> τ を τ = T0・σ(u) と決める(σ はシグモイド関数)。迷っているときは温度を上げて色々な行動の可能性を試し、自信があるときは温度を下げてほぼ迷わず最有力な行動を選ぶ。</p>
+<h3>③ 迷うほど、もっと広く“見る”</h3>
+<p>もう一つの柱が、不確実性を“次にどう見るか”にも波及させる仕組みだ。直前までの不確実性の<span class="term-tip" tabindex="0">指数移動平均<span class="tip">直近の値ほど重みを大きくして計算する平均。急な変化に素早く反応できる</span></span>からの変化量Δuを使い、視覚エンコーダの注意の温度γを γ = κ^tanh(Δu) と変化させる。不確実性が急に上がった瞬間はγを大きくして画像のより広い範囲に注意を向け直し、下がってくれば注意を絞ってピンポイントに集中する。「行動で迷う→視野を広げて見直す→次の行動を決める」というフィードバックループが、追加学習なしに1回の推論の中で完結する。</p>
+<h3>着想は脳科学の“能動的推論”</h3>
+<p>この設計は、<span class="term-tip" tabindex="0">能動的推論<span class="tip">Active Inference。生物は不確実性を減らすように知覚と行動の両方を調整しながら環境と関わる、という脳科学・認知科学の理論</span></span>に着想を得ている。暗闇で物を探すとき、人は目を凝らし(知覚を変え)、同時に手探りで慎重に動く(行動を変える)。この日常的な振る舞いを、VLAモデルの推論プロセスにそのまま落とし込んだと言える。</p>
+<h2><span class="n">5</span>実験結果:小さな仕掛けで着実な改善</h2>
+<p>SCALEは OpenVLA・π0-FAST・SpatialVLA といった複数のVLAバックボーンに、追加学習なしでそのまま適用して評価されている。</p>
+<div class="stats"><div class="stat"><div class="v">+5.8pt</div><div class="k">LIBERO(OpenVLA)成功率の改善幅</div></div><div class="stat"><div class="v">+19.5pt</div><div class="k">実機タスク・分布内条件(OpenVLA)の改善幅</div></div><div class="stat"><div class="v">+10.7pt</div><div class="k">学習を要する既存TTS手法との比較差(LIBERO)</div></div></div>
+<p>SIMPLER-WidowX環境のπ0-FASTでは34.4%から49.0%へ、実機の未知条件(OOD)タスクでも改善が報告されており、シミュレーションと実機の両方で効果が確認されている点は説得力がある。</p>
+<h2><span class="n">6</span>なぜ重要か</h2>
+<div class="pull">「何に迷っているか」ではなく「迷っている」という一点の情報だけで、見る力と動く力を同時に調整できる——それがSCALEの新規性だ。</div>
+<p>従来のTTS手法は、行動の決め方だけを後から補正する“対症療法”に近かった。SCALEは、迷いの原因になりうる知覚そのものに手を伸ばし、しかも1回の推論で完結させることで、賢くなるための計算コストをほぼゼロに抑えている。理論的な裏付け(能動的推論)と実装のシンプルさを両立させている点が、単なるチューニング技巧と一線を画す。</p>
+<h2><span class="n">7</span>意義と限界</h2>
+<p>SCALEが示すのは、VLAモデルの頑健性向上に必ずしも追加学習や大きな計算コストは必要ない、という方向性だ。モデルが元々持っている出力分布の“形”を読み解くだけで、行動と知覚を同時に賢く調整できる。一方で、素直に受け止めるべき限界もある。</p>
+<div class="step"><span class="si">限界1</span><p>T0やκといったハイパーパラメータの調整が必要で、タスクやロボット構成が変わると再調整が要る可能性がある。</p></div><div class="step"><span class="si">限界2</span><p>トークンレベルのKLダイバージェンスという“迷いの指標”が、ロボットが直面する本当に危険な状況を常に捉えられるとは限らない。</p></div><div class="step"><span class="si">限界3</span><p>評価は主にピック&amp;プレース系のマニピュレーションタスクが中心で、ヒューマノイドの全身制御のような、より複雑な行動への効果は今後の検証課題だろう。</p></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>モデルの“自信のなさ”を、モデル自身の出力分布から安く取り出して使う、というアイデアはVLAに限らず様々な場面で使える強力な道具立てだ。追加のモデルを学習する前に、「今持っている情報だけでどこまでできるか」を考える視点は、新人のうちから持っておくと役に立つ。</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>LLMの世界でも「難しい問題ほど長く考える」ようなテスト時計算のスケーリングが話題になっているが、SCALEはロボットの世界で同じ発想を、知覚と行動の両方に広げた事例と見ることができる。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
