@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-09-15</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-09-15</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #ロボティクス #VLA #新人研究者向け</div>
+    <h1 class="headline">ロボット基盤モデルが陥る「視覚のショートカット」を断つ二段階学習法</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-09-15 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Breaking the Vision-Action Shortcut: Latent Interface Training for Generalizable Robotics Foundation Models</div>
+      <div class="pc-row">
+        <span>著者情報は収集元データ(arXiv RSS)に含まれておらず不明</span>
+        <span>arXiv cs.RO ・ 2026年9月</span>
+        <a href="https://arxiv.org/abs/2609.12641">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>なぜ環境が変わるとロボットは崩れるのか</h2>
+<p>ロボットに「皿を洗って」と頼んだら、驚くほど賢く動いてくれる——そんな<span class="term-tip" tabindex="0">VLAモデル<span class="tip">Vision-Language-Action: 画像と言語からロボットの動作を直接出力するモデル</span></span>が近年急速に進化しています。ところがカメラの位置を少しずらしたり、部屋の照明を変えたり、周りに見慣れない物を置いたりするだけで、同じロボットが途端に不器用になることがあります。なぜ「訓練環境ではうまくいくのに、少し環境が変わると崩れる」のでしょうか。今日紹介する論文は、この根本原因のひとつを名指しし、驚くほどシンプルな治療法を提示しています。</p>
+<h2><span class="n">2</span>原因は「見た目のショートカット」</h2>
+<p>原因のひとつは<span class="term-tip" tabindex="0">ショートカット学習<span class="tip">本来学んでほしい特徴ではなく、訓練データの中でたまたま強く相関していた別の手がかりに頼ってしまう現象</span></span>です。たとえば「赤いテーブルの上でコップを掴む」デモばかり見せられたロボットは、「コップの形」ではなく「赤い背景」を頼りに掴む位置を決めてしまうかもしれません。訓練データの中では背景色と正解動作が強く相関しているため、見かけの性能は高くなります。しかし背景が変わった瞬間、その相関は崩れ去り、モデルは途方に暮れてしまいます。著者らはこれを「vision-action shortcut(視覚と行動の間のショートカット)」と呼び、VLAモデルが分布外の環境で性能を落とす主要因のひとつだと指摘します。</p>
+<div class="pull">見た目の変化に弱いロボットの多くは、「物体の形や位置」ではなく「たまたま相関していた背景」を頼りに動いていただけかもしれない。</div>
+<h2><span class="n">3</span>LIT: 二段階でショートカットを断つ訓練法</h2>
+<p>著者らが提案する Latent Interface Training(LIT)は、「まず画像を見せずに正しい目的地の決め方を学ばせ、そのあとで初めて画像を覗かせる」という、いわば二段階の教育プログラムです。全体の流れを擬似コードで見てみましょう。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># Stage 1: 画像を見せずに「目的地」の決め方を学ぶ</span></div><div class="ln"><span class="no">1</span><span class="ct">action_expert = <span class="fn">init_policy</span>()</span></div><div class="ln"><span class="no">2</span><span class="ct"><span class="kw">for</span> demo <span class="kw">in</span> stage1_data:</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="ind"></span>goal_pose = <span class="fn">terminal_SE3_pose</span>(demo)</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>pred = action_expert(demo.language, demo.state, goal_pose)<span class="badge">①</span></span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="ind"></span>update(action_expert, <span class="fn">action_loss</span>(pred, demo.actions))</span></div><div class="ln comment"><span class="no"></span><span class="ct"># Stage 2: 画像は「目的地を復元できる分だけ」通す</span></div><div class="ln"><span class="no">6</span><span class="ct"><span class="fn">freeze</span>(action_expert)</span></div><div class="ln"><span class="no">7</span><span class="ct">interface = <span class="fn">init_latent_interface</span>()</span></div><div class="ln"><span class="no">8</span><span class="ct"><span class="kw">for</span> demo <span class="kw">in</span> stage2_data:</span></div><div class="ln"><span class="no">9</span><span class="ct"><span class="ind"></span>z = interface(<span class="fn">encode_image</span>(demo.image))</span></div><div class="ln"><span class="no">10</span><span class="ct"><span class="ind"></span>pose_loss = <span class="fn">mse</span>(<span class="fn">decode_pose</span>(z), goal_pose)<span class="badge">②</span></span></div><div class="ln"><span class="no">11</span><span class="ct"><span class="ind"></span>pred = action_expert(demo.language, demo.state, z)</span></div><div class="ln"><span class="no">12</span><span class="ct"><span class="ind"></span>loss = <span class="fn">action_loss</span>(pred, demo.actions) + pose_loss</span></div><div class="ln"><span class="no">13</span><span class="ct"><span class="ind"></span>update(interface, loss)<span class="badge">③</span></span></div></div><div class="code-cap">LIT の学習フロー(論文の記述をもとにした擬似コード)</div>
+<h3>Stage 1: 画像なしで「行き先」を覚える</h3>
+<p>Stage 1 では画像を一切見せません。かわりに、デモンストレーションの最終的な<span class="term-tip" tabindex="0">SE(3)姿勢<span class="tip">物体やロボットの手先(エンドエフェクタ)の3次元位置と向きを表す表現</span></span>を「目的地」として教え、言語指示・ロボットの関節状態・目的地から、そこに至る行動列を予測させます。画像がなければ背景色に頼るショートカットは原理的に取りようがありません。ここで学ばれるのは「どこに行けばよいかさえ分かれば、そこへの動き方は分かる」という、行動生成の骨格部分です。</p>
+<h3>Stage 2: 「目的地を思い出せる分だけ」画像を通す</h3>
+<p>Stage 2 では画像を使い始めますが、行動生成器に直接は渡しません。画像の特徴量は<span class="term-tip" tabindex="0">潜在インターフェース<span class="tip">生の画像特徴を一度圧縮し、行動生成モデルへは圧縮後の情報だけを渡す中継地点</span></span>という狭い通り道を通ってから渡されます。そしてこの通り道には「Stage 1 で使っていた目的地の姿勢を、画像の情報だけから復元できるように」という制約(pose復元損失、badge②)がかけられます。つまり画像から抜き出してよいのは「目的地を言い当てるのに本当に必要な空間情報」だけで、背景色のような余計な手がかりは自然と削ぎ落とされていく、という設計です。</p>
+<h2><span class="n">4</span>実験結果: 分布シフトでも崩れない</h2>
+<p>この二段構えの効果は、性質の異なる複数のロボット基盤モデル(<span class="term-tip" tabindex="0">Pi0.5<span class="tip">物理AI分野で使われる代表的なVLA基盤モデルの一つ</span></span>、MolmoAct2、FAST-WAM、ImageWAM)に LIT を組み込む形で検証されました。</p>
+<div class="stats"><div class="stat"><div class="v">+3.87〜10.70pt</div><div class="k">LIBERO-Plus(分布シフトを含む評価環境)での成功率改善</div></div><div class="stat"><div class="v">+13.30〜16.70pt</div><div class="k">未知のカメラ配置・照明・障害物を含む実機評価での成功率改善</div></div></div>
+<p>特筆すべきは、これらの改善が「分布内(訓練時と似た状況)」の性能を犠牲にすることなく達成されている点です。汎化性能と通常時の性能はしばしばトレードオフになりがちですが、LIT はその両立を示しています。</p>
+<h2><span class="n">5</span>この手法の新規性</h2>
+<div class="pull">「何が起きたら成功か」ではなく「画像から何を読み取ってよいか」そのものを制約する——LIT は損失関数の工夫ではなく、情報の通り道そのものを設計するアプローチです。</div>
+<p>多くの汎化性能改善策はデータ拡張やドメインランダム化など「訓練データの多様性を増やす」方向で対処しますが、LIT はモデル構造そのものに「使ってよい情報」のボトルネックを埋め込む点がユニークです。しかも特定のアーキテクチャに依存しない<span class="term-tip" tabindex="0">フレームワーク非依存<span class="tip">特定のモデル構造に縛られず、複数の異なるアーキテクチャに後付けで組み込める設計</span></span>として設計されており、既存の学習済み基盤モデルの改良手法として広く応用できる可能性があります。</p>
+<h2><span class="n">6</span>意義と限界</h2>
+<div class="step"><span class="si">限界1</span><p>検証は Pi0.5 / MolmoAct2 / FAST-WAM / ImageWAM という特定の4アーキテクチャに限られており、他の設計のVLAモデルでも同様の効果が出るかは今後の検証が必要です。</p></div><div class="step"><span class="si">限界2</span><p>Stage 1 で使う「最終姿勢」のような明確な目的地情報を定義しにくいタスク(布のように形が定まらない変形物体の操作など)には、そのままでは適用しにくい可能性があります。</p></div><div class="step"><span class="si">限界3</span><p>二段階の学習パイプラインになるため、単純な単一ステージの学習に比べて手順は複雑になります。具体的な追加の計算コストについてはアブストラクトからは分かりません。</p></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「性能が高い=賢く学習できている」とは限りません。モデルが何に注目して予測しているかを疑い、その手がかりを意図的に制限してみることで、思わぬショートカットが見つかることがあります。自分の実験でも、精度が高すぎると感じたときほど「何を見て当てているのか」を一度疑ってみる癖をつけておくと役立ちます。</div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>情報のボトルネックを使って「本当に必要な情報だけを残す」という発想は、表現学習や情報理論(情報ボトルネック理論)とも通じる考え方です。VLA以外の分野を勉強しているときにも、同じ発想に出会うことがあるので覚えておくと便利です。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
