@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-09-17</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-09-17</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #ロボティクス #VLA #新人研究者向け</div>
+    <h1 class="headline">考えてから動くロボット: MPCoTが実現する「頭の中で複数案を練る」VLAモデル</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-09-17 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">MPCoT: Reward-Guided Multi-Path Latent Reasoning for Test-Time Scalable Vision-Language-Action</div>
+      <div class="pc-row">
+        <span>著者情報は収集元データ(arXiv RSS)に含まれておらず不明</span>
+        <span>arXiv cs.RO ・ 2026年6月</span>
+        <a href="https://arxiv.org/abs/2606.06245">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>ロボットは「考えてから動く」べきか?</h2>
+<p>LLM の世界では、答えをすぐ出さずに<span class="term-tip" tabindex="0">chain-of-thought<span class="tip">途中の思考過程を文章として出力してから答えを出す手法。CoTとも呼ばれる</span></span>で「考えてから答える」ことで精度が上がることが広く知られています。では、ロボットを動かす <span class="term-tip" tabindex="0">VLAモデル<span class="tip">Vision-Language-Action: カメラ画像と言語指示を入力し、ロボットの関節や手先の動作を直接出力するモデル</span></span> にも同じ発想は使えるのでしょうか?</p>
+<p>答えは「使えるが、そのままでは難しい」です。ロボットは秒間何十回も新しい動作指令を出し続ける必要があり、LLM のように何百トークンもかけてじっくり考えている余裕がありません。今日紹介する論文 <strong>MPCoT</strong> は、この「考える時間がない」という制約の中で、ロボットにも思考の余地を持たせる方法を提案しています。</p>
+<h2><span class="n">2</span>背景: 一発勝負のVLAと、遅すぎる思考</h2>
+<p>従来の VLA モデルの多くは、画像と指示を受け取ったら一回の<span class="term-tip" tabindex="0">フォワードパス<span class="tip">ニューラルネットにデータを1回通して出力を得る計算の一巡</span></span>でそのまま動作を出力します。これは高速ですが、長い作業(たとえば「箱を開けて中の部品を取り出し、別の箱に移す」のような複数ステップのタスク)になるほど、途中で迷ったり失敗を引きずったりしやすいという弱点があります。</p>
+<p>一方、LLM のように明示的な文章としての思考(explicit chain-of-thought)をロボットに持たせる方法も研究されていますが、これには2つの問題があります。1つは、文章を1トークンずつ生成するのに時間がかかり、ロボットの動作が遅れてしまうこと。もう1つは、「言葉で考えたこと」を「実際の動作」に変換する際に情報が失われやすいことです。MPCoT は、この2つの問題を同時に解決しようとしています。</p>
+<div class="pull">文章にせず、頭の中(潜在表現)だけで複数の行動プランを同時に練ってから、一番良さそうなものを合成して動く。</div>
+<h2><span class="n">3</span>MPCoTの全体像: 複数の「仮説」を並行して練る</h2>
+<p>MPCoT の核心は「<span class="term-tip" tabindex="0">潜在推論<span class="tip">文章化せず、ベクトルのままモデル内部で行われる思考プロセス</span></span>」です。文章を書き出す代わりに、モデルの内部表現(ベクトル)のまま、複数の行動仮説を同時に持ち、それらを少しずつ洗練させていきます。パラメータは「深さ K」(何回洗練するか)と「幅 M」(いくつの仮説を同時に持つか)の2つで調整できる設計になっています。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># ① M個の初期仮説(潜在ベクトル)を用意する</span></div><div class="ln"><span class="no">1</span><span class="ct">hypotheses = <span class="fn">init_latents</span>(width=M)<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># ② K回、全ての仮説を重み共有のまま少しずつ洗練</span></div><div class="ln"><span class="no">3</span><span class="ct"><span class="kw">for</span> step <span class="kw">in</span> range(K):</span></div><div class="ln"><span class="no">4</span><span class="ct"><span class="ind"></span>hypotheses = <span class="fn">refine</span>(hypotheses)<span class="badge">②</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># ③ 各仮説を採点し、良い案ほど強く反映されるよう合成</span></div><div class="ln"><span class="no">6</span><span class="ct">scores = <span class="fn">path_scorer</span>(hypotheses)<span class="badge">③</span></span></div><div class="ln"><span class="no">7</span><span class="ct">merged = <span class="fn">soft_aggregate</span>(hypotheses, scores)</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ④ 合成結果から、最終的な関節角度・手先位置などを1回だけ出力</span></div><div class="ln"><span class="no">9</span><span class="ct">action = <span class="fn">decode_action</span>(merged)<span class="badge">④</span></span></div></div><div class="code-cap">MPCoTの推論の流れ(擬似コード)</div>
+<h3>① 初期仮説: とりあえず複数の「たたき台」を作る</h3>
+<p>たとえるなら、難しい問題を1人で解くのではなく、M人のチームメンバーにそれぞれ独立に下書きを作らせるイメージです。各仮説は同じ画像・指示から出発しますが、初期化のランダム性によって微妙に異なる方向性を持ちます。</p>
+<h3>② 重み共有の洗練ステップ: 同じ思考回路をK回まわす</h3>
+<p>K回の洗練ステップは、すべて同じパラメータ(重み共有)を使い回します。これは「K人の別々の専門家を用意する」のではなく「1人の専門家に同じ考え方をK回繰り返させる」設計で、モデルサイズを増やさずに思考の深さだけを増やせるという利点があります。</p>
+<h3>③ 学習方法: 何を基準に「良い仮説」と判断するか</h3>
+<p>各仮説を評価する path scorer は、学習時にのみ使う3種類の手がかりを組み合わせて訓練されます。1つ目は<strong>熟練者のデモンストレーションとの一致度</strong>、2つ目は<strong>凍結済みの Qwen3-VL による進捗スコア</strong>(<span class="term-tip" tabindex="0">VLM<span class="tip">Vision-Language Model: 画像と言語を同時に理解する事前学習済みモデル</span></span>に「このロボットの動きはタスクのどこまで進んでいるか」を採点させたもの)、3つ目は<strong>最終到達地点の一致度</strong>です。この3つの信号を組み合わせることで、人手のラベルを増やさずに「良い行動プラン」を見分ける力を学習させています。</p>
+<h3>④ 出力: 最後まで「行動」のインターフェースを崩さない</h3>
+<p>重要なのは、推論の過程では一切、文章(トークン)を生成していない点です。あくまでベクトル空間の中で仮説をやりとりし、最後に一度だけ具体的な動作(関節角度や手先の目標位置など)に変換します。これにより、明示的な chain-of-thought のような生成の遅さを避けつつ、複数案を検討する「熟考」の効果だけを取り込んでいます。</p>
+<h2><span class="n">4</span>実験結果: シミュレーションでも実機でも安定して向上</h2>
+<p>MPCoT は <span class="term-tip" tabindex="0">LIBERO<span class="tip">ロボット操作タスクを評価するための標準的なシミュレーションベンチマーク</span></span> と CALVIN という2つの代表的なベンチマークで、特に複数ステップにわたる長期タスクでの性能向上を確認しています。さらに ALOHA Mini という実機の両腕ロボットを使った5種類の実タスクでも効果を検証しました。</p>
+<div class="stats"><div class="stat"><div class="v">71.3% → 82.0%</div><div class="k">実機5タスクの平均成功率(OpenVLA-OFTベースラインとの比較)</div></div><div class="stat"><div class="v">K・M</div><div class="k">推論の「深さ」と「幅」を調整できる2つのハイパーパラメータ</div></div><div class="stat"><div class="v">0</div><div class="k">推論時に生成する追加のテキストトークン数</div></div></div>
+<p>論文の<span class="term-tip" tabindex="0">アブレーション<span class="tip">モデルの構成要素を1つずつ取り除いて、それぞれがどれだけ性能に貢献しているかを調べる実験</span></span>では、深さ・幅・合成方法(soft aggregation)・報酬による監督のそれぞれが、性能向上に個別に寄与していることも確認されています。</p>
+<h2><span class="n">5</span>なぜこの研究が重要なのか</h2>
+<div class="pull">「考える力」を、動作インターフェースを崩さずロボットに持ち込めることを示した点が新しい。</div>
+<p>LLM 分野で当たり前になりつつある「テスト時に計算量を増やして精度を上げる(<span class="term-tip" tabindex="0">test-time scaling<span class="tip">学習後の推論時に計算をより多く使うことで、モデルを再学習せずに性能を上げる考え方</span></span>)」というアイデアを、テキストではなく連続値の潜在空間で、しかもロボット制御という厳しいリアルタイム制約の中で実現して見せたことが、この論文の技術的な貢献です。似たような発想は今後、他のロボット基盤モデルにも広がっていく可能性があります。</p>
+<h2><span class="n">6</span>意義と限界</h2>
+<div class="step"><span class="si">限界1</span><p>評価は LIBERO・CALVIN・ALOHA Mini という特定のベンチマーク・ロボットに限られており、より多様なロボットや環境での汎化性能はまだ検証されていません。</p></div><div class="step"><span class="si">限界2</span><p>深さ K・幅 M を増やすほど計算コストは増えるため、どこまでリアルタイム制御の要求を満たせるかはハードウェア次第という面が残ります。</p></div><div class="step"><span class="si">限界3</span><p>path scorer の学習には熟練者のデモンストレーションや VLM による進捗スコアが必要で、これらの質に性能が左右される可能性があります。</p></div>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>「重み共有で同じ処理をK回繰り返す」という設計は、Transformer の recurrent 版や universal transformer など、他の分野でも見られる考え方です。モデルを大きくせずに計算だけを増やして性能を上げる、という発想の一種として覚えておくと応用が効きます。</div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「精度を上げたいとき、モデルを大きくするか・学習データを増やすか」だけでなく、「推論時にどれだけ計算を使うか」も設計の自由度になります。MPCoT のように、推論時計算を増やす方向でのアイデアは、既存の学習済みモデルを活かしたまま性能を伸ばせるため、コストパフォーマンスの良い改善策になることが多いです。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
