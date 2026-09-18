@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily Digest — 2026-09-19</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c;--ink-soft:#41463a;--ink-faint:#7a7d75;
+  --bg:#ffffff;--wash:#f7f8f5;--line:#e6e6e6;
+  --accent:#2cb696;--accent-ink:#14866c;--accent-wash:#e8f6f2;
+  --code-bg:#1e2420;--code-ink:#e4e8e0;--code-green:#7fd6b5;
+  --code-dim:#8a9a90;--code-key:#f0b86c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--wash);color:var(--ink);
+  font-family:'Noto Sans JP',sans-serif;line-height:1.95;
+  -webkit-font-smoothing:antialiased;font-size:16px;}
+.topbar{background:var(--bg);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;}
+.topbar-inner{max-width:700px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px;}
+.brand .dot{width:22px;height:22px;background:var(--accent);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.date-pill{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);}
+.page{background:var(--bg);max-width:700px;margin:24px auto;border-radius:12px;padding:56px 64px 48px;}
+.tags{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);letter-spacing:0.04em;margin-bottom:20px;}
+h1.headline{font-size:30px;font-weight:700;line-height:1.55;margin-bottom:26px;}
+.author{display:flex;align-items:center;gap:12px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2cb696,#1c6f8c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;flex-shrink:0;}
+.author-meta .name{font-weight:700;font-size:14px;}
+.author-meta .sub{font-size:12px;color:var(--ink-faint);}
+.paper-card{background:var(--wash);border-radius:10px;padding:20px 22px;margin:30px 0 8px;}
+.paper-card .pc-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px;}
+.paper-card .pc-title{font-size:16px;font-weight:700;line-height:1.6;margin-bottom:10px;}
+.paper-card .pc-row{font-size:12.5px;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 16px;}
+.paper-card a{color:var(--accent-ink);font-weight:700;text-decoration:none;}
+.content{margin-top:14px;}
+.content h2{font-size:21px;font-weight:700;line-height:1.5;margin:44px 0 16px;display:flex;align-items:center;gap:10px;}
+.content h2 .n{font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;background:var(--accent);width:28px;height:28px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.content h3{font-size:16px;font-weight:700;margin:28px 0 10px;color:var(--ink);padding-left:12px;border-left:3px solid var(--accent);}
+.content p{font-size:16px;color:var(--ink-soft);margin-bottom:18px;}
+.content p strong{color:var(--ink);font-weight:700;background:linear-gradient(transparent 62%,var(--accent-wash) 62%);}
+.pull{border-left:3px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0;font-size:18px;font-weight:500;color:var(--ink);line-height:1.7;}
+.stats{display:flex;gap:12px;margin:28px 0;flex-wrap:wrap;}
+.stat{flex:1;min-width:130px;background:var(--accent-wash);border-radius:10px;padding:16px 18px;}
+.stat .v{font-size:24px;font-weight:700;color:var(--accent-ink);line-height:1.2;}
+.stat .v small{font-size:14px;}
+.stat .k{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5;}
+.step{display:flex;gap:14px;margin-bottom:16px;align-items:flex-start;}
+.step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-ink);background:var(--accent-wash);border-radius:6px;padding:3px 9px;flex-shrink:0;margin-top:3px;}
+.step p{margin-bottom:0;}
+.code{background:var(--code-bg);border-radius:10px;padding:18px 0;margin:22px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;color:var(--code-ink);}
+.code .ln{display:grid;grid-template-columns:38px 1fr;min-height:1.7em;}
+.code .ln>.no{color:#4a564f;text-align:right;padding-right:14px;user-select:none;font-size:12px;}
+.code .ln>.ct{white-space:pre;}
+.code .ind{display:inline-block;width:22px;height:1.7em;border-left:1px solid #38443d;vertical-align:top;}
+.code .ln.comment .ct{color:var(--code-dim);}
+.code .cm{color:var(--code-dim);}.code .kw{color:var(--code-key);}
+.code .fn{color:var(--code-green);}.code .st{color:var(--code-green);}.code .nm{color:#c4a3f0;}
+.code .badge{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;border-radius:5px;padding:0 7px;margin-left:6px;vertical-align:middle;}
+.code-cap{font-size:12.5px;color:var(--ink-faint);margin:8px 0 24px;text-align:center;}
+.formula{background:var(--wash);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:22px 0;text-align:center;}
+.formula .eq{font-family:'JetBrains Mono',monospace;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.formula .eq .frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 4px;}
+.formula .eq .frac .top{border-bottom:1.5px solid var(--ink);padding:0 8px;font-size:14px;}
+.formula .eq .frac .bot{padding:2px 8px 0;font-size:14px;}
+.formula .cap{font-size:12.5px;color:var(--ink-faint);}
+.note-box{background:#fff8f0;border:1px solid #f0e0cc;border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.note-box .nb-label{font-weight:700;color:#b5781f;font-size:13px;margin-bottom:4px;}
+.tip-box{background:var(--accent-wash);border-radius:10px;padding:18px 20px;margin:26px 0;font-size:14.5px;color:var(--ink-soft);}
+.tip-box .tb-label{font-weight:700;color:var(--accent-ink);font-size:13px;margin-bottom:4px;}
+.tip-box strong{color:var(--accent-ink);}
+.term{border-bottom:1.5px dotted var(--accent);font-weight:500;color:var(--ink);}
+
+/* 用語ツールチップ (PCはホバー / モバイルはタップで表示) */
+.term-tip{
+  position:relative;display:inline;
+  border-bottom:1.5px dotted var(--accent);
+  font-weight:500;color:var(--ink);
+  cursor:help;outline:none;
+}
+.term-tip::after{content:"ⓘ";font-size:0.7em;color:var(--accent-ink);margin-left:1px;vertical-align:super;}
+.term-tip .tip{
+  position:absolute;bottom:calc(100% + 8px);left:0;
+  width:max-content;max-width:300px;
+  background:var(--ink);color:#fff;
+  font-size:13px;font-weight:400;line-height:1.6;
+  padding:10px 14px;border-radius:8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  opacity:0;visibility:hidden;transform:translateY(4px);
+  transition:opacity .15s,transform .15s,visibility .15s;
+  z-index:50;pointer-events:none;white-space:normal;
+}
+.term-tip .tip::after{
+  content:"";position:absolute;top:100%;left:14px;
+  border:6px solid transparent;border-top-color:var(--ink);
+}
+.term-tip:hover .tip,.term-tip:focus .tip,.term-tip:focus-within .tip{
+  opacity:1;visibility:visible;transform:translateY(0);
+}
+@media(max-width:560px){
+  .term-tip .tip{left:0;right:0;max-width:none;width:auto;}
+}
+.footer{text-align:center;font-size:12px;color:var(--ink-faint);padding:24px;line-height:1.9;}
+@media(max-width:560px){
+  .page{padding:36px 22px 28px;margin:12px;border-radius:10px;}
+  h1.headline{font-size:24px;}.content h2{font-size:19px;}
+  .stat{min-width:100%;}.code{font-size:12px;}
+}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><span class="dot">✦</span> AI Daily Digest</div>
+      <div class="date-pill">2026-09-19</div>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="tags">#AI #論文解説 #世界モデル #物理シミュレーション #新人研究者向け</div>
+    <h1 class="headline">学習した物理シミュレータはなぜ壊れる? 保存則と因子分解という2つの処方箋</h1>
+
+    <div class="author">
+      <div class="avatar">AI</div>
+      <div class="author-meta">
+        <div class="name">AI Daily Digest</div>
+        <div class="sub">2026-09-19 ・ 07:00 ・ きょうの1本をじっくり解説</div>
+      </div>
+    </div>
+
+    <div class="paper-card">
+      <div class="pc-label">本日の論文</div>
+      <div class="pc-title">Conservation Buys Stability and Factoring Buys Counterfactuals in Physical World Models</div>
+      <div class="pc-row">
+        <span>Yufeng Wang, Parivesh Priye, Lu Wei, Haibin Ling</span>
+        <span>arXiv cs.LG ・ 2026年9月</span>
+        <a href="https://arxiv.org/abs/2609.19674">原文 →</a>
+      </div>
+    </div>
+
+    <div class="content">
+<h2><span class="n">1</span>ロボットの「頭の中」にあるシミュレータは、なぜ狂うのか</h2>
+<p>ロボットに新しい行動を学習させるとき、実機で何百万回も試行錯誤させるのは現実的ではありません。そこで使われるのが<span class="term-tip" tabindex="0">世界モデル<span class="tip">物理法則やダイナミクスを学習し、将来の状態を予測するモデル</span></span>です。カメラ映像やセンサ値から「次に何が起きるか」を予測できれば、ロボットは頭の中でリハーサルしてから実世界で動けます。ところがこの「頭の中のシミュレータ」には、昔から悩ましい弱点がありました。<strong>しばらく先まで予測させると、だんだん現実離れしていく</strong>のです。今日紹介する論文は、この崩れ方には実は2種類あり、それぞれ別の薬が必要だ、ということを丁寧に実証した研究です。</p>
+<h2><span class="n">2</span>2つの、まったく別種の「壊れ方」</h2>
+<p>学習済みシミュレータが現実と食い違う場面は、大きく2つに分けられます。1つ目は<strong>長期ロールアウトでの発散</strong>です。1ステップごとの誤差はわずかでも、それを何百ステップも積み重ねると、物体がすり抜けたりエネルギーが増え続けたりと、物理的にありえない状態に迷い込んでしまいます。2つ目は<strong><span class="term-tip" tabindex="0">反実仮想<span class="tip">実際には起きなかった「もしこうだったら」という条件下での挙動</span></span>への対応</strong>です。たとえば2つの物体の間に働く力の向き(符号)を学習時とは逆にしたとき、モデルが「訓練で見た法則」に固執してしまい、新しい法則に従ってくれない、という問題です。</p>
+<p>この論文が面白いのは、「じゃあモデルをもっと大きくすれば直るのでは」という直感を退けている点です。著者らは、同じパラメータ数の予測モデルや<span class="term-tip" tabindex="0">ニューラルODE<span class="tip">微分方程式の右辺をニューラルネットで表現し、連続時間で状態を予測する手法</span></span>を使っても、この2つの問題は解消しないことを示しています。必要なのは規模ではなく、<strong>モデルの構造そのものに物理的な制約を埋め込むこと</strong>でした。</p>
+<h3>処方箋その1: 保存則を守れば、長期安定性が手に入る</h3>
+<p>1つ目の処方箋は、エネルギー保存という物理の基本法則を積分の仕組みに直接組み込むことです。具体的には、モデルに「エネルギー関数」を学習させ、それを<span class="term-tip" tabindex="0">シンプレクティック積分器<span class="tip">エネルギーや運動量などの保存量を壊さずに時間発展を計算する数値積分手法</span></span>で時間発展させます。たとえるなら、振り子の運動をふつうに計算すると計算誤差でだんだん振れ幅が大きくなったり小さくなったりしてしまいますが、この積分器は「振り子のエネルギーは変わらない」という制約を数値計算のレベルで守り続けてくれる、という仕組みです。</p>
+<div class="stats"><div class="stat"><div class="v">100倍</div><div class="k">この積分器を使うと、学習時のロールアウト長の最大100倍先まで、物理的に妥当な予測が崩れなかった</div></div><div class="stat"><div class="v">2種類</div><div class="k">学習済みシミュレータが陥る、本質的に異なる失敗パターンの数</div></div></div>
+<h3>処方箋その2: 結合構造を分解すれば、未知の物理法則にも対応できる</h3>
+<p>2つ目の処方箋は、物体どうしの力の結合関係を、ブラックボックスなニューラルネットの中に隠さず、<strong>明示的な線形の掛け算構造として取り出しておく</strong>ことです。この「<span class="term-tip" tabindex="0">線形因子分解<span class="tip">物理的な結合関係を明示的な線形の掛け算構造として表現すること</span></span>」により、モデルは訓練データにはなかった符号(力の向き)の組み合わせにも対応できるようになりました。一方、この構造を持たない自由なパラメータ化のモデルは、訓練時に見た法則からまったく抜け出せませんでした。</p>
+<h3>本当に「別物」なのか: ダブル・ディソシエーションで確かめる</h3>
+<p>「保存則の構造」と「因子分解の構造」、この2つは本当に独立した効果なのでしょうか。著者らは<span class="term-tip" tabindex="0">ダブル・ディソシエーション<span class="tip">2つの機能が独立していることを示す実験手法。片方だけを壊しても他方は無傷であることを両方向で確認する</span></span>という手法で検証しています。保存則の構造だけを取り除くと反実仮想への対応力は保たれたまま長期安定性だけが崩れ、逆に因子分解の構造だけを取り除くと長期安定性は保たれたまま反実仮想対応だけが崩れる。この対照実験によって、2つの能力が別々の設計判断から生まれることが裏付けられました。</p>
+<div class="code"><div class="ln comment"><span class="no"></span><span class="ct"># 状態は位置 q と運動量 p のペアで表す</span></div><div class="ln"><span class="no">1</span><span class="ct">q, p = state</span></div><div class="ln comment"><span class="no"></span><span class="ct"># ① 学習したエネルギー関数をシンプレクティック積分器で発展させる → 長期安定性</span></div><div class="ln"><span class="no">2</span><span class="ct">dq, dp = <span class="fn">symplectic_step</span>(energy_fn, q, p, dt)<span class="badge">①</span></span></div><div class="ln comment"><span class="no"></span><span class="ct"># ② 物体間の結合を明示的な線形因子分解で表す → 未知の物理法則への対応</span></div><div class="ln"><span class="no">3</span><span class="ct">coupling = <span class="fn">factorized_coupling</span>(q, theta)<span class="badge">②</span></span></div><div class="ln"><span class="no">4</span><span class="ct">q_next, p_next = <span class="fn">integrate</span>(dq, dp, coupling)</span></div><div class="ln"><span class="no">5</span><span class="ct"><span class="kw">return</span> q_next, p_next</span></div></div><div class="code-cap">ロールアウト1ステップの擬似コード(2つの構造がどこに効くかのイメージ)</div>
+<div class="pull">長期にわたって崩れない安定性と、見たことのない物理法則への汎化は、同じ問題の二面ではなく、別々に設計しなければ手に入らない、独立した能力である。</div>
+<p>実験は代表的な非可積分系である<span class="term-tip" tabindex="0">三体問題<span class="tip">3つの天体が重力で相互作用する、解析的には解けない古典力学の代表例</span></span>だけでなく、状態を直接与えず<strong>ピクセル(画像)から推定させる設定</strong>でも同じ結論が再現されたと報告されています。見た目の情報から物理状態を復元しなければならない、より実践的な状況でも構造の効果が消えなかった点は、実ロボットへの応用を考えるうえで心強い結果です。</p>
+<div class="note-box"><div class="nb-label">⚙️ ひとことメモ</div>この研究は具体的なロボットタスクを解いた論文ではなく、物理世界モデルの「設計原則」を提示した基礎研究です。ロボットの模倣学習や強化学習で使われる世界モデル(動画生成ベースのものも含む)の多くは、いまだにこの種の構造をあまり意識せずに作られています。どの部分に保存則を、どの部分に因子分解を埋め込むかを設計段階で考えることが、今後のロボット向け世界モデルの信頼性を左右するかもしれません。</div>
+<h2><span class="n">3</span>意義と限界</h2>
+<div class="step"><span class="si">限界1</span><p>因子分解を効かせるには、あらかじめ「何と何が結合しているか」という物理構造を人間が指定する必要があり、完全に未知の系には素直に適用しにくい</p></div><div class="step"><span class="si">限界2</span><p>エネルギー保存を前提とするシンプレクティック積分器は、摩擦や接触・衝突のようなエネルギーが散逸する現象を主役とする実ロボットの操作タスクには、そのままでは当てはまらない可能性がある</p></div><div class="step"><span class="si">限界3</span><p>検証は三体問題を中心とした比較的小規模な力学系が中心で、多数の物体が複雑に接触し合うマニピュレーションのような高自由度系への拡張は今後の課題として残されている</p></div>
+<div class="tip-box"><div class="tb-label">💡 R&amp;Dでよく出る考え方</div>「モデルを大きくすれば汎化する」という発想に飛びつく前に、まず<strong>失敗のモードを分解する</strong>という今回のアプローチは、AI研究全般で使える態度です。ひとつの現象に見える問題が、実は独立した複数の原因から生まれていないか。そこを切り分けてから、それぞれに合った構造的な制約を考える。遠回りに見えて、これが一番の近道になることがよくあります。</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI Daily Digest<br>
+    arXiv cs.LG / cs.CL / cs.AI より自動収集・要約 ・ generated by Claude
+  </div>
+</body>
+</html>
